@@ -49,6 +49,14 @@ public class User extends AbstractNamedEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @BatchSize(size = 200)
+    @JoinTable(
+            name = "user_managed_departments",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "department_id"))
+    private Set<Department> managedDepartments;
+
     public User() {
     }
 
@@ -107,6 +115,14 @@ public class User extends AbstractNamedEntity {
 
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
+    }
+
+    public Set<Department> getManagedDepartments() {
+        return managedDepartments;
+    }
+
+    public void setManagedDepartments(Set<Department> managedDepartments) {
+        this.managedDepartments = managedDepartments;
     }
 
     @Override
