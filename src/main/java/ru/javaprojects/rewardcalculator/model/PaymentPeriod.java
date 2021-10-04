@@ -2,12 +2,12 @@ package ru.javaprojects.rewardcalculator.model;
 
 import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.time.YearMonth;
+import java.time.ZoneId;
+import java.util.Objects;
 
 @Entity
 @Table(name = "payment_periods", uniqueConstraints = {@UniqueConstraint(columnNames = "period", name = "payment_periods_unique_period_idx")})
@@ -15,6 +15,7 @@ public class PaymentPeriod extends AbstractBaseEntity {
 
     @NotNull
     @Column(name = "period", nullable = false, unique = true)
+    @Convert(converter = YearMonthDateAttributeConverter.class)
     private YearMonth period;
 
     @NotNull
@@ -54,5 +55,27 @@ public class PaymentPeriod extends AbstractBaseEntity {
                 ", period=" + period +
                 ", requiredHoursWorked=" + requiredHoursWorked +
                 '}';
+    }
+
+    static class YearMonthDateAttributeConverter implements AttributeConverter<YearMonth, java.sql.Date> {
+        @Override
+        public java.sql.Date convertToDatabaseColumn(YearMonth yearMonth) {
+            if (Objects.nonNull(yearMonth)) {
+                return java.sql.Date.valueOf(yearMonth.atDay(1));
+            }
+            return null;
+        }
+
+        @Override
+        public YearMonth convertToEntityAttribute(java.sql.Date date) {
+            if (Objects.nonNull(date)) {
+                return YearMonth.from(
+                        Instant
+                                .ofEpochMilli(date.getTime())
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
+            }
+            return null;
+        }
     }
 }
