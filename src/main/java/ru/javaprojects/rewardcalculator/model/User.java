@@ -53,6 +53,7 @@ public class User extends AbstractNamedEntity {
     @BatchSize(size = 200)
     @JoinTable(
             name = "user_managed_departments",
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "department_id"}, name = "user_department_unique_idx")},
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))
     private Set<Department> managedDepartments;
