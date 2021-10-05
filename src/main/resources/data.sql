@@ -2,6 +2,7 @@ DELETE FROM user_managed_departments;
 DELETE FROM user_roles;
 DELETE FROM users;
 DELETE FROM departments;
+DELETE FROM positions;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
@@ -22,3 +23,8 @@ VALUES ('Отдел № 1'),
 INSERT INTO user_managed_departments (user_id, department_id)
 VALUES (100000, 100002),
        (100000, 100003);
+
+INSERT INTO positions (name, salary)
+VALUES ('position 1 name', 40200),
+       ('position 2 name', 35700),
+       ('position 3 name', 60100);
