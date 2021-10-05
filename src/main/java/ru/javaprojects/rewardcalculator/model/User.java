@@ -8,10 +8,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
@@ -49,6 +46,7 @@ public class User extends AbstractNamedEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
+    @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
     @BatchSize(size = 200)
     @JoinTable(
@@ -56,7 +54,7 @@ public class User extends AbstractNamedEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "department_id"}, name = "user_department_unique_idx")},
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))
-    private Set<Department> managedDepartments;
+    private Set<Department> managedDepartments = new HashSet<>();
 
     public User() {
     }
