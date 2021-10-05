@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
 import static ru.javaprojects.rewardcalculator.model.Role.*;
 
@@ -22,11 +23,23 @@ public class UserTestData {
     public static final User user = new User(USER_ID, "User", "user@yandex.ru", "password", DEPARTMENT_HEAD);
     public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", ADMIN, DEPARTMENT_HEAD, ECONOMIST);
 
+    static {
+        user.addManagedDepartments(department1, department2);
+    }
+
     public static User getNew() {
         return new User(null, "NewName", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(DEPARTMENT_HEAD));
     }
 
+    public static User getNewWithManagedDepartments() {
+        User newUser = getNew();
+        newUser.addManagedDepartments(department1, department2);
+        return newUser;
+    }
+
     public static User getUpdated() {
-        return new User(USER_ID, "UpdatedName", "update@gmail.com", "updatedPass", false, new Date(), Set.of(ADMIN, ECONOMIST));
+        User updated =  new User(USER_ID, "UpdatedName", "update@gmail.com", "updatedPass", false, new Date(), Set.of(ADMIN, ECONOMIST));
+        updated.setManagedDepartments(Set.of(department3));
+        return updated;
     }
 }

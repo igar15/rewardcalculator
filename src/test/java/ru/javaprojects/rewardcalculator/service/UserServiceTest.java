@@ -3,6 +3,7 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import ru.javaprojects.rewardcalculator.UserTestData;
 import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
@@ -30,14 +31,27 @@ class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    void createWithManagedDepartments() {
+        User created = service.create(getNewWithManagedDepartments());
+        int newId = created.id();
+        User newUser = getNewWithManagedDepartments();
+        newUser.setId(newId);
+        USER_MATCHER.assertMatch(created, newUser);
+        USER_MATCHER.assertMatch(service.get(newId), newUser);
+    }
+
+    @Test
     void duplicateEmailCreate() {
-        assertThrows(DataAccessException.class, () -> service.create(new User(null, "newName", "user@yandex.ru", "newPass", DEPARTMENT_HEAD)));
+        assertThrows(DataAccessException.class, () -> service.create(new User(null, "newName", user.getEmail(), "newPass", DEPARTMENT_HEAD)));
     }
 
     @Test
     void get() {
         User user = service.get(ADMIN_ID);
         USER_MATCHER.assertMatch(user, admin);
+
+        user = service.get(USER_ID);
+        USER_MATCHER.assertMatch(user, UserTestData.user);
     }
 
     @Test
@@ -47,8 +61,8 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void getByEmail() {
-        User user = service.getByEmail(admin.getEmail());
-        USER_MATCHER.assertMatch(user, admin);
+        User user = service.getByEmail(UserTestData.user.getEmail());
+        USER_MATCHER.assertMatch(user, UserTestData.user);
     }
 
     @Test

@@ -124,6 +124,10 @@ public class User extends AbstractNamedEntity {
         this.managedDepartments = managedDepartments;
     }
 
+    public void addManagedDepartments(Department... departments) {
+        managedDepartments.addAll(Arrays.asList(departments));
+    }
+
     @Override
     public String toString() {
         return "User{" +
