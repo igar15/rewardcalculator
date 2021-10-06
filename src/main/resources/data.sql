@@ -1,6 +1,7 @@
 DELETE FROM user_managed_departments;
 DELETE FROM user_roles;
 DELETE FROM users;
+DELETE FROM employees;
 DELETE FROM departments;
 DELETE FROM positions;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
@@ -28,3 +29,8 @@ INSERT INTO positions (name, salary)
 VALUES ('position 1 name', 40200),
        ('position 2 name', 35700),
        ('position 3 name', 60100);
+
+INSERT INTO employees (name, department_id, position_id)
+VALUES ('employee 1 name', 100002, 100005),
+       ('employee 2 name', 100002, 100005),
+       ('employee 3 name', 100002, 100006);

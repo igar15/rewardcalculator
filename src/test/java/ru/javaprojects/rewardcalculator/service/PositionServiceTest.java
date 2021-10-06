@@ -51,8 +51,13 @@ class PositionServiceTest extends AbstractServiceTest {
 
     @Test
     void delete() {
-        service.delete(POSITION_1_ID);
-        assertThrows(NotFoundException.class, () -> service.get(POSITION_1_ID));
+        service.delete(POSITION_3_ID);
+        assertThrows(NotFoundException.class, () -> service.get(POSITION_3_ID));
+    }
+
+    @Test
+    void deleteWhenPositionHasEmployees() {
+        assertThrows(DataAccessException.class, () -> service.delete(POSITION_1_ID));
     }
 
     @Test
