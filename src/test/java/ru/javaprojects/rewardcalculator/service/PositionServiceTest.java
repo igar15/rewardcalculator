@@ -82,7 +82,7 @@ class PositionServiceTest extends AbstractServiceTest {
     void createWithException() {
         validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, " ", 40000)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Po", 40000)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Po", null)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Po", 9999)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Position name", null)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Position name", 9999)));
     }
 }

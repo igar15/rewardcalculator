@@ -4,6 +4,7 @@ DELETE FROM users;
 DELETE FROM employees;
 DELETE FROM departments;
 DELETE FROM positions;
+DELETE FROM payment_periods;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
@@ -34,3 +35,8 @@ INSERT INTO employees (name, department_id, position_id)
 VALUES ('employee 1 name', 100002, 100005),
        ('employee 2 name', 100002, 100005),
        ('employee 3 name', 100002, 100006);
+
+INSERT INTO payment_periods (period, required_hours_worked)
+VALUES ('2021-01-01', 120),
+       ('2021-02-01', 150.75),
+       ('2021-03-01', 176.50);

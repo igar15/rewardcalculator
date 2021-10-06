@@ -39,14 +39,14 @@ class EmployeeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void createWithBadDepartment() {
+    void createWithNotExistedDepartment() {
         Employee newEmployee = getNewWithDepartmentAndPosition();
         newEmployee.setDepartment(new Department(NOT_FOUND, "Department"));
         assertThrows(NotFoundException.class, () -> service.create(newEmployee));
     }
 
     @Test
-    void createWithBadPosition() {
+    void createWithNotExistedPosition() {
         Employee newEmployee = getNewWithDepartmentAndPosition();
         newEmployee.setPosition(new Position(NOT_FOUND, "Position", 20000));
         assertThrows(NotFoundException.class, () -> service.create(newEmployee));
@@ -70,7 +70,7 @@ class EmployeeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void getAllByDepartmentIdWithBadDepartment() {
+    void getAllByDepartmentIdWithNotExistedDepartment() {
         assertThrows(NotFoundException.class, () -> service.getAllByDepartmentId(NOT_FOUND));
     }
 
@@ -109,7 +109,7 @@ class EmployeeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void updateWithBadDepartment() {
+    void updateWithNotExistedDepartment() {
         Employee updated = getUpdated();
         updated.setDepartment(new Department(NOT_FOUND, "Department"));
         updated.setPosition(position1);
@@ -117,7 +117,7 @@ class EmployeeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void updateWithBadPosition() {
+    void updateWithNotExistedPosition() {
         Employee updated = getUpdated();
         updated.setDepartment(department1);
         updated.setPosition(new Position(NOT_FOUND, "Position", 20000));
