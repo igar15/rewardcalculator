@@ -78,7 +78,7 @@ CREATE TABLE department_rewards
     department_id      INTEGER NOT NULL,
     payment_period_id  INTEGER NOT NULL,
     allocated_amount   INTEGER NOT NULL,
-    distributed_amount INTEGER NOT NULL,
+    distributed_amount INTEGER DEFAULT 0 NOT NULL CHECK (distributed_amount <= allocated_amount),
     FOREIGN KEY (department_id) REFERENCES departments (id) ON DELETE CASCADE,
     FOREIGN KEY (payment_period_id) REFERENCES payment_periods (id) ON DELETE CASCADE
 );

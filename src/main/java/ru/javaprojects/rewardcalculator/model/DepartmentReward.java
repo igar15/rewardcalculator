@@ -30,8 +30,8 @@ public class DepartmentReward extends AbstractBaseEntity {
 
     @NotNull
     @Range(min = 0, max = 5_000_000)
-    @Column(name = "distributed_amount", nullable = false)
-    private Integer distributedAmount;
+    @Column(name = "distributed_amount", nullable = false, columnDefinition = "default 0")
+    private Integer distributedAmount = 0;
 
     public DepartmentReward() {
     }
@@ -40,6 +40,12 @@ public class DepartmentReward extends AbstractBaseEntity {
         super(id);
         this.allocatedAmount = allocatedAmount;
         this.distributedAmount = distributedAmount;
+    }
+
+    public DepartmentReward(Integer id, Integer allocatedAmount, Integer distributedAmount, Department department, PaymentPeriod paymentPeriod) {
+        this(id, allocatedAmount, distributedAmount);
+        this.department = department;
+        this.paymentPeriod = paymentPeriod;
     }
 
     public Department getDepartment() {

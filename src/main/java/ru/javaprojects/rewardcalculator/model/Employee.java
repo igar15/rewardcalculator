@@ -25,7 +25,7 @@ public class Employee extends AbstractNamedEntity {
     }
 
     public Employee(Integer id, String name, Department department, Position position) {
-        super(id, name);
+        this(id, name);
         this.department = department;
         this.position = position;
     }
