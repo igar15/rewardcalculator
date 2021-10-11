@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "employee_rewards", uniqueConstraints = {@UniqueConstraint(columnNames = {"employee_id", "payment_period_id"}, name = "employee_rewards_unique_department_id_payment_period_id_idx")})
+@Table(name = "employee_rewards", uniqueConstraints = {@UniqueConstraint(columnNames = {"employee_id", "department_reward_id"}, name = "employee_rewards_unique_employee_id_department_reward_id_idx")})
 public class EmployeeReward extends AbstractBaseEntity {
 
     @NotNull
@@ -19,9 +19,9 @@ public class EmployeeReward extends AbstractBaseEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_period_id", nullable = false)
+    @JoinColumn(name = "department_reward_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private PaymentPeriod paymentPeriod;
+    private DepartmentReward departmentReward;
 
     @NotNull
     @Range(min = 0, max = 300)
@@ -54,6 +54,13 @@ public class EmployeeReward extends AbstractBaseEntity {
         this.penalty = penalty;
     }
 
+    public EmployeeReward(Integer id, Double hoursWorked, Integer hoursWorkedReward, Integer additionalReward, Integer penalty,
+                          Employee employee, DepartmentReward departmentReward) {
+        this(id, hoursWorked, hoursWorkedReward, additionalReward, penalty);
+        this.employee = employee;
+        this.departmentReward = departmentReward;
+    }
+
     public Employee getEmployee() {
         return employee;
     }
@@ -62,12 +69,12 @@ public class EmployeeReward extends AbstractBaseEntity {
         this.employee = employee;
     }
 
-    public PaymentPeriod getPaymentPeriod() {
-        return paymentPeriod;
+    public DepartmentReward getDepartmentReward() {
+        return departmentReward;
     }
 
-    public void setPaymentPeriod(PaymentPeriod paymentPeriod) {
-        this.paymentPeriod = paymentPeriod;
+    public void setDepartmentReward(DepartmentReward departmentReward) {
+        this.departmentReward = departmentReward;
     }
 
     public Double getHoursWorked() {
@@ -100,6 +107,10 @@ public class EmployeeReward extends AbstractBaseEntity {
 
     public void setPenalty(Integer penalty) {
         this.penalty = penalty;
+    }
+
+    public Integer getFullReward() {
+        return hoursWorkedReward + additionalReward - penalty;
     }
 
     @Override

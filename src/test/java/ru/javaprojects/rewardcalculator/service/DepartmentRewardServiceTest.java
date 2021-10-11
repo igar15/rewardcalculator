@@ -3,30 +3,32 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import ru.javaprojects.rewardcalculator.model.Department;
-import ru.javaprojects.rewardcalculator.model.DepartmentReward;
-import ru.javaprojects.rewardcalculator.model.PaymentPeriod;
+import ru.javaprojects.rewardcalculator.model.*;
 import ru.javaprojects.rewardcalculator.util.exception.DepartmentRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.NOT_FOUND;
+import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.getNew;
+import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.getUpdated;
 import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.*;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.department1;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.department3;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_1_ID;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.NOT_FOUND;
-import static ru.javaprojects.rewardcalculator.PaymentPeriodTestData.paymentPeriod1;
-import static ru.javaprojects.rewardcalculator.PaymentPeriodTestData.paymentPeriod3;
-import static ru.javaprojects.rewardcalculator.PaymentPeriodTestData.PAYMENT_PERIOD_1_ID;
+import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
+import static ru.javaprojects.rewardcalculator.EmployeeTestData.*;
+import static ru.javaprojects.rewardcalculator.PaymentPeriodTestData.*;
 
 class DepartmentRewardServiceTest extends AbstractServiceTest {
 
     @Autowired
     private DepartmentRewardService service;
+
+    @Autowired
+    private EmployeeRewardService employeeRewardService;
 
     @Test
     void create() {
@@ -36,6 +38,15 @@ class DepartmentRewardServiceTest extends AbstractServiceTest {
         newDepartmentReward.setId(newId);
         DEPARTMENT_REWARD_MATCHER.assertMatch(created, newDepartmentReward);
         DEPARTMENT_REWARD_MATCHER.assertMatch(service.get(newId), newDepartmentReward);
+
+        List<EmployeeReward> employeeRewards = employeeRewardService.getAllByDepartmentRewardId(newId);
+        employeeRewards.forEach(employeeReward -> {
+            assertEquals(0, employeeReward.getFullReward());
+        });
+        List<Employee> employees = employeeRewards.stream()
+                .map(employeeReward -> employeeReward.getEmployee())
+                .collect(Collectors.toList());
+        EMPLOYEE_MATCHER.assertMatch(employees, employee1, employee2, employee3);
     }
 
     @Test
@@ -143,7 +154,7 @@ class DepartmentRewardServiceTest extends AbstractServiceTest {
     @Test
     void updateWithAllocatedAMountLessThanExistedDistributedAmount() {
         DepartmentReward updated = getUpdatedWithDepartmentAndPaymentPeriod();
-        updated.setAllocatedAmount(100000);
+        updated.setAllocatedAmount(30000);
         assertThrows(DepartmentRewardBadDataException.class, () -> service.update(updated));
     }
 

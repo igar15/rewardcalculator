@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS user_managed_departments;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS department_rewards;
 DROP TABLE IF EXISTS employee_rewards;
+DROP TABLE IF EXISTS department_rewards;
 DROP TABLE IF EXISTS payment_periods;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS positions;
@@ -78,7 +78,8 @@ CREATE TABLE department_rewards
     department_id      INTEGER NOT NULL,
     payment_period_id  INTEGER NOT NULL,
     allocated_amount   INTEGER NOT NULL,
-    distributed_amount INTEGER DEFAULT 0 NOT NULL CHECK (distributed_amount <= allocated_amount),
+    distributed_amount INTEGER DEFAULT 0 NOT NULL,
+    CONSTRAINT valid_distributed_amount CHECK (distributed_amount <= allocated_amount),
     FOREIGN KEY (department_id) REFERENCES departments (id) ON DELETE CASCADE,
     FOREIGN KEY (payment_period_id) REFERENCES payment_periods (id) ON DELETE CASCADE
 );
@@ -86,14 +87,15 @@ CREATE UNIQUE INDEX department_rewards_unique_department_id_payment_period_id_id
 
 CREATE TABLE employee_rewards
 (
-    id                  INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-    employee_id         INTEGER NOT NULL,
-    payment_period_id   INTEGER NOT NULL,
-    hours_worked        NUMERIC NOT NULL,
-    hours_worked_reward INTEGER NOT NULL,
-    additional_reward   INTEGER NOT NULL,
-    penalty             INTEGER NOT NULL,
+    id                     INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+    employee_id            INTEGER NOT NULL,
+    department_reward_id   INTEGER NOT NULL,
+    hours_worked           NUMERIC NOT NULL,
+    hours_worked_reward    INTEGER NOT NULL,
+    additional_reward      INTEGER NOT NULL,
+    penalty                INTEGER NOT NULL,
+    CONSTRAINT valid_employee_reward CHECK (hours_worked_reward + additional_reward - penalty >= 0),
     FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE,
-    FOREIGN KEY (payment_period_id) REFERENCES payment_periods (id) ON DELETE CASCADE
+    FOREIGN KEY (department_reward_id) REFERENCES department_rewards (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX employee_rewards_unique_department_id_payment_period_id_idx ON employee_rewards (employee_id, payment_period_id);
+CREATE UNIQUE INDEX employee_rewards_unique_employee_id_department_reward_id_idx ON employee_rewards (employee_id, department_reward_id);

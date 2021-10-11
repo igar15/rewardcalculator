@@ -1,6 +1,7 @@
 DELETE FROM user_managed_departments;
 DELETE FROM user_roles;
 DELETE FROM users;
+DELETE FROM employee_rewards;
 DELETE FROM employees;
 DELETE FROM department_rewards;
 DELETE FROM departments;
@@ -43,6 +44,12 @@ VALUES ('2021-01-01', 120),
        ('2021-03-01', 176.50);
 
 INSERT INTO department_rewards (department_id, payment_period_id, allocated_amount, distributed_amount)
-VALUES (100002, 100011, 150000, 150000),
-       (100002, 100012, 200000, 185000),
-       (100003, 100011, 310000, 310000);
+VALUES (100002, 100011, 40800, 40800),
+       (100002, 100012, 40800, 40800),
+       (100003, 100011, 40800, 40800);
+
+INSERT INTO employee_rewards (employee_id, department_reward_id, hours_worked, hours_worked_reward, additional_reward, penalty)
+VALUES (100008, 100015, 150.75, 12060, 0, 0),
+       (100009, 100015, 150.75, 10710, 0, 0),
+       (100010, 100015, 150.75, 18030, 0, 0),
+       (100008, 100016, 176.50, 12060, 0, 0);
