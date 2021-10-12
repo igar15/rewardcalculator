@@ -4,6 +4,7 @@ import ru.javaprojects.rewardcalculator.model.User;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
@@ -20,15 +21,11 @@ public class UserTestData {
     public static final String USER_MAIL = "user@yandex.ru";
     public static final String ADMIN_MAIL = "admin@gmail.com";
 
-    public static final User user = new User(USER_ID, "User", "user@yandex.ru", "password", DEPARTMENT_HEAD);
-    public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", ADMIN, DEPARTMENT_HEAD, ECONOMIST);
-
-    static {
-        user.addManagedDepartments(department1, department2);
-    }
+    public static final User user = new User(USER_ID, "User", "user@yandex.ru", "password", Set.of(department1, department2), DEPARTMENT_HEAD);
+    public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Set.of(), ADMIN, DEPARTMENT_HEAD, ECONOMIST);
 
     public static User getNew() {
-        return new User(null, "NewName", "new@gmail.com", "newPass", false, new Date(), Collections.singleton(DEPARTMENT_HEAD));
+        return new User(null, "NewName", "new@gmail.com", "newPass", false, new Date(), new HashSet<>(), Collections.singleton(DEPARTMENT_HEAD));
     }
 
     public static User getNewWithManagedDepartments() {
@@ -38,8 +35,7 @@ public class UserTestData {
     }
 
     public static User getUpdated() {
-        User updated =  new User(USER_ID, "UpdatedName", "update@gmail.com", "updatedPass", false, new Date(), Set.of(ADMIN, ECONOMIST));
-        updated.setManagedDepartments(Set.of(department3));
+        User updated =  new User(USER_ID, "UpdatedName", "update@gmail.com", "updatedPass", false, new Date(), Set.of(department3), Set.of(ADMIN, ECONOMIST));
         return updated;
     }
 }

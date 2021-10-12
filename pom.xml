@@ -32,6 +32,12 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!--JSON-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate5</artifactId>
+		</dependency>
+
 		<!--Validation-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

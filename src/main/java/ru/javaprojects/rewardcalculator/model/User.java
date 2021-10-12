@@ -54,25 +54,26 @@ public class User extends AbstractNamedEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "department_id"}, name = "user_department_unique_idx")},
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "department_id"))
-    private Set<Department> managedDepartments = new HashSet<>();
+    private Set<Department> managedDepartments;
 
     public User() {
     }
 
     public User(User user) {
-        this(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.isEnabled(), user.getRegistered(), user.getRoles());
+        this(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.isEnabled(), user.getRegistered(), user.getManagedDepartments(), user.getRoles());
     }
 
-    public User(Integer id, String name, String email, String password, Role role, Role... roles) {
-        this(id, name, email, password, true, new Date(), EnumSet.of(role, roles));
+    public User(Integer id, String name, String email, String password, Set<Department> managedDepartments, Role role, Role... roles) {
+        this(id, name, email, password, true, new Date(), managedDepartments, EnumSet.of(role, roles));
     }
 
-    public User(Integer id, String name, String email, String password, boolean enabled, Date registered, Collection<Role> roles) {
+    public User(Integer id, String name, String email, String password, boolean enabled, Date registered, Set<Department> managedDepartments, Collection<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
         this.enabled = enabled;
         this.registered = registered;
+        this.managedDepartments = managedDepartments;
         setRoles(roles);
     }
 
@@ -125,6 +126,9 @@ public class User extends AbstractNamedEntity {
     }
 
     public void addManagedDepartments(Department... departments) {
+        if (Objects.isNull(managedDepartments)) {
+            managedDepartments = new HashSet<>();
+        }
         managedDepartments.addAll(Arrays.asList(departments));
     }
 
@@ -136,6 +140,7 @@ public class User extends AbstractNamedEntity {
                 ", email=" + email +
                 ", enabled=" + enabled +
                 ", roles=" + roles +
+                ", managedDepartments=" + managedDepartments +
                 '}';
     }
 }
