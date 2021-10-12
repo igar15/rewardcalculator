@@ -1,6 +1,8 @@
 package ru.javaprojects.rewardcalculator;
 
 import ru.javaprojects.rewardcalculator.model.User;
+import ru.javaprojects.rewardcalculator.to.UserTo;
+import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
 import java.util.Collections;
 import java.util.Date;
@@ -12,7 +14,7 @@ import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SE
 import static ru.javaprojects.rewardcalculator.model.Role.*;
 
 public class UserTestData {
-    public static final TestMatcher<User> USER_MATCHER = TestMatcher.usingIgnoringFieldsComparator(User.class, "registered");
+    public static final TestMatcher<User> USER_MATCHER = TestMatcher.usingIgnoringFieldsComparator(User.class, "registered", "password");
 
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
@@ -34,8 +36,11 @@ public class UserTestData {
         return newUser;
     }
 
-    public static User getUpdated() {
-        User updated =  new User(USER_ID, "UpdatedName", "update@gmail.com", "updatedPass", false, new Date(), Set.of(department3), Set.of(ADMIN, ECONOMIST));
-        return updated;
+    public static UserTo getUpdated() {
+        return new UserTo(USER_ID, "UpdatedName", "update@gmail.com", false, Set.of(department3), Set.of(ADMIN, ECONOMIST));
+    }
+
+    public static String jsonWithPassword(User user, String password) {
+        return JsonUtil.writeAdditionProps(user, "password", password);
     }
 }

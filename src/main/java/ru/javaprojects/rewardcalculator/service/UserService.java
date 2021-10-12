@@ -3,12 +3,14 @@ package ru.javaprojects.rewardcalculator.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.javaprojects.rewardcalculator.HasManagedDepartments;
 import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.repository.UserRepository;
 import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -27,7 +29,7 @@ public class UserService {
 
     public User create(User user) {
         Assert.notNull(user, "user must not be null");
-        checkManagedDepartments(user.getManagedDepartments());
+        checkManagedDepartments(user);
         return repository.save(user);
     }
 
@@ -49,18 +51,11 @@ public class UserService {
         repository.delete(user);
     }
 
-    public void update(User user) {
-        Assert.notNull(user, "user must not be null");
-        get(user.id());
-        checkManagedDepartments(user.getManagedDepartments());
-        repository.save(user);
-    }
-
     @Transactional
     public void update(UserTo userTo) {
         Assert.notNull(userTo, "userTo must not be null");
         User user = get(userTo.id());
-        checkManagedDepartments(userTo.getManagedDepartments());
+        checkManagedDepartments(userTo);
         updateFromTo(user, userTo);
     }
 
@@ -77,13 +72,12 @@ public class UserService {
         user.setPassword(password);
     }
 
-    private void checkManagedDepartments(Set<Department> managedDepartments) {
+    private void checkManagedDepartments(HasManagedDepartments bean) {
+        Set<Department> managedDepartments = bean.getManagedDepartments();
         if (Objects.nonNull(managedDepartments)) {
-            managedDepartments.forEach(department -> {
-                Department dbDepartment = departmentService.get(department.id());
-                managedDepartments.remove(department);
-                managedDepartments.add(dbDepartment);
-            });
+            Set<Department> dbDepartments = new HashSet<>();
+            managedDepartments.forEach(department -> dbDepartments.add(departmentService.get(department.id())));
+            bean.setManagedDepartments(dbDepartments);
         }
     }
 }

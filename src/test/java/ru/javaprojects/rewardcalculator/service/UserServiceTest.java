@@ -6,6 +6,8 @@ import org.springframework.dao.DataAccessException;
 import ru.javaprojects.rewardcalculator.UserTestData;
 import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.model.User;
+import ru.javaprojects.rewardcalculator.to.UserTo;
+import ru.javaprojects.rewardcalculator.util.UserUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -99,12 +101,12 @@ class UserServiceTest extends AbstractServiceTest {
     @Test
     void update() {
         service.update(getUpdated());
-        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(service.get(USER_ID), UserUtil.updateFromTo(new User(user), getUpdated()));
     }
 
     @Test
     void updateNotFound() {
-        User updated = getUpdated();
+        UserTo updated = getUpdated();
         updated.setId(NOT_FOUND);
         assertThrows(NotFoundException.class, () -> service.update(updated));
     }

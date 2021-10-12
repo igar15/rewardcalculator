@@ -1,12 +1,13 @@
 package ru.javaprojects.rewardcalculator.to;
 
+import ru.javaprojects.rewardcalculator.HasManagedDepartments;
 import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.model.Role;
 
 import javax.validation.constraints.*;
 import java.util.Set;
 
-public class UserTo extends BaseTo {
+public class UserTo extends BaseTo implements HasManagedDepartments {
 
     @NotBlank
     @Size(min = 4, max = 50)
@@ -29,7 +30,7 @@ public class UserTo extends BaseTo {
     public UserTo() {
     }
 
-    public UserTo(Integer id, String name, String email, boolean enabled, Set<Role> roles, Set<Department> managedDepartments) {
+    public UserTo(Integer id, String name, String email, boolean enabled, Set<Department> managedDepartments, Set<Role> roles) {
         super(id);
         this.name = name;
         this.email = email;
@@ -70,10 +71,12 @@ public class UserTo extends BaseTo {
         this.roles = roles;
     }
 
+    @Override
     public Set<Department> getManagedDepartments() {
         return managedDepartments;
     }
 
+    @Override
     public void setManagedDepartments(Set<Department> managedDepartments) {
         this.managedDepartments = managedDepartments;
     }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
+import ru.javaprojects.rewardcalculator.HasManagedDepartments;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -12,7 +13,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
-public class User extends AbstractNamedEntity {
+public class User extends AbstractNamedEntity implements HasManagedDepartments {
 
     @Email
     @NotBlank
@@ -117,10 +118,12 @@ public class User extends AbstractNamedEntity {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
 
+    @Override
     public Set<Department> getManagedDepartments() {
         return managedDepartments;
     }
 
+    @Override
     public void setManagedDepartments(Set<Department> managedDepartments) {
         this.managedDepartments = managedDepartments;
     }
