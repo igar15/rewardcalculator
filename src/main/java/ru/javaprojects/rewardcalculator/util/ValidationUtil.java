@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import ru.javaprojects.rewardcalculator.HasId;
+import ru.javaprojects.rewardcalculator.util.exception.ErrorType;
 import ru.javaprojects.rewardcalculator.util.exception.IllegalRequestDataException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,13 +40,13 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-//    public static Throwable logAndGetRootCause(Logger log, HttpServletRequest req, Exception e, boolean logStackTrace, ErrorType errorType) {
-//        Throwable rootCause = getRootCause(e);
-//        if (logStackTrace) {
-//            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
-//        } else {
-//            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
-//        }
-//        return rootCause;
-//    }
+    public static Throwable logAndGetRootCause(Logger log, HttpServletRequest req, Exception e, boolean logStackTrace, ErrorType errorType) {
+        Throwable rootCause = getRootCause(e);
+        if (logStackTrace) {
+            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
+        } else {
+            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
+        }
+        return rootCause;
+    }
 }

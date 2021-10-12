@@ -79,7 +79,11 @@ public class UserService {
 
     private void checkManagedDepartments(Set<Department> managedDepartments) {
         if (Objects.nonNull(managedDepartments)) {
-            managedDepartments.forEach(department -> departmentService.get(department.id()));
+            managedDepartments.forEach(department -> {
+                Department dbDepartment = departmentService.get(department.id());
+                managedDepartments.remove(department);
+                managedDepartments.add(dbDepartment);
+            });
         }
     }
 }
