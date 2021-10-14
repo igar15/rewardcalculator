@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
-    List<Employee> findAllByDepartmentIdOrderByName(int departmentId);
+    List<Employee> findAllByPositionDepartmentId(int departmentId);
 
     @EntityGraph(attributePaths = "position")
     @Query("SELECT e FROM Employee e WHERE e.id = :id")

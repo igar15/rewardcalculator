@@ -1,6 +1,7 @@
 package ru.javaprojects.rewardcalculator;
 
 import ru.javaprojects.rewardcalculator.model.User;
+import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
@@ -23,24 +24,39 @@ public class UserTestData {
     public static final String USER_MAIL = "user@yandex.ru";
     public static final String ADMIN_MAIL = "admin@gmail.com";
 
-    public static final User user = new User(USER_ID, "User", "user@yandex.ru", "password", Set.of(department1, department2), DEPARTMENT_HEAD);
-    public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Set.of(), ADMIN, DEPARTMENT_HEAD, ECONOMIST);
+    public static final User user = new User(USER_ID, "User", "user@yandex.ru", "password", true, Set.of(DEPARTMENT_HEAD), Set.of(department1, department2));
+    public static final User admin = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", true, Set.of(ADMIN, DEPARTMENT_HEAD, ECONOMIST), Set.of());
 
     public static User getNew() {
-        return new User(null, "NewName", "new@gmail.com", "newPass", false, new Date(), new HashSet<>(), Collections.singleton(DEPARTMENT_HEAD));
+        return new User(null, "NewName", "new@gmail.com", "newPass", false, Set.of(DEPARTMENT_HEAD), new HashSet<>());
+    }
+
+    public static NewUserTo getNewTo() {
+        return new NewUserTo(null, "NewName", "new@gmail.com", "newPass", false, Set.of(DEPARTMENT_HEAD), Set.of());
     }
 
     public static User getNewWithManagedDepartments() {
-        User newUser = getNew();
-        newUser.addManagedDepartments(department1, department2);
-        return newUser;
+        User user = getNew();
+        user.addManagedDepartment(department1);
+        user.addManagedDepartment(department2);
+        return user;
     }
 
-    public static UserTo getUpdated() {
-        return new UserTo(USER_ID, "UpdatedName", "update@gmail.com", false, Set.of(department3), Set.of(ADMIN, ECONOMIST));
+    public static NewUserTo getNewToWithManagedDepartmentsId() {
+        NewUserTo newUserTo = getNewTo();
+        newUserTo.setManagedDepartmentsId(Set.of(DEPARTMENT_1_ID, DEPARTMENT_2_ID));
+        return newUserTo;
     }
 
-    public static String jsonWithPassword(User user, String password) {
-        return JsonUtil.writeAdditionProps(user, "password", password);
+    public static User getUpdated() {
+        return new User(USER_ID, "UpdatedName", "update@gmail.com", false, Set.of(ADMIN, ECONOMIST), Set.of(department3));
+    }
+
+    public static UserTo getUpdatedTo() {
+        return new UserTo(USER_ID, "UpdatedName", "update@gmail.com", false, Set.of(ADMIN, ECONOMIST), Set.of(DEPARTMENT_3_ID));
+    }
+
+    public static String jsonWithPassword(NewUserTo newUserTo, String password) {
+        return JsonUtil.writeAdditionProps(newUserTo, "password", password);
     }
 }

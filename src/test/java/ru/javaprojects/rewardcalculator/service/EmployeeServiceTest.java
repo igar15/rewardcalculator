@@ -30,7 +30,7 @@ class EmployeeServiceTest extends AbstractServiceTest {
 
     @Test
     void create() {
-        Employee created = service.create(getNewWithDepartmentAndPosition());
+        Employee created = service.create(getNewWithPosition());
         int newId = created.id();
         Employee newEmployee = getNew();
         newEmployee.setId(newId);
@@ -39,15 +39,8 @@ class EmployeeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void createWithNotExistedDepartment() {
-        Employee newEmployee = getNewWithDepartmentAndPosition();
-        newEmployee.setDepartment(new Department(NOT_FOUND, "Department"));
-        assertThrows(NotFoundException.class, () -> service.create(newEmployee));
-    }
-
-    @Test
     void createWithNotExistedPosition() {
-        Employee newEmployee = getNewWithDepartmentAndPosition();
+        Employee newEmployee = getNewWithPosition();
         newEmployee.setPosition(new Position(NOT_FOUND, "Position", 20000));
         assertThrows(NotFoundException.class, () -> service.create(newEmployee));
     }
@@ -87,13 +80,13 @@ class EmployeeServiceTest extends AbstractServiceTest {
 
     @Test
     void update() {
-        service.update(getUpdatedWithDepartmentAndPosition());
+        service.update(getUpdatedWithPosition());
         EMPLOYEE_MATCHER.assertMatch(service.get(EMPLOYEE_1_ID), getUpdated());
     }
 
     @Test
     void updateWithPositionChanging() {
-        Employee updated = getUpdatedWithDepartmentAndPosition();
+        Employee updated = getUpdatedWithPosition();
         updated.setPosition(position3);
         service.update(updated);
         Employee employee = repository.findByIdWithPosition(EMPLOYEE_1_ID);
@@ -109,23 +102,14 @@ class EmployeeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void updateWithNotExistedDepartment() {
-        Employee updated = getUpdated();
-        updated.setDepartment(new Department(NOT_FOUND, "Department"));
-        updated.setPosition(position1);
-        assertThrows(NotFoundException.class, () -> service.update(updated));
-    }
-
-    @Test
     void updateWithNotExistedPosition() {
         Employee updated = getUpdated();
-        updated.setDepartment(department1);
         updated.setPosition(new Position(NOT_FOUND, "Position", 20000));
         assertThrows(NotFoundException.class, () -> service.update(updated));
     }
 
     @Test
     void createWithException() {
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Employee(null, " ", department1, position1)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new Employee(null, " ", position1)));
     }
 }

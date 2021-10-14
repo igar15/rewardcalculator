@@ -48,19 +48,19 @@ CREATE TABLE user_managed_departments
 
 CREATE TABLE positions
 (
-    id     INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-    name   VARCHAR NOT NULL,
-    salary INTEGER NOT NULL
+    id            INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+    name          VARCHAR NOT NULL,
+    salary        INTEGER NOT NULL,
+    department_id INTEGER NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES departments (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX positions_unique_name_idx ON positions (name);
+CREATE UNIQUE INDEX positions_unique_department_id_name_idx ON positions (department_id, name);
 
 CREATE TABLE employees
 (
     id            INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
     name          VARCHAR NOT NULL,
-    department_id INTEGER NOT NULL,
     position_id   INTEGER NOT NULL,
-    FOREIGN KEY (department_id) REFERENCES departments (id),
     FOREIGN KEY (position_id) REFERENCES positions (id)
 );
 

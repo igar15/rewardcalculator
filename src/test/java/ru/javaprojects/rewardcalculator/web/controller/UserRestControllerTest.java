@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.service.UserService;
+import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.util.UserUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.department3;
+import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_3_ID;
 import static ru.javaprojects.rewardcalculator.TestUtil.readFromJson;
 import static ru.javaprojects.rewardcalculator.UserTestData.*;
 import static ru.javaprojects.rewardcalculator.model.Role.ADMIN;
@@ -64,14 +65,15 @@ class UserRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithLocation() throws Exception {
-        User newUser = getNewWithManagedDepartments();
+        NewUserTo newUserTo = getNewToWithManagedDepartmentsId();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(newUser, "newPass")))
+                .content(jsonWithPassword(newUserTo, "newPass")))
                 .andExpect(status().isCreated());
 
         User created = readFromJson(action, User.class);
         int newId = created.id();
+        User newUser = getNewWithManagedDepartments();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
         USER_MATCHER.assertMatch(userService.get(newId), newUser);
@@ -96,19 +98,19 @@ class UserRestControllerTest extends AbstractControllerTest {
 
     @Test
     void update() throws Exception {
-        UserTo updatedTo = getUpdated();
+        UserTo updatedTo = getUpdatedTo();
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(userService.get(USER_ID), UserUtil.updateFromTo(new User(user), updatedTo));
+        USER_MATCHER.assertMatch(userService.get(USER_ID), getUpdated());
     }
 
     @Test
     void updateNotFound() throws Exception {
-        UserTo updatedTo = getUpdated();
+        UserTo updatedTo = getUpdatedTo();
         updatedTo.setId(null);
         perform(MockMvcRequestBuilders.put(REST_URL + NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -167,11 +169,11 @@ class UserRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createInvalid() throws Exception {
-        User newUser = getNew();
-        newUser.setName(" ");
+        NewUserTo newUserTo = getNewTo();
+        newUserTo.setName(" ");
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(newUser, "newPass")))
+                .content(jsonWithPassword(newUserTo, "newPass")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR));
@@ -179,7 +181,7 @@ class UserRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateInvalid() throws Exception {
-        UserTo updatedTo = getUpdated();
+        UserTo updatedTo = getUpdatedTo();
         updatedTo.setRoles(Set.of());
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -192,10 +194,10 @@ class UserRestControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void createDuplicateEmail() throws Exception {
-        User newUser = new User(null, "NewName", user.getEmail(), "newPass", new HashSet<>(), DEPARTMENT_HEAD);
+        NewUserTo newUserTo = new NewUserTo(null, "NewName", user.getEmail(), "newPass", true, Set.of(DEPARTMENT_HEAD), Set.of());
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonWithPassword(newUser, "newPass")))
+                .content(jsonWithPassword(newUserTo, "newPass")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR))
@@ -205,7 +207,7 @@ class UserRestControllerTest extends AbstractControllerTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void updateDuplicateEmail() throws Exception {
-        UserTo updatedTo = new UserTo(null, "Updated", admin.getEmail(), true, Set.of(department3),  Set.of(DEPARTMENT_HEAD, ADMIN));
+        UserTo updatedTo = new UserTo(null, "Updated", admin.getEmail(), true, Set.of(DEPARTMENT_HEAD, ADMIN), Set.of(DEPARTMENT_3_ID));
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))

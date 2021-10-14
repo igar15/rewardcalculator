@@ -1,13 +1,11 @@
 package ru.javaprojects.rewardcalculator.to;
 
-import ru.javaprojects.rewardcalculator.HasManagedDepartments;
-import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.model.Role;
 
 import javax.validation.constraints.*;
 import java.util.Set;
 
-public class UserTo extends BaseTo implements HasManagedDepartments {
+public class UserTo extends BaseTo {
 
     @NotBlank
     @Size(min = 4, max = 50)
@@ -25,18 +23,18 @@ public class UserTo extends BaseTo implements HasManagedDepartments {
     private Set<Role> roles;
 
     @NotNull
-    private Set<Department> managedDepartments;
+    private Set<Integer> managedDepartmentsId;
 
     public UserTo() {
     }
 
-    public UserTo(Integer id, String name, String email, boolean enabled, Set<Department> managedDepartments, Set<Role> roles) {
+    public UserTo(Integer id, String name, String email, boolean enabled, Set<Role> roles, Set<Integer> managedDepartmentsId) {
         super(id);
         this.name = name;
         this.email = email;
         this.enabled = enabled;
         this.roles = roles;
-        this.managedDepartments = managedDepartments;
+        this.managedDepartmentsId = managedDepartmentsId;
     }
 
     public String getName() {
@@ -71,14 +69,12 @@ public class UserTo extends BaseTo implements HasManagedDepartments {
         this.roles = roles;
     }
 
-    @Override
-    public Set<Department> getManagedDepartments() {
-        return managedDepartments;
+    public Set<Integer> getManagedDepartmentsId() {
+        return managedDepartmentsId;
     }
 
-    @Override
-    public void setManagedDepartments(Set<Department> managedDepartments) {
-        this.managedDepartments = managedDepartments;
+    public void setManagedDepartmentsId(Set<Integer> managedDepartmentsId) {
+        this.managedDepartmentsId = managedDepartmentsId;
     }
 
     @Override
@@ -89,7 +85,7 @@ public class UserTo extends BaseTo implements HasManagedDepartments {
                 ", email=" + email +
                 ", enabled=" + enabled +
                 ", roles=" + roles +
-                ", managedDepartments=" + managedDepartments +
+                ", managedDepartmentsId=" + managedDepartmentsId +
                 '}';
     }
 }

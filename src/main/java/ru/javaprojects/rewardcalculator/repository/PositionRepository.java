@@ -11,5 +11,5 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface PositionRepository extends JpaRepository<Position, Integer> {
 
-    List<Position> findAllByOrderByName();
+    List<Position> findAllByDepartmentIdOrderByName(int departmentId);
 }

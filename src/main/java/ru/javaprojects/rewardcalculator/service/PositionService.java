@@ -11,9 +11,11 @@ import java.util.List;
 @Service
 public class PositionService {
     private final PositionRepository repository;
+    private final DepartmentService departmentService;
 
-    public PositionService(PositionRepository repository) {
+    public PositionService(PositionRepository repository, DepartmentService departmentService) {
         this.repository = repository;
+        this.departmentService = departmentService;
     }
 
     public Position create(Position position) {
@@ -25,8 +27,9 @@ public class PositionService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found position with id=" + id));
     }
 
-    public List<Position> getAll() {
-        return repository.findAllByOrderByName();
+    public List<Position> getAllByDepartmentId(int departmentId) {
+        departmentService.get(departmentId);
+        return repository.findAllByDepartmentIdOrderByName(departmentId);
     }
 
     public void delete(int id) {

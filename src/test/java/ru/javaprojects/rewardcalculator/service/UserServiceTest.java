@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import ru.javaprojects.rewardcalculator.UserTestData;
-import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.model.User;
+import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.util.UserUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
@@ -26,7 +26,7 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void create() {
-        User created = service.create(getNew());
+        User created = service.create(getNewTo());
         int newId = created.id();
         User newUser = getNew();
         newUser.setId(newId);
@@ -36,7 +36,7 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void createWithManagedDepartments() {
-        User created = service.create(getNewWithManagedDepartments());
+        User created = service.create(getNewToWithManagedDepartmentsId());
         int newId = created.id();
         User newUser = getNewWithManagedDepartments();
         newUser.setId(newId);
@@ -46,14 +46,14 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void createWithNotExistedManagedDepartments() {
-        User newUser = getNew();
-        newUser.addManagedDepartments(new Department(NOT_FOUND, "not existed department"));
-        assertThrows(NotFoundException.class, () -> service.create(newUser));
+        NewUserTo newUserTo = getNewTo();
+        newUserTo.setManagedDepartmentsId(Set.of(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> service.create(newUserTo));
     }
 
     @Test
     void duplicateEmailCreate() {
-        assertThrows(DataAccessException.class, () -> service.create(new User(null, "newName", user.getEmail(), "newPass", Set.of(), DEPARTMENT_HEAD)));
+        assertThrows(DataAccessException.class, () -> service.create(new NewUserTo(null, "newName", user.getEmail(), "newPass", true, Set.of(DEPARTMENT_HEAD), Set.of())));
     }
 
     @Test
@@ -100,25 +100,26 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void update() {
-        service.update(getUpdated());
-        USER_MATCHER.assertMatch(service.get(USER_ID), UserUtil.updateFromTo(new User(user), getUpdated()));
+        service.update(getUpdatedTo());
+        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
     }
 
     @Test
     void updateNotFound() {
-        UserTo updated = getUpdated();
+        UserTo updated = getUpdatedTo();
         updated.setId(NOT_FOUND);
         assertThrows(NotFoundException.class, () -> service.update(updated));
     }
 
     @Test
     void createWithException() {
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Set.of(), DEPARTMENT_HEAD)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Set.of(), DEPARTMENT_HEAD)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Set.of(), DEPARTMENT_HEAD)));
-        User newUser = getNew();
-        newUser.setRoles(Collections.EMPTY_SET);
-        validateRootCause(ConstraintViolationException.class, () -> service.create(newUser));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new NewUserTo(null, "  ", "mail@yandex.ru", "password", true, Set.of(DEPARTMENT_HEAD), Set.of())));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new NewUserTo(null, "User", "  ", "password", true, Set.of(DEPARTMENT_HEAD), Set.of())));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new NewUserTo(null, "User", "mail@yandex.ru", "  ", true,  Set.of(DEPARTMENT_HEAD), Set.of())));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new NewUserTo(null, "User", "mail@yandex.ru", "  ", true,  Set.of(DEPARTMENT_HEAD), Set.of())));
+        NewUserTo newUserTo = getNewTo();
+        newUserTo.setRoles(Set.of());
+        validateRootCause(ConstraintViolationException.class, () -> service.create(newUserTo));
     }
 
     @Test

@@ -28,15 +28,15 @@ INSERT INTO user_managed_departments (user_id, department_id)
 VALUES (100000, 100002),
        (100000, 100003);
 
-INSERT INTO positions (name, salary)
-VALUES ('position 1 name', 40200),
-       ('position 2 name', 35700),
-       ('position 3 name', 60100);
+INSERT INTO positions (name, salary, department_id)
+VALUES ('position 1 name', 40200, 100002),
+       ('position 2 name', 35700, 100002),
+       ('position 3 name', 60100, 100002);
 
-INSERT INTO employees (name, department_id, position_id)
-VALUES ('employee 1 name', 100002, 100005),
-       ('employee 2 name', 100002, 100005),
-       ('employee 3 name', 100002, 100006);
+INSERT INTO employees (name, position_id)
+VALUES ('employee 1 name', 100005),
+       ('employee 2 name', 100005),
+       ('employee 3 name', 100006);
 
 INSERT INTO payment_periods (period, required_hours_worked)
 VALUES ('2021-01-01', 120),

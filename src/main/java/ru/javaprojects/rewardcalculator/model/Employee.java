@@ -9,11 +9,6 @@ public class Employee extends AbstractNamedEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id", nullable = false)
     private Position position;
 
@@ -24,18 +19,9 @@ public class Employee extends AbstractNamedEntity {
         super(id, name);
     }
 
-    public Employee(Integer id, String name, Department department, Position position) {
+    public Employee(Integer id, String name, Position position) {
         this(id, name);
-        this.department = department;
         this.position = position;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
     }
 
     public Position getPosition() {

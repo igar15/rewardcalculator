@@ -5,7 +5,6 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
-import ru.javaprojects.rewardcalculator.HasManagedDepartments;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -13,7 +12,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
-public class User extends AbstractNamedEntity implements HasManagedDepartments {
+public class User extends AbstractNamedEntity {
 
     @Email
     @NotBlank
@@ -60,22 +59,21 @@ public class User extends AbstractNamedEntity implements HasManagedDepartments {
     public User() {
     }
 
-    public User(User user) {
-        this(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.isEnabled(), user.getRegistered(), user.getManagedDepartments(), user.getRoles());
-    }
-
-    public User(Integer id, String name, String email, String password, Set<Department> managedDepartments, Role role, Role... roles) {
-        this(id, name, email, password, true, new Date(), managedDepartments, EnumSet.of(role, roles));
-    }
-
-    public User(Integer id, String name, String email, String password, boolean enabled, Date registered, Set<Department> managedDepartments, Collection<Role> roles) {
+    public User(Integer id, String name, String email, String password, boolean enabled, Set<Role> roles, Set<Department> managedDepartments) {
         super(id, name);
         this.email = email;
         this.password = password;
         this.enabled = enabled;
-        this.registered = registered;
+        this.roles = roles;
         this.managedDepartments = managedDepartments;
-        setRoles(roles);
+    }
+
+    public User(Integer id, String name, String email, String password, boolean enabled, Set<Role> roles) {
+        this(id, name, email, password, enabled, roles, new HashSet<>());
+    }
+
+    public User(Integer id, String name, String email, boolean enabled, Set<Role> roles, Set<Department> managedDepartments) {
+        this(id, name, email, null, enabled, roles, managedDepartments);
     }
 
     public String getEmail() {
@@ -118,21 +116,19 @@ public class User extends AbstractNamedEntity implements HasManagedDepartments {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
 
-    @Override
     public Set<Department> getManagedDepartments() {
         return managedDepartments;
     }
 
-    @Override
     public void setManagedDepartments(Set<Department> managedDepartments) {
         this.managedDepartments = managedDepartments;
     }
 
-    public void addManagedDepartments(Department... departments) {
+    public void addManagedDepartment(Department department) {
         if (Objects.isNull(managedDepartments)) {
             managedDepartments = new HashSet<>();
         }
-        managedDepartments.addAll(Arrays.asList(departments));
+        managedDepartments.add(department);
     }
 
     @Override

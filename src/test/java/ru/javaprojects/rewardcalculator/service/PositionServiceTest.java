@@ -10,6 +10,9 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_1_ID;
+import static ru.javaprojects.rewardcalculator.DepartmentTestData.department1;
+import static ru.javaprojects.rewardcalculator.EmployeeTestData.NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.PositionTestData.*;
 
 class PositionServiceTest extends AbstractServiceTest {
@@ -29,7 +32,7 @@ class PositionServiceTest extends AbstractServiceTest {
 
     @Test
     void duplicateNameCreate() {
-        assertThrows(DataAccessException.class, () -> service.create(new Position(null, position1.getName(), 25000)));
+        assertThrows(DataAccessException.class, () -> service.create(new Position(null, position1.getName(), 25000, department1)));
     }
 
     @Test
@@ -44,9 +47,14 @@ class PositionServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void getAll() {
-        List<Position> positions = service.getAll();
+    void getAllByDepartmentId() {
+        List<Position> positions = service.getAllByDepartmentId(DEPARTMENT_1_ID);
         POSITION_MATCHER.assertMatch(positions, position1, position2, position3);
+    }
+
+    @Test
+    void getAllByDepartmentIdWithNotExistedDepartment() {
+        assertThrows(NotFoundException.class, () -> service.getAllByDepartmentId(NOT_FOUND));
     }
 
     @Test
@@ -80,9 +88,9 @@ class PositionServiceTest extends AbstractServiceTest {
 
     @Test
     void createWithException() {
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, " ", 40000)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Po", 40000)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Position name", null)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Position name", 9999)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, " ", 40000, department1)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Po", 40000, department1)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Position name", null, department1)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Position name", 9999, department1)));
     }
 }

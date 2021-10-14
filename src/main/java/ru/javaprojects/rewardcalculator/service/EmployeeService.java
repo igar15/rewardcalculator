@@ -22,7 +22,6 @@ public class EmployeeService {
 
     public Employee create(Employee employee) {
         Assert.notNull(employee, "employee must not be null");
-        departmentService.get(employee.getDepartment().id());
         positionService.get(employee.getPosition().id());
         return repository.save(employee);
     }
@@ -33,7 +32,7 @@ public class EmployeeService {
 
     public List<Employee> getAllByDepartmentId(int departmentId) {
         departmentService.get(departmentId);
-        return repository.findAllByDepartmentIdOrderByName(departmentId);
+        return repository.findAllByPositionDepartmentId(departmentId);
     }
 
     public void delete(int id) {
@@ -44,7 +43,6 @@ public class EmployeeService {
     public void update(Employee employee) {
         Assert.notNull(employee, "employee must not be null");
         get(employee.id());
-        departmentService.get(employee.getDepartment().id());
         positionService.get(employee.getPosition().id());
         repository.save(employee);
     }

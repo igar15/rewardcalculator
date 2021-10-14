@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 public enum Role implements GrantedAuthority {
     ECONOMIST,
     DEPARTMENT_HEAD,
+    PERSONNEL_OFFICER,
     ADMIN;
 
     //https://stackoverflow.com/a/19542316/548473
