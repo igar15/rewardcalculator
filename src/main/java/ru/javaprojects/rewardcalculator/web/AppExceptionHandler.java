@@ -36,7 +36,7 @@ public class AppExceptionHandler {
     public static final String EXCEPTION_DUPLICATE_PAYMENT_PERIOD = "Payment period already exists";
     public static final String EXCEPTION_DUPLICATE_DEPARTMENT_REWARD = "Department reward for this payment period already exists";
     public static final String EXCEPTION_DUPLICATE_EMPLOYEE_REWARD = "Employee reward for this payment period already exists";
-//    public static final String EXCEPTION_HOLDER_HAS_ALBUMS = "Cannot delete because employee has albums";
+    public static final String EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES = "Cannot delete because department has employees";
     public static final String EXCEPTION_NOT_AUTHORIZED = "You are not authorized";
     public static final String EXCEPTION_ACCESS_DENIED = "You do not have enough permission";
     public static final String EXCEPTION_BAD_CREDENTIALS = "Email / password incorrect. Please try again";
@@ -49,8 +49,8 @@ public class AppExceptionHandler {
             "positions_unique_department_id_name_idx", EXCEPTION_DUPLICATE_POSITION,
             "payment_periods_unique_period_idx", EXCEPTION_DUPLICATE_PAYMENT_PERIOD,
             "department_rewards_unique_department_id_payment_period_id_idx", EXCEPTION_DUPLICATE_DEPARTMENT_REWARD,
-            "employee_rewards_unique_employee_id_department_reward_id_idx", EXCEPTION_DUPLICATE_EMPLOYEE_REWARD);
-//            "albums_holder_id_fkey", EXCEPTION_HOLDER_HAS_ALBUMS);
+            "employee_rewards_unique_employee_id_department_reward_id_idx", EXCEPTION_DUPLICATE_EMPLOYEE_REWARD,
+            "employees_position_id_fkey", EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES);
 
     private static final String INVALID_PASSWORD_CONSTRAINT = "changePassword.password: size must be between 5 and 32";
 
