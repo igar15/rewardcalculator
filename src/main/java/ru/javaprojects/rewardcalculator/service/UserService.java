@@ -9,7 +9,6 @@ import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;

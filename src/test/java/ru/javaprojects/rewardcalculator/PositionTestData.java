@@ -1,6 +1,7 @@
 package ru.javaprojects.rewardcalculator;
 
 import ru.javaprojects.rewardcalculator.model.Position;
+import ru.javaprojects.rewardcalculator.to.PositionTo;
 
 import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
@@ -21,7 +22,15 @@ public class PositionTestData {
         return new Position(null, "newPositionName", 50000, department1);
     }
 
+    public static PositionTo getNewTo() {
+        return new PositionTo(null, "newPositionName", 50000, DEPARTMENT_1_ID);
+    }
+
     public static Position getUpdated() {
         return new Position(POSITION_1_ID, "UpdatedPositionName", 54200, department1);
+    }
+
+    public static PositionTo getUpdatedTo() {
+        return new PositionTo(POSITION_1_ID, "UpdatedPositionName", 54200, DEPARTMENT_1_ID);
     }
 }

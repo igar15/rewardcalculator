@@ -1,12 +1,18 @@
 package ru.javaprojects.rewardcalculator.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.model.Position;
 import ru.javaprojects.rewardcalculator.repository.PositionRepository;
+import ru.javaprojects.rewardcalculator.to.PositionTo;
+import ru.javaprojects.rewardcalculator.util.PositionUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
+
+import static ru.javaprojects.rewardcalculator.util.PositionUtil.*;
 
 @Service
 public class PositionService {
@@ -18,8 +24,12 @@ public class PositionService {
         this.departmentService = departmentService;
     }
 
-    public Position create(Position position) {
-        Assert.notNull(position, "position must not be null");
+    @Transactional
+    public Position create(PositionTo positionTo) {
+        Assert.notNull(positionTo, "positionTo must not be null");
+        Department department = departmentService.get(positionTo.getDepartmentId());
+        Position position = createFromTo(positionTo);
+        position.setDepartment(department);
         return repository.save(position);
     }
 
@@ -37,9 +47,10 @@ public class PositionService {
         repository.delete(position);
     }
 
-    public void update(Position position) {
-        Assert.notNull(position, "position must not be null");
-        get(position.id());
-        repository.save(position);
+    @Transactional
+    public void update(PositionTo positionTo) {
+        Assert.notNull(positionTo, "position must not be null");
+        Position position = get(positionTo.id());
+        updateFromTo(position, positionTo);
     }
 }

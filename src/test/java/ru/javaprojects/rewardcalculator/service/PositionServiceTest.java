@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import ru.javaprojects.rewardcalculator.model.Position;
+import ru.javaprojects.rewardcalculator.to.PositionTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -11,7 +12,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_1_ID;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.department1;
 import static ru.javaprojects.rewardcalculator.EmployeeTestData.NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.PositionTestData.*;
 
@@ -22,7 +22,7 @@ class PositionServiceTest extends AbstractServiceTest {
 
     @Test
     void create() {
-        Position created = service.create(getNew());
+        Position created = service.create(getNewTo());
         int newId = created.id();
         Position newPosition = getNew();
         newPosition.setId(newId);
@@ -32,7 +32,7 @@ class PositionServiceTest extends AbstractServiceTest {
 
     @Test
     void duplicateNameCreate() {
-        assertThrows(DataAccessException.class, () -> service.create(new Position(null, position1.getName(), 25000, department1)));
+        assertThrows(DataAccessException.class, () -> service.create(new PositionTo(null, position1.getName(), 25000, DEPARTMENT_1_ID)));
     }
 
     @Test
@@ -75,22 +75,22 @@ class PositionServiceTest extends AbstractServiceTest {
 
     @Test
     void update() {
-        service.update(getUpdated());
+        service.update(getUpdatedTo());
         POSITION_MATCHER.assertMatch(service.get(POSITION_1_ID), getUpdated());
     }
 
     @Test
     void updateNotFound() {
-        Position updated = getUpdated();
+        PositionTo updated = getUpdatedTo();
         updated.setId(NOT_FOUND);
         assertThrows(NotFoundException.class, () -> service.update(updated));
     }
 
     @Test
     void createWithException() {
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, " ", 40000, department1)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Po", 40000, department1)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Position name", null, department1)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Position(null, "Position name", 9999, department1)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, " ", 40000, DEPARTMENT_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Po", 40000, DEPARTMENT_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Position name", null, DEPARTMENT_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Position name", 9999, DEPARTMENT_1_ID)));
     }
 }
