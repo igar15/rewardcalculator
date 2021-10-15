@@ -11,11 +11,9 @@ import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.service.UserService;
 import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
-import ru.javaprojects.rewardcalculator.util.UserUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -107,6 +105,18 @@ class UserRestControllerTest extends AbstractControllerTest {
 
         USER_MATCHER.assertMatch(userService.get(USER_ID), getUpdated());
     }
+
+    @Test
+    void updateIdNotConsistent() throws Exception {
+        UserTo updatedTo = getUpdatedTo();
+        updatedTo.setId(ADMIN_ID);
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
 
     @Test
     void updateNotFound() throws Exception {

@@ -151,6 +151,17 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateIdNotConsistent() throws Exception {
+        EmployeeTo updatedTo = getUpdatedTo();
+        updatedTo.setId(EMPLOYEE_2_ID);
+        perform(MockMvcRequestBuilders.put(REST_URL + "employees/" + EMPLOYEE_1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
     void updateNotFound() throws Exception {
         EmployeeTo updatedTo = getUpdatedTo();
         updatedTo.setId(null);

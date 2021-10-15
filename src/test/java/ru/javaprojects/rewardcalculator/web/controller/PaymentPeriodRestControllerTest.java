@@ -7,8 +7,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.javaprojects.rewardcalculator.model.Department;
-import ru.javaprojects.rewardcalculator.service.DepartmentService;
+import ru.javaprojects.rewardcalculator.model.PaymentPeriod;
+import ru.javaprojects.rewardcalculator.service.PaymentPeriodService;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
@@ -16,18 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
+import static ru.javaprojects.rewardcalculator.PaymentPeriodTestData.*;
+import static ru.javaprojects.rewardcalculator.PositionTestData.POSITION_1_ID;
 import static ru.javaprojects.rewardcalculator.TestUtil.readFromJson;
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.DATA_NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.VALIDATION_ERROR;
-import static ru.javaprojects.rewardcalculator.web.AppExceptionHandler.EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES;
-import static ru.javaprojects.rewardcalculator.web.AppExceptionHandler.EXCEPTION_DUPLICATE_DEPARTMENT;
+import static ru.javaprojects.rewardcalculator.web.AppExceptionHandler.EXCEPTION_DUPLICATE_PAYMENT_PERIOD;
 
-class DepartmentRestControllerTest extends AbstractControllerTest {
-    private static final String REST_URL = DepartmentRestController.REST_URL + '/';
+class PaymentPeriodRestControllerTest extends AbstractControllerTest {
+    private static final String REST_URL = PaymentPeriodRestController.REST_URL + '/';
 
     @Autowired
-    private DepartmentService departmentService;
+    private PaymentPeriodService service;
 
     @Test
     void getAll() throws Exception {
@@ -35,16 +35,16 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DEPARTMENT_MATCHER.contentJson(department1, department3, department2));
+                .andExpect(PAYMENT_PERIOD_MATCHER.contentJson(paymentPeriod3, paymentPeriod2, paymentPeriod1));
     }
 
     @Test
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + DEPARTMENT_1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + PAYMENT_PERIOD_1_ID))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DEPARTMENT_MATCHER.contentJson(department1));
+                .andExpect(PAYMENT_PERIOD_MATCHER.contentJson(paymentPeriod1));
     }
 
     @Test
@@ -56,20 +56,10 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
 
     @Test
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + DEPARTMENT_2_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + PAYMENT_PERIOD_1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> departmentService.get(DEPARTMENT_2_ID));
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NEVER)
-    void deleteWhenPositionHasEmployees() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + DEPARTMENT_1_ID))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
-                .andExpect(detailMessage(EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES));
+        assertThrows(NotFoundException.class, () -> service.get(PAYMENT_PERIOD_1_ID));
     }
 
     @Test
@@ -81,36 +71,35 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithLocation() throws Exception {
-        Department newDepartment = getNew();
+        PaymentPeriod newPaymentPeriod = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newDepartment)))
+                .content(JsonUtil.writeValue(newPaymentPeriod)))
                 .andExpect(status().isCreated());
 
-        Department created = readFromJson(action, Department.class);
+        PaymentPeriod created = readFromJson(action, PaymentPeriod.class);
         int newId = created.id();
-        newDepartment.setId(newId);
-        DEPARTMENT_MATCHER.assertMatch(created, newDepartment);
-        DEPARTMENT_MATCHER.assertMatch(departmentService.get(newId), newDepartment);
+        newPaymentPeriod.setId(newId);
+        PAYMENT_PERIOD_MATCHER.assertMatch(created, newPaymentPeriod);
+        PAYMENT_PERIOD_MATCHER.assertMatch(service.get(newId), newPaymentPeriod);
     }
-
 
     @Test
     void update() throws Exception {
-        Department updated = getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + DEPARTMENT_1_ID)
+        PaymentPeriod updated = getUpdated();
+        perform(MockMvcRequestBuilders.put(REST_URL + PAYMENT_PERIOD_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        DEPARTMENT_MATCHER.assertMatch(departmentService.get(DEPARTMENT_1_ID), updated);
+        PAYMENT_PERIOD_MATCHER.assertMatch(service.get(PAYMENT_PERIOD_1_ID), updated);
     }
 
     @Test
     void updateIdNotConsistent() throws Exception {
-        Department updated = getUpdated();
-        updated.setId(DEPARTMENT_2_ID);
-        perform(MockMvcRequestBuilders.put(REST_URL + DEPARTMENT_1_ID)
+        PaymentPeriod updated = getUpdated();
+        updated.setId(PAYMENT_PERIOD_2_ID);
+        perform(MockMvcRequestBuilders.put(REST_URL + POSITION_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isUnprocessableEntity())
@@ -119,7 +108,7 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateNotFound() throws Exception {
-        Department updated = getUpdated();
+        PaymentPeriod updated = getUpdated();
         updated.setId(null);
         perform(MockMvcRequestBuilders.put(REST_URL + NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -130,11 +119,11 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createInvalid() throws Exception {
-        Department newDepartment = getNew();
-        newDepartment.setName(" ");
+        PaymentPeriod newPaymentPeriod = getNew();
+        newPaymentPeriod.setRequiredHoursWorked(-10d);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newDepartment)))
+                .content(JsonUtil.writeValue(newPaymentPeriod)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR));
@@ -142,9 +131,9 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateInvalid() throws Exception {
-        Department updated = getUpdated();
-        updated.setName(" ");
-        perform(MockMvcRequestBuilders.put(REST_URL + DEPARTMENT_1_ID)
+        PaymentPeriod updated = getUpdated();
+        updated.setRequiredHoursWorked(-10d);
+        perform(MockMvcRequestBuilders.put(REST_URL + PAYMENT_PERIOD_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
@@ -154,27 +143,27 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
 
     @Test
     @Transactional(propagation = Propagation.NEVER)
-    void createDuplicateName() throws Exception {
-        Department newDepartment = new Department(null, department1.getName());
+    void createDuplicatePeriod() throws Exception {
+        PaymentPeriod newDepartment = new PaymentPeriod(null, paymentPeriod1.getPeriod(), 150d);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDepartment)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR))
-                .andExpect(detailMessage(EXCEPTION_DUPLICATE_DEPARTMENT));
+                .andExpect(detailMessage(EXCEPTION_DUPLICATE_PAYMENT_PERIOD));
     }
 
     @Test
     @Transactional(propagation = Propagation.NEVER)
-    void updateDuplicateName() throws Exception {
-        Department updated = new Department(DEPARTMENT_1_ID, department2.getName());
-        perform(MockMvcRequestBuilders.put(REST_URL + DEPARTMENT_1_ID)
+    void updateDuplicatePeriod() throws Exception {
+        PaymentPeriod updated = new PaymentPeriod(PAYMENT_PERIOD_1_ID, paymentPeriod2.getPeriod(), 150d);
+        perform(MockMvcRequestBuilders.put(REST_URL + PAYMENT_PERIOD_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR))
-                .andExpect(detailMessage(EXCEPTION_DUPLICATE_DEPARTMENT));
+                .andExpect(detailMessage(EXCEPTION_DUPLICATE_PAYMENT_PERIOD));
     }
 }
