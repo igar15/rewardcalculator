@@ -50,7 +50,7 @@ public class PositionService {
     @Transactional
     public void update(PositionTo positionTo) {
         Assert.notNull(positionTo, "position must not be null");
-        Position position = get(positionTo.id());
+        Position position = get(positionTo.getId());
         updateFromTo(position, positionTo);
     }
 }

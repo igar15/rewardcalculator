@@ -55,7 +55,7 @@ public class UserService {
     @Transactional
     public void update(UserTo userTo) {
         Assert.notNull(userTo, "userTo must not be null");
-        User user = get(userTo.id());
+        User user = get(userTo.getId());
         updateFromTo(user, userTo);
         addManagedDepartments(user, userTo);
     }

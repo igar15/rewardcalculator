@@ -14,6 +14,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
+    @EntityGraph(attributePaths = "position")
     List<Employee> findAllByPositionDepartmentId(int departmentId);
 
     @EntityGraph(attributePaths = "position")

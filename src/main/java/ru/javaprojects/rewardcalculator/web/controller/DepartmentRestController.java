@@ -21,7 +21,7 @@ import static ru.javaprojects.rewardcalculator.util.ValidationUtil.checkNew;
 @RequestMapping(value = DepartmentRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DepartmentRestController {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    public static final String REST_URL = "/api/departments";
+    static final String REST_URL = "/api/departments";
     private final DepartmentService service;
 
     public DepartmentRestController(DepartmentService service) {

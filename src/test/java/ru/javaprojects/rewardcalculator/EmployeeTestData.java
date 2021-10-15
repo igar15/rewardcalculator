@@ -1,7 +1,9 @@
 package ru.javaprojects.rewardcalculator;
 
 import ru.javaprojects.rewardcalculator.model.Employee;
+import ru.javaprojects.rewardcalculator.to.EmployeeTo;
 
+import static ru.javaprojects.rewardcalculator.PositionTestData.POSITION_1_ID;
 import static ru.javaprojects.rewardcalculator.PositionTestData.position1;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
 
@@ -18,18 +20,18 @@ public class EmployeeTestData {
     public static final Employee employee3 = new Employee(EMPLOYEE_3_ID, "employee 3 name");
 
     public static Employee getNew() {
-        return new Employee(null, "NewName");
-    }
-
-    public static Employee getNewWithPosition() {
         return new Employee(null, "NewName", position1);
     }
 
-    public static Employee getUpdated() {
-        return new Employee(EMPLOYEE_1_ID, "UpdatedName");
+    public static EmployeeTo getNewTo() {
+        return new EmployeeTo(null, "NewName", POSITION_1_ID);
     }
 
-    public static Employee getUpdatedWithPosition() {
+    public static Employee getUpdated() {
         return new Employee(EMPLOYEE_1_ID, "UpdatedName", position1);
+    }
+
+    public static EmployeeTo getUpdatedTo() {
+        return new EmployeeTo(EMPLOYEE_1_ID, "UpdatedName", POSITION_1_ID);
     }
 }

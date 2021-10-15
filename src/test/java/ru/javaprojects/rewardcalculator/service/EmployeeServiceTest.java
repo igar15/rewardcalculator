@@ -2,10 +2,9 @@ package ru.javaprojects.rewardcalculator.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.model.Employee;
-import ru.javaprojects.rewardcalculator.model.Position;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRepository;
+import ru.javaprojects.rewardcalculator.to.EmployeeTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -13,10 +12,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_1_ID;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.department1;
 import static ru.javaprojects.rewardcalculator.EmployeeTestData.NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.EmployeeTestData.getNew;
+import static ru.javaprojects.rewardcalculator.EmployeeTestData.getNewTo;
 import static ru.javaprojects.rewardcalculator.EmployeeTestData.getUpdated;
+import static ru.javaprojects.rewardcalculator.EmployeeTestData.getUpdatedTo;
 import static ru.javaprojects.rewardcalculator.EmployeeTestData.*;
 import static ru.javaprojects.rewardcalculator.PositionTestData.*;
 
@@ -30,7 +30,7 @@ class EmployeeServiceTest extends AbstractServiceTest {
 
     @Test
     void create() {
-        Employee created = service.create(getNewWithPosition());
+        Employee created = service.create(getNewTo());
         int newId = created.id();
         Employee newEmployee = getNew();
         newEmployee.setId(newId);
@@ -40,9 +40,9 @@ class EmployeeServiceTest extends AbstractServiceTest {
 
     @Test
     void createWithNotExistedPosition() {
-        Employee newEmployee = getNewWithPosition();
-        newEmployee.setPosition(new Position(NOT_FOUND, "Position", 20000));
-        assertThrows(NotFoundException.class, () -> service.create(newEmployee));
+        EmployeeTo newEmployeeTo = getNewTo();
+        newEmployeeTo.setPositionId(NOT_FOUND);
+        assertThrows(NotFoundException.class, () -> service.create(newEmployeeTo));
     }
 
     @Test
@@ -80,15 +80,15 @@ class EmployeeServiceTest extends AbstractServiceTest {
 
     @Test
     void update() {
-        service.update(getUpdatedWithPosition());
+        service.update(getUpdatedTo());
         EMPLOYEE_MATCHER.assertMatch(service.get(EMPLOYEE_1_ID), getUpdated());
     }
 
     @Test
     void updateWithPositionChanging() {
-        Employee updated = getUpdatedWithPosition();
-        updated.setPosition(position3);
-        service.update(updated);
+        EmployeeTo updatedTo = getUpdatedTo();
+        updatedTo.setPositionId(POSITION_3_ID);
+        service.update(updatedTo);
         Employee employee = repository.findByIdWithPosition(EMPLOYEE_1_ID);
         EMPLOYEE_MATCHER.assertMatch(employee, getUpdated());
         POSITION_MATCHER.assertMatch(employee.getPosition(), position3);
@@ -96,20 +96,20 @@ class EmployeeServiceTest extends AbstractServiceTest {
 
     @Test
     void updateNotFound() {
-        Employee updated = getUpdated();
-        updated.setId(NOT_FOUND);
-        assertThrows(NotFoundException.class, () -> service.update(updated));
+        EmployeeTo updatedTo = getUpdatedTo();
+        updatedTo.setId(NOT_FOUND);
+        assertThrows(NotFoundException.class, () -> service.update(updatedTo));
     }
 
     @Test
     void updateWithNotExistedPosition() {
-        Employee updated = getUpdated();
-        updated.setPosition(new Position(NOT_FOUND, "Position", 20000));
-        assertThrows(NotFoundException.class, () -> service.update(updated));
+        EmployeeTo updatedTo = getUpdatedTo();
+        updatedTo.setPositionId(NOT_FOUND);
+        assertThrows(NotFoundException.class, () -> service.update(updatedTo));
     }
 
     @Test
     void createWithException() {
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new Employee(null, " ", position1)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new EmployeeTo(null, " ", POSITION_1_ID)));
     }
 }

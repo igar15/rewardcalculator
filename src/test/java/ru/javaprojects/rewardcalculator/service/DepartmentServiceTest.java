@@ -56,7 +56,7 @@ class DepartmentServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void deleteWhenDepartmentHasEmployees() {
+    void deleteWhenDepartmentPositionHasEmployees() {
         assertThrows(DataAccessException.class, () -> service.delete(DEPARTMENT_1_ID));
     }
 

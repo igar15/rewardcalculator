@@ -1,12 +1,18 @@
 package ru.javaprojects.rewardcalculator.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javaprojects.rewardcalculator.model.Employee;
+import ru.javaprojects.rewardcalculator.model.Position;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRepository;
+import ru.javaprojects.rewardcalculator.to.EmployeeTo;
+import ru.javaprojects.rewardcalculator.util.EmployeeUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
+
+import static ru.javaprojects.rewardcalculator.util.EmployeeUtil.*;
 
 @Service
 public class EmployeeService {
@@ -20,9 +26,12 @@ public class EmployeeService {
         this.positionService = positionService;
     }
 
-    public Employee create(Employee employee) {
-        Assert.notNull(employee, "employee must not be null");
-        positionService.get(employee.getPosition().id());
+    @Transactional
+    public Employee create(EmployeeTo employeeTo) {
+        Assert.notNull(employeeTo, "employeeTo must not be null");
+        Position position = positionService.get(employeeTo.getPositionId());
+        Employee employee = createFromTo(employeeTo);
+        employee.setPosition(position);
         return repository.save(employee);
     }
 
@@ -40,10 +49,12 @@ public class EmployeeService {
         repository.delete(employee);
     }
 
-    public void update(Employee employee) {
-        Assert.notNull(employee, "employee must not be null");
-        get(employee.id());
-        positionService.get(employee.getPosition().id());
-        repository.save(employee);
+    @Transactional
+    public void update(EmployeeTo employeeTo) {
+        Assert.notNull(employeeTo, "employeeTo must not be null");
+        Employee employee = get(employeeTo.getId());
+        Position position = positionService.get(employeeTo.getPositionId());
+        updateFromTo(employee, employeeTo);
+        employee.setPosition(position);
     }
 }
