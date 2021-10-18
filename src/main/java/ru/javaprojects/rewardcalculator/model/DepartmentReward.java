@@ -36,9 +36,13 @@ public class DepartmentReward extends AbstractBaseEntity {
     public DepartmentReward() {
     }
 
-    public DepartmentReward(Integer id, Integer allocatedAmount, Integer distributedAmount) {
+    public DepartmentReward(Integer id, Integer allocatedAmount) {
         super(id);
         this.allocatedAmount = allocatedAmount;
+    }
+
+    public DepartmentReward(Integer id, Integer allocatedAmount, Integer distributedAmount) {
+        this(id, allocatedAmount);
         this.distributedAmount = distributedAmount;
     }
 

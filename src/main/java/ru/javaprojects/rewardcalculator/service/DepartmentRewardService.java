@@ -3,16 +3,17 @@ package ru.javaprojects.rewardcalculator.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import ru.javaprojects.rewardcalculator.model.Department;
-import ru.javaprojects.rewardcalculator.model.DepartmentReward;
-import ru.javaprojects.rewardcalculator.model.Employee;
-import ru.javaprojects.rewardcalculator.model.EmployeeReward;
+import ru.javaprojects.rewardcalculator.model.*;
 import ru.javaprojects.rewardcalculator.repository.DepartmentRewardRepository;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRewardRepository;
+import ru.javaprojects.rewardcalculator.to.DepartmentRewardTo;
+import ru.javaprojects.rewardcalculator.util.DepartmentRewardUtil;
 import ru.javaprojects.rewardcalculator.util.exception.DepartmentRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
+
+import static ru.javaprojects.rewardcalculator.util.DepartmentRewardUtil.*;
 
 @Service
 public class DepartmentRewardService {
@@ -33,11 +34,13 @@ public class DepartmentRewardService {
     }
 
     @Transactional
-    public DepartmentReward create(DepartmentReward departmentReward) {
-        Assert.notNull(departmentReward, "departmentReward must not be null");
-        checkDistributedAMountZero(departmentReward);
-        departmentService.get(departmentReward.getDepartment().id());
-        paymentPeriodService.get(departmentReward.getPaymentPeriod().id());
+    public DepartmentReward create(DepartmentRewardTo departmentRewardTo) {
+        Assert.notNull(departmentRewardTo, "departmentRewardTo must not be null");
+        Department department = departmentService.get(departmentRewardTo.getDepartmentId());
+        PaymentPeriod paymentPeriod = paymentPeriodService.get(departmentRewardTo.getPaymentPeriodId());
+        DepartmentReward departmentReward = createFromTo(departmentRewardTo);
+        departmentReward.setDepartment(department);
+        departmentReward.setPaymentPeriod(paymentPeriod);
         DepartmentReward created = repository.save(departmentReward);
         createBlankEmployeeRewards(created);
         return created;
@@ -64,24 +67,14 @@ public class DepartmentRewardService {
         repository.delete(departmentReward);
     }
 
-    //Update from outside using DTO
-    // Do not update department
-    // Do not update distributed amount
-    public void update(DepartmentReward departmentReward) {
-        Assert.notNull(departmentReward, "departmentReward must not be null");
-        DepartmentReward dbDepartmentReward = get(departmentReward.id());
-        if (dbDepartmentReward.getDistributedAmount() > departmentReward.getAllocatedAmount()) {
-            throw new DepartmentRewardBadDataException("The distributed amount must be less than or equal to the allocated amount");
+    @Transactional
+    public void update(DepartmentRewardTo departmentRewardTo) {
+        Assert.notNull(departmentRewardTo, "departmentRewardTo must not be null");
+        DepartmentReward departmentReward = get(departmentRewardTo.getId());
+        if (departmentReward.getDistributedAmount() > departmentRewardTo.getAllocatedAmount()) {
+            throw new DepartmentRewardBadDataException("The allocated amount must be greater than or equal to the distributed amount");
         }
-        departmentService.get(departmentReward.getDepartment().id());
-        paymentPeriodService.get(departmentReward.getPaymentPeriod().id());
-        repository.save(departmentReward);
-    }
-
-    private void checkDistributedAMountZero(DepartmentReward departmentReward) {
-        if (!departmentReward.getDistributedAmount().equals(0)) {
-            throw new DepartmentRewardBadDataException("Distributed amount for new department reward must be 0");
-        }
+        updateFromTo(departmentReward, departmentRewardTo);
     }
 
     private void createBlankEmployeeRewards(DepartmentReward departmentReward) {
