@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.TestUtil.readFromJson;
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.DATA_NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.VALIDATION_ERROR;

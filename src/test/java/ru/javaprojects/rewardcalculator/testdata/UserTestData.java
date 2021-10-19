@@ -1,16 +1,15 @@
-package ru.javaprojects.rewardcalculator;
+package ru.javaprojects.rewardcalculator.testdata;
 
+import ru.javaprojects.rewardcalculator.TestMatcher;
 import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
 import static ru.javaprojects.rewardcalculator.model.Role.*;
 

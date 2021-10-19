@@ -3,18 +3,16 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import ru.javaprojects.rewardcalculator.PaymentPeriodTestData;
 import ru.javaprojects.rewardcalculator.model.PaymentPeriod;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
-import java.time.Month;
 import java.time.YearMonth;
 import java.util.List;
 
 import static java.time.Month.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.javaprojects.rewardcalculator.PaymentPeriodTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.*;
 
 class PaymentPeriodServiceTest extends AbstractServiceTest {
 

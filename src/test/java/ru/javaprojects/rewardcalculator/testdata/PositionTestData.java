@@ -1,9 +1,10 @@
-package ru.javaprojects.rewardcalculator;
+package ru.javaprojects.rewardcalculator.testdata;
 
+import ru.javaprojects.rewardcalculator.TestMatcher;
 import ru.javaprojects.rewardcalculator.model.Position;
 import ru.javaprojects.rewardcalculator.to.PositionTo;
 
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
 
 public class PositionTestData {

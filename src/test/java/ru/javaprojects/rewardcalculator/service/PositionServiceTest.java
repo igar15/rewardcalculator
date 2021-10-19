@@ -11,9 +11,9 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_1_ID;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.NOT_FOUND;
-import static ru.javaprojects.rewardcalculator.PositionTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_1_ID;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.NOT_FOUND;
+import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.*;
 
 class PositionServiceTest extends AbstractServiceTest {
 

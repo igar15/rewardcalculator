@@ -3,20 +3,18 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import ru.javaprojects.rewardcalculator.UserTestData;
+import ru.javaprojects.rewardcalculator.testdata.UserTestData;
 import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
-import ru.javaprojects.rewardcalculator.util.UserUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.javaprojects.rewardcalculator.UserTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.UserTestData.*;
 import static ru.javaprojects.rewardcalculator.model.Role.DEPARTMENT_HEAD;
 
 class UserServiceTest extends AbstractServiceTest {

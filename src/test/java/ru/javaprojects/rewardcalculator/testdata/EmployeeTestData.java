@@ -1,10 +1,11 @@
-package ru.javaprojects.rewardcalculator;
+package ru.javaprojects.rewardcalculator.testdata;
 
+import ru.javaprojects.rewardcalculator.TestMatcher;
 import ru.javaprojects.rewardcalculator.model.Employee;
 import ru.javaprojects.rewardcalculator.to.EmployeeTo;
 
-import static ru.javaprojects.rewardcalculator.PositionTestData.POSITION_1_ID;
-import static ru.javaprojects.rewardcalculator.PositionTestData.position1;
+import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.POSITION_1_ID;
+import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.position1;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
 
 public class EmployeeTestData {

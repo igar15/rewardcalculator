@@ -1,5 +1,6 @@
-package ru.javaprojects.rewardcalculator;
+package ru.javaprojects.rewardcalculator.testdata;
 
+import ru.javaprojects.rewardcalculator.TestMatcher;
 import ru.javaprojects.rewardcalculator.model.Department;
 
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;

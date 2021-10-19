@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
@@ -14,4 +15,8 @@ public interface EmployeeRewardRepository extends JpaRepository<EmployeeReward, 
 
     @EntityGraph(attributePaths = "employee")
     List<EmployeeReward> findAllByDepartmentRewardIdOrderByEmployeeName(int departmentRewardId);
+
+
+    @EntityGraph(attributePaths = {"employee.position", "departmentReward.paymentPeriod"})
+    Optional<EmployeeReward> findById(int id);
 }

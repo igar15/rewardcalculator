@@ -1,9 +1,11 @@
-package ru.javaprojects.rewardcalculator;
+package ru.javaprojects.rewardcalculator.testdata;
 
+import ru.javaprojects.rewardcalculator.TestMatcher;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
+import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.*;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward2;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.employee1;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
 
 public class EmployeeRewardTestData {
@@ -18,19 +20,11 @@ public class EmployeeRewardTestData {
     public static final EmployeeReward employeeReward2 = new EmployeeReward(EMPLOYEE_REWARD_2_ID, 150.75, 10710, 0, 0);
     public static final EmployeeReward employeeReward3 = new EmployeeReward(EMPLOYEE_REWARD_3_ID, 150.75, 18030, 0, 0);
 
-    public static EmployeeReward getNew() {
-        return new EmployeeReward(null, 120d, 12060, 0, 0);
-    }
-
-    public static EmployeeReward getNewWithEmployeeAndDepartmentReward() {
-        return new EmployeeReward(null, 120d, 12060, 0, 0, employee1, departmentReward1);
-    }
-
     public static EmployeeReward getUpdated() {
-        return new EmployeeReward(EMPLOYEE_REWARD_1_ID, 100d, 10050, 0, 0);
+        return new EmployeeReward(EMPLOYEE_REWARD_1_ID, 100d, 8000, 2000, 0, employee1, departmentReward2);
     }
 
-    public static EmployeeReward getUpdatedWithEmployeeAndDepartmentReward() {
-        return new EmployeeReward(EMPLOYEE_REWARD_1_ID, 100d, 10050, 0, 0, employee1, departmentReward2);
+    public static EmployeeRewardTo getUpdatedTo() {
+        return new EmployeeRewardTo(EMPLOYEE_REWARD_1_ID, 100d, 2000, 0);
     }
 }

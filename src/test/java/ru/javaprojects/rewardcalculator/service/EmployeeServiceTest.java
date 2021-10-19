@@ -11,14 +11,14 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_1_ID;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.NOT_FOUND;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.getNew;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.getNewTo;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.getUpdated;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.getUpdatedTo;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.*;
-import static ru.javaprojects.rewardcalculator.PositionTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_1_ID;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.NOT_FOUND;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getNew;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getNewTo;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getUpdated;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getUpdatedTo;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.*;
 
 class EmployeeServiceTest extends AbstractServiceTest {
 

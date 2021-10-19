@@ -2,26 +2,27 @@ package ru.javaprojects.rewardcalculator.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.javaprojects.rewardcalculator.model.DepartmentReward;
-import ru.javaprojects.rewardcalculator.model.Employee;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
+import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.DEPARTMENT_REWARD_2_ID;
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.departmentReward2;
-import static ru.javaprojects.rewardcalculator.EmployeeRewardTestData.*;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.NOT_FOUND;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.employee1;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.getUpdated;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.getUpdatedTo;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.NOT_FOUND;
 
 class EmployeeRewardServiceTest extends AbstractServiceTest {
 
     @Autowired
     private EmployeeRewardService service;
+
+    @Autowired
+    private DepartmentRewardService departmentRewardService;
 
     @Test
     void get() {
@@ -47,49 +48,45 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
 
     @Test
     void update() {
-        service.update(getUpdatedWithEmployeeAndDepartmentReward());
+        service.update(getUpdatedTo());
         EMPLOYEE_REWARD_MATCHER.assertMatch(service.get(EMPLOYEE_REWARD_1_ID), getUpdated());
+        DEPARTMENT_REWARD_MATCHER.assertMatch(departmentRewardService.get(DEPARTMENT_REWARD_2_ID), departmentReward2Updated);
     }
 
     @Test
     void updateWithNegativeFullReward() {
-        EmployeeReward updated = getUpdatedWithEmployeeAndDepartmentReward();
-        updated.setPenalty(11000);
-        assertThrows(EmployeeRewardBadDataException.class, () -> service.update(updated));
+        EmployeeRewardTo updatedTo = getUpdatedTo();
+        updatedTo.setPenalty(11000);
+        assertThrows(EmployeeRewardBadDataException.class, () -> service.update(updatedTo));
     }
 
     @Test
-    void updateWithAllocatedAmountExceeded() {
-        EmployeeReward updated = getUpdatedWithEmployeeAndDepartmentReward();
-        updated.setAdditionalReward(2500);
-        assertThrows(EmployeeRewardBadDataException.class, () -> service.update(updated));
+    void updateWithAllocatedAmountExceededTooMuchReward() {
+        EmployeeRewardTo updatedTo = getUpdatedTo();
+        updatedTo.setAdditionalReward(4500);
+        assertThrows(EmployeeRewardBadDataException.class, () -> service.update(updatedTo));
+    }
+
+    @Test
+    void updateWithAllocatedAmountExceededTooMuchHoursWorked() {
+        EmployeeRewardTo updatedTo = getUpdatedTo();
+        updatedTo.setHoursWorked(500d);
+        assertThrows(EmployeeRewardBadDataException.class, () -> service.update(updatedTo));
     }
 
     @Test
     void updateNotFound() {
-        EmployeeReward updated = getUpdatedWithEmployeeAndDepartmentReward();
-        updated.setId(NOT_FOUND);
-        assertThrows(NotFoundException.class, () -> service.update(updated));
+        EmployeeRewardTo updatedTo = getUpdatedTo();
+        updatedTo.setId(NOT_FOUND);
+        assertThrows(NotFoundException.class, () -> service.update(updatedTo));
     }
-
-    @Test
-    void updateWithNotExistedEmployee() {
-        EmployeeReward updated = getUpdatedWithEmployeeAndDepartmentReward();
-        updated.setEmployee(new Employee(NOT_FOUND, "employeeName"));
-        assertThrows(NotFoundException.class, () -> service.update(updated));
-    }
-
-    @Test
-    void updateWithNotExistedDepartmentReward() {
-        EmployeeReward updated = getUpdatedWithEmployeeAndDepartmentReward();
-        updated.setDepartmentReward(new DepartmentReward(NOT_FOUND, 40000, 0));
-        assertThrows(NotFoundException.class, () -> service.update(updated));
-    }
-
     @Test
     void updateWithException() {
-        validateRootCause(ConstraintViolationException.class, () -> service.update(new EmployeeReward(EMPLOYEE_REWARD_1_ID, null, 12060, 0, 0, employee1, departmentReward2)));
-        validateRootCause(ConstraintViolationException.class, () -> service.update(new EmployeeReward(EMPLOYEE_REWARD_1_ID, -5.d, 12060, 0, 0, employee1, departmentReward2)));
-        validateRootCause(ConstraintViolationException.class, () -> service.update(new EmployeeReward(EMPLOYEE_REWARD_1_ID, 310d, 12060, 0, 0, employee1, departmentReward2)));
+        validateRootCause(IllegalArgumentException.class, () -> service.update(new EmployeeRewardTo(EMPLOYEE_REWARD_1_ID, null,  0, 0)));
+        validateRootCause(IllegalArgumentException.class, () -> service.update(new EmployeeRewardTo(EMPLOYEE_REWARD_1_ID, 100d,  null, 0)));
+        validateRootCause(IllegalArgumentException.class, () -> service.update(new EmployeeRewardTo(EMPLOYEE_REWARD_1_ID, 100d,  0, null)));
+        validateRootCause(IllegalArgumentException.class, () -> service.update(new EmployeeRewardTo(EMPLOYEE_REWARD_1_ID, -5.d,  0, 0)));
+        validateRootCause(IllegalArgumentException.class, () -> service.update(new EmployeeRewardTo(EMPLOYEE_REWARD_1_ID, 100d,  -2000, 0)));
+        validateRootCause(IllegalArgumentException.class, () -> service.update(new EmployeeRewardTo(EMPLOYEE_REWARD_1_ID, 100d,  0, -2000)));
     }
 }

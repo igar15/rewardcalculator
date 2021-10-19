@@ -16,17 +16,17 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.NOT_FOUND;
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.getNew;
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.getNewTo;
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.getUpdated;
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.getUpdatedTo;
-import static ru.javaprojects.rewardcalculator.DepartmentRewardTestData.*;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_1_ID;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.DEPARTMENT_3_ID;
-import static ru.javaprojects.rewardcalculator.EmployeeTestData.*;
-import static ru.javaprojects.rewardcalculator.PaymentPeriodTestData.PAYMENT_PERIOD_1_ID;
-import static ru.javaprojects.rewardcalculator.PaymentPeriodTestData.PAYMENT_PERIOD_3_ID;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.NOT_FOUND;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getNew;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getNewTo;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getUpdated;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getUpdatedTo;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_1_ID;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_3_ID;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.PAYMENT_PERIOD_1_ID;
+import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.PAYMENT_PERIOD_3_ID;
 
 class DepartmentRewardServiceTest extends AbstractServiceTest {
 

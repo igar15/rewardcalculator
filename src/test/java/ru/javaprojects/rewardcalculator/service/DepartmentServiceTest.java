@@ -10,7 +10,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.javaprojects.rewardcalculator.DepartmentTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 
 class DepartmentServiceTest extends AbstractServiceTest {
 
