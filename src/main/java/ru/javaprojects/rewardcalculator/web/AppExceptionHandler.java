@@ -36,7 +36,7 @@ public class AppExceptionHandler {
     public static final String EXCEPTION_DUPLICATE_PAYMENT_PERIOD = "Payment period already exists";
     public static final String EXCEPTION_DUPLICATE_DEPARTMENT_REWARD = "Department reward for this payment period already exists";
     public static final String EXCEPTION_DUPLICATE_EMPLOYEE_REWARD = "Employee reward for this payment period already exists";
-    public static final String EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES = "Cannot delete because department has employees";
+    public static final String EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES = "Cannot delete because there are employees on the department's position";
     public static final String EXCEPTION_NOT_AUTHORIZED = "You are not authorized";
     public static final String EXCEPTION_ACCESS_DENIED = "You do not have enough permission";
     public static final String EXCEPTION_BAD_CREDENTIALS = "Email / password incorrect. Please try again";

@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.NOT_FOUND;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.PAGE;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.PAGEABLE;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getNew;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getNewTo;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getUpdated;
@@ -26,8 +28,7 @@ import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_1_ID;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_3_ID;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.*;
-import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.PAYMENT_PERIOD_1_ID;
-import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.PAYMENT_PERIOD_3_ID;
+import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.*;
 
 class DepartmentRewardServiceTest extends AbstractServiceTest {
 
@@ -79,6 +80,7 @@ class DepartmentRewardServiceTest extends AbstractServiceTest {
     void get() {
         DepartmentReward departmentReward = service.get(DEPARTMENT_REWARD_1_ID);
         DEPARTMENT_REWARD_MATCHER.assertMatch(departmentReward, departmentReward1);
+        PAYMENT_PERIOD_MATCHER.assertMatch(departmentReward.getPaymentPeriod(), paymentPeriod1);
     }
 
     @Test

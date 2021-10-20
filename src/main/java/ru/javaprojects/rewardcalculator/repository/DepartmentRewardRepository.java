@@ -17,8 +17,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface DepartmentRewardRepository extends JpaRepository<DepartmentReward, Integer> {
 
+    @EntityGraph(attributePaths = {"paymentPeriod"})
+    Optional<DepartmentReward> findById(int id);
+
+    @EntityGraph(attributePaths = {"paymentPeriod"})
     List<DepartmentReward> findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(int departmentId);
 
+    @EntityGraph(attributePaths = {"paymentPeriod"})
     Page<DepartmentReward> findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(int departmentId, Pageable pageable);
 
     Optional<DepartmentReward> findByDepartmentIdAndPaymentPeriodId(int departmentId, int paymentPeriodId);

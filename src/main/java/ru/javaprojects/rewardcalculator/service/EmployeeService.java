@@ -7,7 +7,6 @@ import ru.javaprojects.rewardcalculator.model.Employee;
 import ru.javaprojects.rewardcalculator.model.Position;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRepository;
 import ru.javaprojects.rewardcalculator.to.EmployeeTo;
-import ru.javaprojects.rewardcalculator.util.EmployeeUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class EmployeeService {
 
     public List<Employee> getAllByDepartmentId(int departmentId) {
         departmentService.get(departmentId);
-        return repository.findAllByPositionDepartmentId(departmentId);
+        return repository.findAllByPositionDepartmentIdWithPosition(departmentId);
     }
 
     public void delete(int id) {

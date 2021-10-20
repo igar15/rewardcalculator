@@ -7,31 +7,32 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javaprojects.rewardcalculator.model.*;
 import ru.javaprojects.rewardcalculator.repository.DepartmentRewardRepository;
+import ru.javaprojects.rewardcalculator.repository.EmployeeRepository;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRewardRepository;
 import ru.javaprojects.rewardcalculator.to.DepartmentRewardTo;
-import ru.javaprojects.rewardcalculator.util.DepartmentRewardUtil;
 import ru.javaprojects.rewardcalculator.util.exception.DepartmentRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
 
-import static ru.javaprojects.rewardcalculator.util.DepartmentRewardUtil.*;
+import static ru.javaprojects.rewardcalculator.util.DepartmentRewardUtil.createFromTo;
+import static ru.javaprojects.rewardcalculator.util.DepartmentRewardUtil.updateFromTo;
 
 @Service
 public class DepartmentRewardService {
     private final DepartmentRewardRepository repository;
     private final DepartmentService departmentService;
     private final PaymentPeriodService paymentPeriodService;
-    private final EmployeeService employeeService;
+    private final EmployeeRepository employeeRepository;
     private final EmployeeRewardRepository employeeRewardRepository;
 
     public DepartmentRewardService(DepartmentRewardRepository repository, DepartmentService departmentService,
-                                   PaymentPeriodService paymentPeriodService, EmployeeService employeeService,
+                                   PaymentPeriodService paymentPeriodService, EmployeeRepository employeeRepository,
                                    EmployeeRewardRepository employeeRewardRepository) {
         this.repository = repository;
         this.departmentService = departmentService;
         this.paymentPeriodService = paymentPeriodService;
-        this.employeeService = employeeService;
+        this.employeeRepository = employeeRepository;
         this.employeeRewardRepository = employeeRewardRepository;
     }
 
@@ -87,7 +88,7 @@ public class DepartmentRewardService {
 
     private void createBlankEmployeeRewards(DepartmentReward departmentReward) {
         Department department = departmentReward.getDepartment();
-        List<Employee> employees = employeeService.getAllByDepartmentId(department.id());
+        List<Employee> employees = employeeRepository.findAllByPositionDepartmentId(department.id());
         employees.forEach(employee ->
                 employeeRewardRepository.save(new EmployeeReward(null, 0d, 0, 0, 0, employee, departmentReward)));
     }

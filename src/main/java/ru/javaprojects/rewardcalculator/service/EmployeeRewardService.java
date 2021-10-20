@@ -37,7 +37,8 @@ public class EmployeeRewardService {
     @Transactional
     public void update(EmployeeRewardTo employeeRewardTo) {
         checkToState(employeeRewardTo);
-        EmployeeReward employeeReward = get(employeeRewardTo.getId());
+        EmployeeReward employeeReward = repository.findByIdWithPositionAndDepartmentReward(employeeRewardTo.getId())
+                .orElseThrow(() -> new NotFoundException("Not found employee reward with id=" + employeeRewardTo.getId()));
         DepartmentReward departmentReward = employeeReward.getDepartmentReward();
         int salary = employeeReward.getEmployee().getPosition().getSalary();
         double requiredHoursWorked = departmentReward.getPaymentPeriod().getRequiredHoursWorked();
@@ -48,24 +49,4 @@ public class EmployeeRewardService {
         updateFromTo(employeeReward, employeeRewardTo, hoursWorkedReward);
         departmentReward.setDistributedAmount(newDistributedAmount);
     }
-//
-//    private int calculateHoursWorkedReward(double hoursWorked, int salary, double requiredHoursWorked) {
-//        return (int) (hoursWorked * salary / requiredHoursWorked * PREMIUM_RATE);
-//    }
-//
-//    private int calculateFullReward(int hoursWorkedReward, int additionalReward, int penalty) {
-//        int fullReward = hoursWorkedReward + additionalReward - penalty;
-//        if (fullReward < 0) {
-//            throw new EmployeeRewardBadDataException("Employee reward must be greater than or equal zero");
-//        }
-//        return fullReward;
-//    }
-//
-//    private int calculateNewDistributedAmount(DepartmentReward departmentReward, int currentEmployeeFullReward, int newEmployeeFullReward) {
-//        int newDistributedAmount =  departmentReward.getDistributedAmount() - currentEmployeeFullReward + newEmployeeFullReward;
-//        if (newDistributedAmount > departmentReward.getAllocatedAmount()) {
-//            throw new EmployeeRewardBadDataException("Department reward allocated amount exceeded");
-//        }
-//        return newDistributedAmount;
-//    }
 }
