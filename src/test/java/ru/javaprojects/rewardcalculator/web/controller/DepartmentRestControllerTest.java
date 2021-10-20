@@ -12,12 +12,14 @@ import ru.javaprojects.rewardcalculator.service.DepartmentService;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.TestUtil.readFromJson;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.DATA_NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.VALIDATION_ERROR;
 import static ru.javaprojects.rewardcalculator.web.AppExceptionHandler.EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES;
@@ -36,6 +38,19 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DEPARTMENT_MATCHER.contentJson(department1, department3, department2));
+    }
+
+    @Test
+    void getAllByPage() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "byPage")
+                .param("page", "0")
+                .param("size", "2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        List<Department> departments = JsonUtil.readContentFromPage(action.andReturn().getResponse().getContentAsString(), Department.class);
+        DEPARTMENT_MATCHER.assertMatch(departments, department1, department3);
     }
 
     @Test

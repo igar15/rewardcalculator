@@ -3,6 +3,7 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import ru.javaprojects.rewardcalculator.model.PaymentPeriod;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
@@ -49,6 +50,13 @@ class PaymentPeriodServiceTest extends AbstractServiceTest {
     void getAll() {
         List<PaymentPeriod> paymentPeriods = service.getAll();
         PAYMENT_PERIOD_MATCHER.assertMatch(paymentPeriods, paymentPeriod3, paymentPeriod2, paymentPeriod1);
+    }
+
+    @Test
+    void getAllByPage() {
+        Page<PaymentPeriod> paymentPeriods = service.getAll(PAGEABLE);
+        assertEquals(PAGE, paymentPeriods);
+        PAYMENT_PERIOD_MATCHER.assertMatch(paymentPeriods.getContent(), paymentPeriod3, paymentPeriod2);
     }
 
     @Test

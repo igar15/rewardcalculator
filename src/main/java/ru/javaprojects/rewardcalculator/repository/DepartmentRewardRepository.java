@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +18,8 @@ import java.util.Optional;
 public interface DepartmentRewardRepository extends JpaRepository<DepartmentReward, Integer> {
 
     List<DepartmentReward> findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(int departmentId);
+
+    Page<DepartmentReward> findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(int departmentId, Pageable pageable);
 
     Optional<DepartmentReward> findByDepartmentIdAndPaymentPeriodId(int departmentId, int paymentPeriodId);
 

@@ -3,6 +3,7 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
@@ -47,6 +48,13 @@ class DepartmentServiceTest extends AbstractServiceTest {
     void getAll() {
         List<Department> departments = service.getAll();
         DEPARTMENT_MATCHER.assertMatch(departments, department1, department3, department2);
+    }
+
+    @Test
+    void getAllByPage() {
+        Page<Department> departments = service.getAll(PAGEABLE);
+        assertEquals(PAGE, departments);
+        DEPARTMENT_MATCHER.assertMatch(departments.getContent(), department1, department3);
     }
 
     @Test

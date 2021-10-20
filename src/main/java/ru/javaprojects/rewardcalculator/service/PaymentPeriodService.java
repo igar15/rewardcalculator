@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javaprojects.rewardcalculator.model.PaymentPeriod;
@@ -27,6 +29,11 @@ public class PaymentPeriodService {
 
     public List<PaymentPeriod> getAll() {
         return repository.findAllByOrderByPeriodDesc();
+    }
+
+    public Page<PaymentPeriod> getAll(Pageable pageable) {
+        Assert.notNull(pageable, "pageable must not be null");
+        return repository.findAllByOrderByPeriodDesc(pageable);
     }
 
     public void delete(int id) {

@@ -3,6 +3,7 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import ru.javaprojects.rewardcalculator.model.DepartmentReward;
 import ru.javaprojects.rewardcalculator.model.Employee;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
@@ -105,6 +106,13 @@ class DepartmentRewardServiceTest extends AbstractServiceTest {
     void getAllByDepartmentId() {
         List<DepartmentReward> departmentRewards = service.getAllByDepartmentId(DEPARTMENT_1_ID);
         DEPARTMENT_REWARD_MATCHER.assertMatch(departmentRewards, departmentReward2, departmentReward1);
+    }
+
+    @Test
+    void getAllByDepartmentIdByPage() {
+        Page<DepartmentReward> departmentRewards = service.getAllByDepartmentId(DEPARTMENT_1_ID, PAGEABLE);
+        assertEquals(PAGE, departmentRewards);
+        DEPARTMENT_REWARD_MATCHER.assertMatch(departmentRewards.getContent(), departmentReward2, departmentReward1);
     }
 
     @Test

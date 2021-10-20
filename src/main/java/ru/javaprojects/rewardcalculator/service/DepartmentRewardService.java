@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -60,6 +62,12 @@ public class DepartmentRewardService {
     public List<DepartmentReward> getAllByDepartmentId(int departmentId) {
         departmentService.get(departmentId);
         return repository.findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(departmentId);
+    }
+
+    public Page<DepartmentReward> getAllByDepartmentId(int departmentId, Pageable pageable) {
+        Assert.notNull(pageable, "pageable must not be null");
+        departmentService.get(departmentId);
+        return repository.findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(departmentId, pageable);
     }
 
     public void delete(int id) {

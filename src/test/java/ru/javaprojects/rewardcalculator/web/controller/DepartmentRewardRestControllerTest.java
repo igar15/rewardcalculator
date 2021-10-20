@@ -17,6 +17,8 @@ import ru.javaprojects.rewardcalculator.to.DepartmentRewardTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -49,6 +51,20 @@ class DepartmentRewardRestControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DEPARTMENT_REWARD_MATCHER.contentJson(departmentReward2, departmentReward1));
     }
+
+    @Test
+    void getAllByPage() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/departmentrewards/byPage")
+                .param("page", "0")
+                .param("size", "2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        List<DepartmentReward> departmentRewards = JsonUtil.readContentFromPage(action.andReturn().getResponse().getContentAsString(), DepartmentReward.class);
+        DEPARTMENT_REWARD_MATCHER.assertMatch(departmentRewards, departmentReward2, departmentReward1);
+    }
+
 
     @Test
     void getAllWithNotExistedDepartment() throws Exception {

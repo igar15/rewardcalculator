@@ -2,6 +2,8 @@ package ru.javaprojects.rewardcalculator.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,12 @@ public class DepartmentRestController {
     public List<Department> getAll() {
         log.info("getAll");
         return service.getAll();
+    }
+
+    @GetMapping("/byPage")
+    public Page<Department> getAll(Pageable pageable) {
+        log.info("getAll (pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
+        return service.getAll(pageable);
     }
 
     @GetMapping("/{id}")

@@ -12,6 +12,8 @@ import ru.javaprojects.rewardcalculator.service.PaymentPeriodService;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,6 +38,19 @@ class PaymentPeriodRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(PAYMENT_PERIOD_MATCHER.contentJson(paymentPeriod3, paymentPeriod2, paymentPeriod1));
+    }
+
+    @Test
+    void getAllByPage() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "byPage")
+                .param("page", "0")
+                .param("size", "2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+        List<PaymentPeriod> paymentPeriods = JsonUtil.readContentFromPage(action.andReturn().getResponse().getContentAsString(), PaymentPeriod.class);
+        PAYMENT_PERIOD_MATCHER.assertMatch(paymentPeriods, paymentPeriod3, paymentPeriod2);
     }
 
     @Test
