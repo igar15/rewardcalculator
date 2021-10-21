@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.service;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -25,6 +27,7 @@ public class EmployeeService {
         this.positionService = positionService;
     }
 
+    @CacheEvict(value = "employees", allEntries = true)
     @Transactional
     public Employee create(EmployeeTo employeeTo) {
         Assert.notNull(employeeTo, "employeeTo must not be null");
@@ -38,16 +41,19 @@ public class EmployeeService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found employee with id=" + id));
     }
 
+    @Cacheable(value = "employees", key = "#departmentId")
     public List<Employee> getAllByDepartmentId(int departmentId) {
         departmentService.get(departmentId);
         return repository.findAllByPositionDepartmentIdWithPosition(departmentId);
     }
 
+    @CacheEvict(value = "employees", allEntries = true)
     public void delete(int id) {
         Employee employee = get(id);
         repository.delete(employee);
     }
 
+    @CacheEvict(value = "employees", allEntries = true)
     @Transactional
     public void update(EmployeeTo employeeTo) {
         Assert.notNull(employeeTo, "employeeTo must not be null");

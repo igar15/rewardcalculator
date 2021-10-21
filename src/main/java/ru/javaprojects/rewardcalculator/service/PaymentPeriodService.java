@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.service;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class PaymentPeriodService {
         this.repository = repository;
     }
 
+    @CacheEvict(value = "paymentperiods", allEntries = true)
     public PaymentPeriod create(PaymentPeriod paymentPeriod) {
         Assert.notNull(paymentPeriod, "paymentPeriod must not be null");
         return repository.save(paymentPeriod);
@@ -27,6 +30,7 @@ public class PaymentPeriodService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found payment period with id=" + id));
     }
 
+    @Cacheable("paymentperiods")
     public List<PaymentPeriod> getAll() {
         return repository.findAllByOrderByPeriodDesc();
     }
@@ -36,11 +40,13 @@ public class PaymentPeriodService {
         return repository.findAllByOrderByPeriodDesc(pageable);
     }
 
+    @CacheEvict(value = "paymentperiods", allEntries = true)
     public void delete(int id) {
         PaymentPeriod paymentPeriod = get(id);
         repository.delete(paymentPeriod);
     }
 
+    @CacheEvict(value = "paymentperiods", allEntries = true)
     public void update(PaymentPeriod paymentPeriod) {
         Assert.notNull(paymentPeriod, "paymentPeriod must not be null");
         get(paymentPeriod.id());

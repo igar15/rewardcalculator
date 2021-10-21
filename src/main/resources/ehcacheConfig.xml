@@ -1,0 +1,24 @@
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd">
+
+    <cache-template name="multiNonExpiryCache">
+        <expiry>
+            <none/>
+        </expiry>
+        <heap>100</heap>
+    </cache-template>
+
+    <cache-template name="singleNonExpiryCache">
+        <expiry>
+            <none/>
+        </expiry>
+        <heap>1</heap>
+    </cache-template>
+
+    <cache alias="departments" uses-template="singleNonExpiryCache"/>
+    <cache alias="paymentperiods" uses-template="singleNonExpiryCache"/>
+<!--    <cache alias="users" uses-template="multiNonExpiryCache"/>-->
+    <cache alias="positions" uses-template="multiNonExpiryCache"/>
+    <cache alias="employees" uses-template="multiNonExpiryCache"/>
+</config>
