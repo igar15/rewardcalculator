@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.model;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.Objects;
 
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "payment_periods", uniqueConstraints = {@UniqueConstraint(columnNames = "period", name = "payment_periods_unique_period_idx")})
 public class PaymentPeriod extends AbstractBaseEntity {

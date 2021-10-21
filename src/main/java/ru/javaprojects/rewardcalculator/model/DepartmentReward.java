@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.model;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
@@ -7,6 +9,7 @@ import org.hibernate.validator.constraints.Range;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "department_rewards", uniqueConstraints = {@UniqueConstraint(columnNames = {"department_id", "payment_period_id"}, name = "department_rewards_unique_department_id_payment_period_id_idx")})
 public class DepartmentReward extends AbstractBaseEntity {
