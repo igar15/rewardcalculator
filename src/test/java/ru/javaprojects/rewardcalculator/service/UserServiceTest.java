@@ -51,7 +51,7 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void duplicateEmailCreate() {
-        assertThrows(DataAccessException.class, () -> service.create(new NewUserTo(null, "newName", user.getEmail(), "newPass", true, Set.of(DEPARTMENT_HEAD), Set.of())));
+        assertThrows(DataAccessException.class, () -> service.create(new NewUserTo(null, "newName", departmentHead.getEmail(), "newPass", true, Set.of(DEPARTMENT_HEAD), Set.of())));
     }
 
     @Test
@@ -59,8 +59,8 @@ class UserServiceTest extends AbstractServiceTest {
         User user = service.get(ADMIN_ID);
         USER_MATCHER.assertMatch(user, admin);
 
-        user = service.get(USER_ID);
-        USER_MATCHER.assertMatch(user, UserTestData.user);
+        user = service.get(DEPARTMENT_HEAD_ID);
+        USER_MATCHER.assertMatch(user, UserTestData.departmentHead);
     }
 
     @Test
@@ -70,8 +70,8 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void getByEmail() {
-        User user = service.getByEmail(UserTestData.user.getEmail());
-        USER_MATCHER.assertMatch(user, UserTestData.user);
+        User user = service.getByEmail(UserTestData.departmentHead.getEmail());
+        USER_MATCHER.assertMatch(user, UserTestData.departmentHead);
     }
 
     @Test
@@ -82,13 +82,13 @@ class UserServiceTest extends AbstractServiceTest {
     @Test
     void getAll() {
         List<User> users = service.getAll();
-        USER_MATCHER.assertMatch(users, admin, user);
+        USER_MATCHER.assertMatch(users, admin, departmentHead, economist, personnelOfficer);
     }
 
     @Test
     void delete() {
-        service.delete(USER_ID);
-        assertThrows(NotFoundException.class, () -> service.get(USER_ID));
+        service.delete(DEPARTMENT_HEAD_ID);
+        assertThrows(NotFoundException.class, () -> service.get(DEPARTMENT_HEAD_ID));
     }
 
     @Test
@@ -99,7 +99,7 @@ class UserServiceTest extends AbstractServiceTest {
     @Test
     void update() {
         service.update(getUpdatedTo());
-        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(service.get(DEPARTMENT_HEAD_ID), getUpdated());
     }
 
     @Test
@@ -113,8 +113,6 @@ class UserServiceTest extends AbstractServiceTest {
     void createWithException() {
         validateRootCause(ConstraintViolationException.class, () -> service.create(new NewUserTo(null, "  ", "mail@yandex.ru", "password", true, Set.of(DEPARTMENT_HEAD), Set.of())));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new NewUserTo(null, "User", "  ", "password", true, Set.of(DEPARTMENT_HEAD), Set.of())));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new NewUserTo(null, "User", "mail@yandex.ru", "  ", true,  Set.of(DEPARTMENT_HEAD), Set.of())));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new NewUserTo(null, "User", "mail@yandex.ru", "  ", true,  Set.of(DEPARTMENT_HEAD), Set.of())));
         NewUserTo newUserTo = getNewTo();
         newUserTo.setRoles(Set.of());
         validateRootCause(ConstraintViolationException.class, () -> service.create(newUserTo));
@@ -122,10 +120,10 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void enable() {
-        service.enable(USER_ID, false);
-        assertFalse(service.get(USER_ID).isEnabled());
-        service.enable(USER_ID, true);
-        assertTrue(service.get(USER_ID).isEnabled());
+        service.enable(DEPARTMENT_HEAD_ID, false);
+        assertFalse(service.get(DEPARTMENT_HEAD_ID).isEnabled());
+        service.enable(DEPARTMENT_HEAD_ID, true);
+        assertTrue(service.get(DEPARTMENT_HEAD_ID).isEnabled());
     }
 
     @Test
@@ -135,8 +133,9 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void changePassword() {
-        service.changePassword(USER_ID, "newPassword");
-        assertEquals("newPassword", service.get(USER_ID).getPassword());
+        User user = service.get(DEPARTMENT_HEAD_ID);
+        service.changePassword(DEPARTMENT_HEAD_ID, "newPassword");
+        assertNotEquals(user.getPassword(), service.get(DEPARTMENT_HEAD_ID).getPassword());
     }
 
     @Test

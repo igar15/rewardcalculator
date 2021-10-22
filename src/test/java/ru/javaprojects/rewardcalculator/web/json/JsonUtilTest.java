@@ -3,7 +3,6 @@ package ru.javaprojects.rewardcalculator.web.json;
 import org.junit.jupiter.api.Test;
 import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.model.PaymentPeriod;
-import ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData;
 import ru.javaprojects.rewardcalculator.to.NewUserTo;
 
 import java.util.List;
@@ -36,7 +35,7 @@ class JsonUtilTest {
 
     @Test
     void writeOnlyAccess() {
-        String json = JsonUtil.writeValue(user);
+        String json = JsonUtil.writeValue(departmentHead);
         System.out.println(json);
         assertThat(json, not(containsString("password")));
         String jsonWithPass = jsonWithPassword(getNewTo(), "newPass");

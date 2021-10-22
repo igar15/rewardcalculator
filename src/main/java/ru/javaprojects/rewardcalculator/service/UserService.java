@@ -1,5 +1,6 @@
 package ru.javaprojects.rewardcalculator.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -20,16 +21,18 @@ import static ru.javaprojects.rewardcalculator.util.UserUtil.updateFromTo;
 public class UserService {
     private final UserRepository repository;
     private final DepartmentService departmentService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository, DepartmentService departmentService) {
+    public UserService(UserRepository repository, DepartmentService departmentService, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.departmentService = departmentService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public User create(NewUserTo newUserTo) {
         Assert.notNull(newUserTo, "newUserTo must not be null");
-        User user = createNewFromTo(newUserTo);
+        User user = createNewFromTo(newUserTo, passwordEncoder);
         addManagedDepartments(user, newUserTo);
         return repository.save(user);
     }
@@ -70,7 +73,7 @@ public class UserService {
     public void changePassword(int id, String password) {
         Assert.notNull(password, "password must not be null");
         User user = get(id);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
     }
 
     private void addManagedDepartments(User user, UserTo userTo) {
