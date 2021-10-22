@@ -10,9 +10,9 @@ import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SE
 public class PositionTestData {
     public static final TestMatcher<Position> POSITION_MATCHER = TestMatcher.usingIgnoringFieldsComparator(Position.class, "department");
 
-    public static final int POSITION_1_ID = START_SEQ + 5;
-    public static final int POSITION_2_ID = START_SEQ + 6;
-    public static final int POSITION_3_ID = START_SEQ + 7;
+    public static final int POSITION_1_ID = START_SEQ + 7;
+    public static final int POSITION_2_ID = START_SEQ + 8;
+    public static final int POSITION_3_ID = START_SEQ + 9;
     public static final int NOT_FOUND = 10;
 
     public static final Position position1 = new Position(POSITION_1_ID, "position 1 name", 40200);

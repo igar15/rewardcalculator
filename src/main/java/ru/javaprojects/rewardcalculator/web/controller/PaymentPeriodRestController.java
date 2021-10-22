@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaprojects.rewardcalculator.model.PaymentPeriod;
@@ -48,6 +49,7 @@ public class PaymentPeriodRestController {
         return service.get(id);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_ECONOMIST"})
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -55,6 +57,7 @@ public class PaymentPeriodRestController {
         service.delete(id);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_ECONOMIST"})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PaymentPeriod> createWithLocation(@Valid @RequestBody PaymentPeriod paymentPeriod) {
         log.info("create {}", paymentPeriod);
@@ -66,6 +69,7 @@ public class PaymentPeriodRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_ECONOMIST"})
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody PaymentPeriod paymentPeriod, @PathVariable int id) {

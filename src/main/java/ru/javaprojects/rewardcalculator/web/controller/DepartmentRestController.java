@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaprojects.rewardcalculator.model.Department;
@@ -30,24 +31,28 @@ public class DepartmentRestController {
         this.service = service;
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
     @GetMapping
     public List<Department> getAll() {
         log.info("getAll");
         return service.getAll();
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
     @GetMapping("/byPage")
     public Page<Department> getAll(Pageable pageable) {
         log.info("getAll (pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
         return service.getAll(pageable);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
     @GetMapping("/{id}")
     public Department get(@PathVariable int id) {
         log.info("get {}", id);
         return service.get(id);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -55,6 +60,7 @@ public class DepartmentRestController {
         service.delete(id);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Department> createWithLocation(@Valid @RequestBody Department department) {
         log.info("create {}", department);
@@ -66,6 +72,7 @@ public class DepartmentRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody Department department, @PathVariable int id) {
