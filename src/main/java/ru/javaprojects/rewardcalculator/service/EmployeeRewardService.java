@@ -2,12 +2,10 @@ package ru.javaprojects.rewardcalculator.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import ru.javaprojects.rewardcalculator.model.DepartmentReward;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRewardRepository;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
-import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
@@ -29,9 +27,17 @@ public class EmployeeRewardService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found employee reward with id=" + id));
     }
 
+    public EmployeeReward getWithDepartment(int id) {
+        return repository.findByIdWithDepartment(id).orElseThrow(() -> new NotFoundException("Not found employee reward with id=" + id));
+    }
+
     public List<EmployeeReward> getAllByDepartmentRewardId(int departmentRewardId) {
-        departmentRewardService.get(departmentRewardId);
-        return repository.findAllByDepartmentRewardIdOrderByEmployeeName(departmentRewardId);
+        DepartmentReward departmentReward = departmentRewardService.get(departmentRewardId);
+        return getAllByDepartmentReward(departmentReward);
+    }
+
+    public List<EmployeeReward> getAllByDepartmentReward(DepartmentReward departmentReward) {
+        return repository.findAllByDepartmentRewardIdOrderByEmployeeName(departmentReward.getId());
     }
 
     @Transactional

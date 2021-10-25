@@ -19,6 +19,10 @@ public class Department extends AbstractNamedEntity {
         super(id, name);
     }
 
+    public Department(Integer id) {
+        this(id, null);
+    }
+
     @Override
     public String toString() {
         return "Department{" +

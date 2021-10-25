@@ -13,7 +13,8 @@ import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
 
-import static ru.javaprojects.rewardcalculator.util.EmployeeUtil.*;
+import static ru.javaprojects.rewardcalculator.util.EmployeeUtil.createFromTo;
+import static ru.javaprojects.rewardcalculator.util.EmployeeUtil.updateFromTo;
 
 @Service
 public class EmployeeService {
@@ -39,6 +40,10 @@ public class EmployeeService {
 
     public Employee get(int id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found employee with id=" + id));
+    }
+
+    public Employee getWithPositionDepartment(int id) {
+        return repository.findByIdWithPositionDepartment(id).orElseThrow(() -> new NotFoundException("Not found employee with id=" + id));
     }
 
     @Cacheable(value = "employees", key = "#departmentId")

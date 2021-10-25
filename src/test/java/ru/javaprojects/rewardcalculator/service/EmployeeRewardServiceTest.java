@@ -11,6 +11,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_MATCHER;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.department1;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.getUpdated;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.getUpdatedTo;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.*;
@@ -31,6 +33,13 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    void getWithDepartment() {
+        EmployeeReward employeeReward = service.getWithDepartment(EMPLOYEE_REWARD_1_ID);
+        EMPLOYEE_REWARD_MATCHER.assertMatch(employeeReward, employeeReward1);
+        DEPARTMENT_MATCHER.assertMatch(employeeReward.getDepartmentReward().getDepartment(), department1);
+    }
+
+    @Test
     void getNotFound() {
         assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND));
     }
@@ -38,6 +47,12 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
     @Test
     void getAllByDepartmentRewardId() {
         List<EmployeeReward> employeeRewards = service.getAllByDepartmentRewardId(DEPARTMENT_REWARD_2_ID);
+        EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward1, employeeReward2, employeeReward3);
+    }
+
+    @Test
+    void getAllByDepartmentReward() {
+        List<EmployeeReward> employeeRewards = service.getAllByDepartmentReward(departmentReward2);
         EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward1, employeeReward2, employeeReward3);
     }
 

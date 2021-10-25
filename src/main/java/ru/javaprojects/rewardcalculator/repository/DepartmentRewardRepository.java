@@ -20,6 +20,10 @@ public interface DepartmentRewardRepository extends JpaRepository<DepartmentRewa
     @EntityGraph(attributePaths = {"paymentPeriod"})
     Optional<DepartmentReward> findById(int id);
 
+    @EntityGraph(attributePaths = {"department", "paymentPeriod"})
+    @Query("SELECT d FROM DepartmentReward d WHERE d.id = :id")
+    Optional<DepartmentReward> findByIdWithDepartment(@Param("id") int id);
+
     @EntityGraph(attributePaths = {"paymentPeriod"})
     List<DepartmentReward> findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(int departmentId);
 
@@ -27,8 +31,4 @@ public interface DepartmentRewardRepository extends JpaRepository<DepartmentRewa
     Page<DepartmentReward> findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(int departmentId, Pageable pageable);
 
     Optional<DepartmentReward> findByDepartmentIdAndPaymentPeriodId(int departmentId, int paymentPeriodId);
-
-    @EntityGraph(attributePaths = {"department", "paymentPeriod"})
-    @Query("SELECT d FROM DepartmentReward d WHERE d.id = :id")
-    DepartmentReward findByIdWithDepartmentAndPaymentPeriod(@Param("id") int id);
 }

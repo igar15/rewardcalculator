@@ -4,44 +4,62 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ru.javaprojects.rewardcalculator.model.DepartmentReward;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
+import ru.javaprojects.rewardcalculator.service.DepartmentRewardService;
 import ru.javaprojects.rewardcalculator.service.EmployeeRewardService;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
+import ru.javaprojects.rewardcalculator.web.security.AuthorizedUser;
 
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.javaprojects.rewardcalculator.util.SecureUtil.checkDepartmentHeadManagesTheDepartment;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.assureIdConsistent;
 
 @RestController
 @RequestMapping(value = EmployeeRewardRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@Secured({"ROLE_ADMIN", "ROLE_DEPARTMENT_HEAD"})
 public class EmployeeRewardRestController {
     private final Logger log = LoggerFactory.getLogger(getClass());
     static final String REST_URL = "/api";
     private final EmployeeRewardService service;
+    private final DepartmentRewardService departmentRewardService;
 
-    public EmployeeRewardRestController(EmployeeRewardService service) {
+    public EmployeeRewardRestController(EmployeeRewardService service, DepartmentRewardService departmentRewardService) {
         this.service = service;
+        this.departmentRewardService = departmentRewardService;
     }
 
     @GetMapping("/departmentrewards/{departmentRewardId}/employeerewards")
-    public List<EmployeeReward> getAll(@PathVariable int departmentRewardId) {
+    public List<EmployeeReward> getAll(@PathVariable int departmentRewardId, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("getAll for departmentReward {}", departmentRewardId);
-        return service.getAllByDepartmentRewardId(departmentRewardId);
+        DepartmentReward departmentReward = departmentRewardService.getWithDepartment(departmentRewardId);
+        checkDepartmentHeadManagesTheDepartment(authUser, departmentReward.getDepartment());
+        return service.getAllByDepartmentReward(departmentReward);
     }
 
     @GetMapping("/employeerewards/{id}")
-    public EmployeeReward get(@PathVariable int id) {
+    public EmployeeReward get(@PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("get {}", id);
-        return service.get(id);
+        return checkDepartmentHeadManagesTheEmployeeReward(id, authUser);
     }
 
     @PutMapping(value = "/employeerewards/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody EmployeeRewardTo employeeRewardTo, @PathVariable int id) {
+    public void update(@Valid @RequestBody EmployeeRewardTo employeeRewardTo, @PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("update {} with id={}", employeeRewardTo, id);
         assureIdConsistent(employeeRewardTo, id);
+        checkDepartmentHeadManagesTheEmployeeReward(employeeRewardTo.getId(), authUser);
         service.update(employeeRewardTo);
+    }
+
+    private EmployeeReward checkDepartmentHeadManagesTheEmployeeReward(int employeeRewardId, AuthorizedUser authUser) {
+        EmployeeReward employeeReward = service.getWithDepartment(employeeRewardId);
+        checkDepartmentHeadManagesTheDepartment(authUser, employeeReward.getDepartmentReward().getDepartment());
+        return employeeReward;
     }
 }

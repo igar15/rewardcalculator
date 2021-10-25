@@ -11,7 +11,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_1_ID;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getNew;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getNewTo;
@@ -52,6 +52,14 @@ class EmployeeServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    void getWithPositionDepartment() {
+        Employee employee = service.getWithPositionDepartment(EMPLOYEE_1_ID);
+        EMPLOYEE_MATCHER.assertMatch(employee, employee1);
+        POSITION_MATCHER.assertMatch(employee.getPosition(), position1);
+        DEPARTMENT_MATCHER.assertMatch(employee.getPosition().getDepartment(), department1);
+    }
+
+    @Test
     void getNotFound() {
         assertThrows(NotFoundException.class, () -> service.get(NOT_FOUND));
     }
@@ -89,7 +97,7 @@ class EmployeeServiceTest extends AbstractServiceTest {
         EmployeeTo updatedTo = getUpdatedTo();
         updatedTo.setPositionId(POSITION_3_ID);
         service.update(updatedTo);
-        Employee employee = repository.findByIdWithPosition(EMPLOYEE_1_ID);
+        Employee employee = service.getWithPositionDepartment(EMPLOYEE_1_ID);
         EMPLOYEE_MATCHER.assertMatch(employee, getUpdated());
         POSITION_MATCHER.assertMatch(employee.getPosition(), position3);
     }

@@ -11,9 +11,10 @@ import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SE
 public class EmployeeRewardTestData {
     public static final TestMatcher<EmployeeReward> EMPLOYEE_REWARD_MATCHER = TestMatcher.usingIgnoringFieldsComparator(EmployeeReward.class, "employee", "departmentReward");
 
-    public static final int EMPLOYEE_REWARD_1_ID = START_SEQ + 19;
-    public static final int EMPLOYEE_REWARD_2_ID = START_SEQ + 20;
-    public static final int EMPLOYEE_REWARD_3_ID = START_SEQ + 21;
+    public static final int EMPLOYEE_REWARD_1_ID = START_SEQ + 22;
+    public static final int EMPLOYEE_REWARD_2_ID = START_SEQ + 23;
+    public static final int EMPLOYEE_REWARD_3_ID = START_SEQ + 24;
+    public static final int EMPLOYEE_REWARD_ANOTHER_DEPARTMENT_ID = START_SEQ + 26;
     public static final int NOT_FOUND = 10;
 
     public static final EmployeeReward employeeReward1 = new EmployeeReward(EMPLOYEE_REWARD_1_ID, 150.75, 12060, 0, 0);

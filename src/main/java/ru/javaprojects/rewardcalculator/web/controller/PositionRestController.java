@@ -5,16 +5,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javaprojects.rewardcalculator.model.Position;
 import ru.javaprojects.rewardcalculator.service.PositionService;
 import ru.javaprojects.rewardcalculator.to.PositionTo;
+import ru.javaprojects.rewardcalculator.web.security.AuthorizedUser;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static ru.javaprojects.rewardcalculator.util.SecureUtil.checkDepartmentHeadManagesTheDepartment;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.assureIdConsistent;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.checkNew;
 
@@ -30,17 +34,21 @@ public class PositionRestController {
     }
 
     @GetMapping("/departments/{departmentId}/positions")
-    public List<Position> getAll(@PathVariable int departmentId) {
+    public List<Position> getAll(@PathVariable int departmentId, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("getAll for department {}", departmentId);
+        checkDepartmentHeadManagesTheDepartment(authUser, departmentId);
         return service.getAllByDepartmentId(departmentId);
     }
 
     @GetMapping("/positions/{id}")
-    public Position get(@PathVariable int id) {
+    public Position get(@PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("get {}", id);
-        return service.get(id);
+        Position position = service.getWithDepartment(id);
+        checkDepartmentHeadManagesTheDepartment(authUser, position.getDepartment());
+        return position;
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @DeleteMapping("/positions/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -48,6 +56,7 @@ public class PositionRestController {
         service.delete(id);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @PostMapping(value = "/positions", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Position> createWithLocation(@Valid @RequestBody PositionTo positionTo) {
         log.info("create {}", positionTo);
@@ -59,6 +68,7 @@ public class PositionRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @PutMapping(value = "/positions/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody PositionTo positionTo, @PathVariable int id) {

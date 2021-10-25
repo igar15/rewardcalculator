@@ -21,5 +21,7 @@ public interface EmployeeRewardRepository extends JpaRepository<EmployeeReward, 
     @Query("SELECT e FROM EmployeeReward e WHERE e.id = :id")
     Optional<EmployeeReward> findByIdWithPositionAndDepartmentReward(int id);
 
-    Optional<EmployeeReward> findById(int id);
+    @EntityGraph(attributePaths = {"departmentReward.department"})
+    @Query("SELECT e FROM EmployeeReward e WHERE e.id = :id")
+    Optional<EmployeeReward> findByIdWithDepartment(int id);
 }

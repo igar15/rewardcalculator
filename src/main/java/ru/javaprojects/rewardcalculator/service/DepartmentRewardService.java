@@ -53,6 +53,10 @@ public class DepartmentRewardService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found department reward with id=" + id));
     }
 
+    public DepartmentReward getWithDepartment(int id) {
+        return repository.findByIdWithDepartment(id).orElseThrow(() -> new NotFoundException("Not found department reward with id=" + id));
+    }
+
     public DepartmentReward getByDepartmentIdAndPaymentPeriodId(int departmentId, int paymentPeriodId) {
         departmentService.get(departmentId);
         paymentPeriodService.get(paymentPeriodId);

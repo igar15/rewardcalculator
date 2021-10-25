@@ -19,9 +19,10 @@ import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.pa
 public class DepartmentRewardTestData {
     public static final TestMatcher<DepartmentReward> DEPARTMENT_REWARD_MATCHER = TestMatcher.usingIgnoringFieldsComparator(DepartmentReward.class, "department", "paymentPeriod");
 
-    public static final int DEPARTMENT_REWARD_1_ID = START_SEQ + 16;
-    public static final int DEPARTMENT_REWARD_2_ID = START_SEQ + 17;
-    public static final int DEPARTMENT_REWARD_3_ID = START_SEQ + 18;
+    public static final int DEPARTMENT_REWARD_1_ID = START_SEQ + 18;
+    public static final int DEPARTMENT_REWARD_2_ID = START_SEQ + 19;
+    public static final int DEPARTMENT_REWARD_3_ID = START_SEQ + 20;
+    public static final int DEPARTMENT_REWARD_ANOTHER_DEPARTMENT_ID = START_SEQ + 21;
     public static final int NOT_FOUND = 10;
 
     public static final DepartmentReward departmentReward1 = new DepartmentReward(DEPARTMENT_REWARD_1_ID, 40800, 40800);

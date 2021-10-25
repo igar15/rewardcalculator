@@ -16,9 +16,9 @@ import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SE
 public class PaymentPeriodTestData {
     public static final TestMatcher<PaymentPeriod> PAYMENT_PERIOD_MATCHER = TestMatcher.usingIgnoringFieldsComparator(PaymentPeriod.class);
 
-    public static final int PAYMENT_PERIOD_1_ID = START_SEQ + 13;
-    public static final int PAYMENT_PERIOD_2_ID = START_SEQ + 14;
-    public static final int PAYMENT_PERIOD_3_ID = START_SEQ + 15;
+    public static final int PAYMENT_PERIOD_1_ID = START_SEQ + 15;
+    public static final int PAYMENT_PERIOD_2_ID = START_SEQ + 16;
+    public static final int PAYMENT_PERIOD_3_ID = START_SEQ + 17;
     public static final int NOT_FOUND = 10;
 
     public static final PaymentPeriod paymentPeriod1 = new PaymentPeriod(PAYMENT_PERIOD_1_ID, YearMonth.of(2021, JANUARY), 120d);

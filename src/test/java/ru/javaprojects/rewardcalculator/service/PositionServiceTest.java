@@ -11,8 +11,10 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_1_ID;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.NOT_FOUND;
+import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.getNew;
+import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.getUpdated;
 import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.*;
 
 class PositionServiceTest extends AbstractServiceTest {
@@ -39,6 +41,13 @@ class PositionServiceTest extends AbstractServiceTest {
     void get() {
         Position position = service.get(POSITION_1_ID);
         POSITION_MATCHER.assertMatch(position, position1);
+    }
+
+    @Test
+    void getWithDepartment() {
+        Position position = service.getWithDepartment(POSITION_1_ID);
+        POSITION_MATCHER.assertMatch(position, position1);
+        DEPARTMENT_MATCHER.assertMatch(position.getDepartment(), department1);
     }
 
     @Test

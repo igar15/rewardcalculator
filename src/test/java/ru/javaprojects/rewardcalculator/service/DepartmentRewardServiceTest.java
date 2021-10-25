@@ -25,8 +25,7 @@ import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getUpdated;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.getUpdatedTo;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.*;
-import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_1_ID;
-import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_3_ID;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.*;
 
@@ -80,6 +79,14 @@ class DepartmentRewardServiceTest extends AbstractServiceTest {
     void get() {
         DepartmentReward departmentReward = service.get(DEPARTMENT_REWARD_1_ID);
         DEPARTMENT_REWARD_MATCHER.assertMatch(departmentReward, departmentReward1);
+        PAYMENT_PERIOD_MATCHER.assertMatch(departmentReward.getPaymentPeriod(), paymentPeriod1);
+    }
+
+    @Test
+    void getWithDepartment() {
+        DepartmentReward departmentReward = service.getWithDepartment(DEPARTMENT_REWARD_1_ID);
+        DEPARTMENT_REWARD_MATCHER.assertMatch(departmentReward, departmentReward1);
+        DEPARTMENT_MATCHER.assertMatch(departmentReward.getDepartment(), department1);
         PAYMENT_PERIOD_MATCHER.assertMatch(departmentReward.getPaymentPeriod(), paymentPeriod1);
     }
 

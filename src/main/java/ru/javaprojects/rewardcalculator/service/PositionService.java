@@ -40,6 +40,10 @@ public class PositionService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found position with id=" + id));
     }
 
+    public Position getWithDepartment(int id) {
+        return repository.findByIdWithDepartment(id).orElseThrow(() -> new NotFoundException("Not found position with id=" + id));
+    }
+
     @Cacheable(value = "positions", key = "#departmentId")
     public List<Position> getAllByDepartmentId(int departmentId) {
         departmentService.get(departmentId);

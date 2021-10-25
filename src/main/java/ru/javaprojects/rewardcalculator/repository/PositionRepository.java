@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.rewardcalculator.model.Position;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
@@ -18,5 +19,5 @@ public interface PositionRepository extends JpaRepository<Position, Integer> {
 
     @EntityGraph(attributePaths = {"department"})
     @Query("SELECT p FROM Position p WHERE p.id = :id")
-    Position findByIdWithDepartment(@Param("id") int id);
+    Optional<Position> findByIdWithDepartment(@Param("id") int id);
 }
