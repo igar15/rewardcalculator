@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,11 +19,14 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static ru.javaprojects.rewardcalculator.config.OpenApiConfig.ALLOWED_ADMIN_PERSONNEL_OFFICER;
+import static ru.javaprojects.rewardcalculator.config.OpenApiConfig.ALLOWED_ADMIN_PERSONNEL_OFFICER_ECONOMIST;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.assureIdConsistent;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = DepartmentRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@Tag(name = "Department Controller")
 public class DepartmentRestController {
     private final Logger log = LoggerFactory.getLogger(getClass());
     static final String REST_URL = "/api/departments";
@@ -31,37 +36,42 @@ public class DepartmentRestController {
         this.service = service;
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
     @GetMapping
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
+    @Operation(description = "Get all departments" + ALLOWED_ADMIN_PERSONNEL_OFFICER_ECONOMIST)
     public List<Department> getAll() {
         log.info("getAll");
         return service.getAll();
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
     @GetMapping("/byPage")
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
+    @Operation(description = "Get departments page" + ALLOWED_ADMIN_PERSONNEL_OFFICER_ECONOMIST)
     public Page<Department> getAll(Pageable pageable) {
         log.info("getAll (pageNumber={}, pageSize={})", pageable.getPageNumber(), pageable.getPageSize());
         return service.getAll(pageable);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
     @GetMapping("/{id}")
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER", "ROLE_ECONOMIST"})
+    @Operation(description = "Get department" + ALLOWED_ADMIN_PERSONNEL_OFFICER_ECONOMIST)
     public Department get(@PathVariable int id) {
         log.info("get {}", id);
         return service.get(id);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
+    @Operation(description = "Delete department" + ALLOWED_ADMIN_PERSONNEL_OFFICER)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
         service.delete(id);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
+    @Operation(description = "Create new department" + ALLOWED_ADMIN_PERSONNEL_OFFICER)
     public ResponseEntity<Department> createWithLocation(@Valid @RequestBody Department department) {
         log.info("create {}", department);
         checkNew(department);
@@ -72,9 +82,10 @@ public class DepartmentRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
+    @Operation(description = "Update department" + ALLOWED_ADMIN_PERSONNEL_OFFICER)
     public void update(@Valid @RequestBody Department department, @PathVariable int id) {
         log.info("update {} with id={}", department, id);
         assureIdConsistent(department, id);

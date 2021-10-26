@@ -1,5 +1,8 @@
 package ru.javaprojects.rewardcalculator.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +26,7 @@ import static ru.javaprojects.rewardcalculator.web.security.JwtProvider.AUTHORIZ
 @RestController
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Validated
+@Tag(name = "Profile Controller")
 public class ProfileRestController {
     static final String REST_URL = "/api/profile";
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -37,6 +41,8 @@ public class ProfileRestController {
     }
 
     @PostMapping("/login")
+    @Operation(description = "Login to app")
+    @SecurityRequirements
     public ResponseEntity<User> login(@RequestParam String email, @RequestParam String password) {
         log.info("login user {}", email);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email.toLowerCase(), password));
@@ -47,6 +53,7 @@ public class ProfileRestController {
     }
 
     @GetMapping
+    @Operation(description = "Get user profile data")
     public User get(@AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("get {}", authUser.getId());
         return service.get(authUser.getId());
@@ -54,6 +61,7 @@ public class ProfileRestController {
 
     @PatchMapping("/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(description = "Change user profile password")
     public void changePassword(@RequestParam @Size(min = 5, max = 32) String password, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("change password for user {}", authUser.getId());
         service.changePassword(authUser.getId(), password);

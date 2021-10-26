@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,12 +19,14 @@ import ru.javaprojects.rewardcalculator.web.security.AuthorizedUser;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.javaprojects.rewardcalculator.config.OpenApiConfig.ALLOWED_ADMIN_DEPARTMENT_HEAD;
 import static ru.javaprojects.rewardcalculator.util.SecureUtil.checkDepartmentHeadManagesTheDepartment;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.assureIdConsistent;
 
 @RestController
 @RequestMapping(value = EmployeeRewardRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Secured({"ROLE_ADMIN", "ROLE_DEPARTMENT_HEAD"})
+@Tag(name = "Employee Reward Controller")
 public class EmployeeRewardRestController {
     private final Logger log = LoggerFactory.getLogger(getClass());
     static final String REST_URL = "/api";
@@ -35,6 +39,7 @@ public class EmployeeRewardRestController {
     }
 
     @GetMapping("/departmentrewards/{departmentRewardId}/employeerewards")
+    @Operation(description = "Get all employee rewards of the department reward" + ALLOWED_ADMIN_DEPARTMENT_HEAD)
     public List<EmployeeReward> getAll(@PathVariable int departmentRewardId, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("getAll for departmentReward {}", departmentRewardId);
         DepartmentReward departmentReward = departmentRewardService.getWithDepartment(departmentRewardId);
@@ -43,6 +48,7 @@ public class EmployeeRewardRestController {
     }
 
     @GetMapping("/employeerewards/{id}")
+    @Operation(description = "Get employee reward" + ALLOWED_ADMIN_DEPARTMENT_HEAD)
     public EmployeeReward get(@PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("get {}", id);
         return checkDepartmentHeadManagesTheEmployeeReward(id, authUser);
@@ -50,6 +56,7 @@ public class EmployeeRewardRestController {
 
     @PutMapping(value = "/employeerewards/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(description = "Update employee reward" + ALLOWED_ADMIN_DEPARTMENT_HEAD)
     public void update(@Valid @RequestBody EmployeeRewardTo employeeRewardTo, @PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("update {} with id={}", employeeRewardTo, id);
         assureIdConsistent(employeeRewardTo, id);
