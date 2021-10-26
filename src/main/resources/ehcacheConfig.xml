@@ -18,7 +18,7 @@
 
     <cache alias="departments" uses-template="singleNonExpiryCache"/>
     <cache alias="paymentperiods" uses-template="singleNonExpiryCache"/>
-<!--    <cache alias="users" uses-template="multiNonExpiryCache"/>-->
     <cache alias="positions" uses-template="multiNonExpiryCache"/>
     <cache alias="employees" uses-template="multiNonExpiryCache"/>
+    <cache alias="users" uses-template="multiNonExpiryCache"/>
 </config>

@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +19,11 @@ public class JwtProvider {
     public static final long AUTHORIZATION_TOKEN_EXPIRATION_TIME = 432_000_000; // 5 days
     public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+
+    public JwtProvider(Environment environment) {
+        this.environment = environment;
+    }
 
     public  String generateAuthorizationToken(String userEmail) {
         return JWT.create()

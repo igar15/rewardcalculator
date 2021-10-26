@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.service;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,7 @@ public class UserService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Not found user with id=" + id));
     }
 
+    @Cacheable(value = "users", key = "#email")
     public User getByEmail(String email) {
         Assert.notNull(email, "email must not be null");
         return repository.findByEmail(email).orElseThrow(() -> new NotFoundException("Not found user with email=" + email));
@@ -50,11 +53,13 @@ public class UserService {
         return repository.findAllByOrderByNameAscEmailAsc();
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
         User user = get(id);
         repository.delete(user);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     public void update(UserTo userTo) {
         Assert.notNull(userTo, "userTo must not be null");
@@ -63,12 +68,14 @@ public class UserService {
         addManagedDepartments(user, userTo);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     public void enable(int id, boolean enabled) {
         User user = get(id);
         user.setEnabled(enabled);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     public void changePassword(int id, String password) {
         Assert.notNull(password, "password must not be null");
