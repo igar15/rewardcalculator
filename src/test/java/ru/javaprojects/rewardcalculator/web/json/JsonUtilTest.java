@@ -46,10 +46,7 @@ class JsonUtilTest {
 
     @Test
     void readContentFromPage() {
-        String jsonPage = "{\"content\":[{\"id\":100013,\"period\":\"2021-03\",\"requiredHoursWorked\":176.5}," +
-                "{\"id\":100012,\"period\":\"2021-02\",\"requiredHoursWorked\":150.75}]," +
-                "\"pageable\":{\"page\":0,\"size\":2,\"sort\":{\"orders\":[]}},\"total\":3}";
-        List<PaymentPeriod> paymentPeriods = JsonUtil.readContentFromPage(jsonPage, PaymentPeriod.class);
+        List<PaymentPeriod> paymentPeriods = JsonUtil.readContentFromPage(JSON_PAGE, PaymentPeriod.class);
         PAYMENT_PERIOD_MATCHER.assertMatch(paymentPeriods, paymentPeriod3, paymentPeriod2);
     }
 }

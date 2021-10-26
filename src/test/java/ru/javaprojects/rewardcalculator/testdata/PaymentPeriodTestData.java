@@ -27,6 +27,10 @@ public class PaymentPeriodTestData {
 
     public static final Pageable PAGEABLE = PageRequest.of(0, 2);
     public static final Page<PaymentPeriod> PAGE = new PageImpl<>(List.of(paymentPeriod3, paymentPeriod2), PAGEABLE, 3);
+    public static final String JSON_PAGE =
+            "{\"content\":[{\"id\":100017,\"period\":\"2021-03\",\"requiredHoursWorked\":176.5}," +
+            "{\"id\":100016,\"period\":\"2021-02\",\"requiredHoursWorked\":150.75}]," +
+            "\"pageable\":{\"page\":0,\"size\":2,\"sort\":{\"orders\":[]}},\"total\":3}";
 
     public static PaymentPeriod getNew() {
         return new PaymentPeriod(null, YearMonth.now(), 176.25);
