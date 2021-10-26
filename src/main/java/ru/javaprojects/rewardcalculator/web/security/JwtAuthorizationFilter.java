@@ -11,8 +11,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.javaprojects.rewardcalculator.model.User;
-import ru.javaprojects.rewardcalculator.repository.UserRepository;
+import ru.javaprojects.rewardcalculator.service.UserService;
 import ru.javaprojects.rewardcalculator.util.exception.ErrorInfo;
+import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import ru.javaprojects.rewardcalculator.web.json.JacksonObjectMapper;
 
 import javax.servlet.FilterChain;
@@ -21,7 +22,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.BAD_TOKEN_ERROR;
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.DISABLED_ERROR;
@@ -33,12 +33,12 @@ import static ru.javaprojects.rewardcalculator.web.security.JwtProvider.TOKEN_PR
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     public static final String OPTIONS_HTTP_METHOD = "Options";
     private final JwtProvider jwtProvider;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ObjectMapper mapper = JacksonObjectMapper.getMapper();
 
-    public JwtAuthorizationFilter(JwtProvider jwtProvider, UserRepository userRepository) {
+    public JwtAuthorizationFilter(JwtProvider jwtProvider, UserService userService) {
         this.jwtProvider = jwtProvider;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -78,17 +78,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private AuthResult getAuthentication(String userEmail, HttpServletRequest request, HttpServletResponse response) throws IOException {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
-        Optional<User> optionalUser = userRepository.findByEmail(userEmail);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        try {
+            User user = userService.getByEmail(userEmail);
             if (!user.isEnabled()) {
                 sendDisableResponse(request, response);
                 return new AuthResult(null, false);
+            } else {
+                AuthorizedUser authUser = new AuthorizedUser(user);
+                usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(authUser, null, authUser.getAuthorities());
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             }
-            AuthorizedUser authUser = new AuthorizedUser(user);
-            usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(authUser, null, authUser.getAuthorities());
-            usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        } catch (NotFoundException e) {
+            // We do not need to do anything here, just return AuthResult with null UsernamePasswordAuthenticationToken
         }
         return new AuthResult(usernamePasswordAuthenticationToken, true);
     }
@@ -99,7 +101,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());
         ServletOutputStream outputStream = response.getOutputStream();
-//        ObjectMapper mapper = JacksonObjectMapper.getMapper();
         mapper.writeValue(outputStream, responseEntity);
         outputStream.flush();
     }
@@ -110,7 +111,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         ServletOutputStream outputStream = response.getOutputStream();
-//        ObjectMapper mapper = JacksonObjectMapper.getMapper();
         mapper.writeValue(outputStream, responseEntity);
         outputStream.flush();
     }
