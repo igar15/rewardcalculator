@@ -1,15 +1,20 @@
 package ru.javaprojects.rewardcalculator.service;
 
+import com.itextpdf.text.pdf.PdfReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.javaprojects.rewardcalculator.TestUtil;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
+import java.io.IOException;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.javaprojects.rewardcalculator.TestUtil.checkPdf;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_MATCHER;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.department1;
@@ -54,6 +59,12 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
     void getAllByDepartmentReward() {
         List<EmployeeReward> employeeRewards = service.getAllByDepartmentReward(departmentReward2);
         EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward1, employeeReward2, employeeReward3);
+    }
+
+    @Test
+    void getAllByDepartmentRewardInPdf() throws IOException {
+        byte[] pdfBytes = service.getAllByDepartmentRewardInPdf(departmentReward2);
+        checkPdf(pdfBytes);
     }
 
     @Test

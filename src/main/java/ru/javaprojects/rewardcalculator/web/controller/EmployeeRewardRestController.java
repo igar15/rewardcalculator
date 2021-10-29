@@ -64,6 +64,16 @@ public class EmployeeRewardRestController {
         service.update(employeeRewardTo);
     }
 
+    @GetMapping(value = "/departmentrewards/{departmentRewardId}/employeerewards/pdf",
+                produces = MediaType.APPLICATION_PDF_VALUE)
+    @Operation(description = "Get all employee rewards of the department reward in PDF file" + ALLOWED_ADMIN_DEPARTMENT_HEAD)
+    public @ResponseBody byte[] getAllInPdf(@PathVariable int departmentRewardId, @AuthenticationPrincipal AuthorizedUser authUser) {
+        log.info("getAll for departmentReward {} in pdf", departmentRewardId);
+        DepartmentReward departmentReward = departmentRewardService.getWithDepartment(departmentRewardId);
+        checkDepartmentHeadManagesTheDepartment(authUser, departmentReward.getDepartment());
+        return service.getAllByDepartmentRewardInPdf(departmentReward);
+    }
+
     private EmployeeReward checkDepartmentHeadManagesTheEmployeeReward(int employeeRewardId, AuthorizedUser authUser) {
         EmployeeReward employeeReward = service.getWithDepartment(employeeRewardId);
         checkDepartmentHeadManagesTheDepartment(authUser, employeeReward.getDepartmentReward().getDepartment());

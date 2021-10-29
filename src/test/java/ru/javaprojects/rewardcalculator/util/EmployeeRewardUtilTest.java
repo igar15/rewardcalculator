@@ -1,11 +1,18 @@
 package ru.javaprojects.rewardcalculator.util;
 
+import com.itextpdf.text.pdf.PdfReader;
 import org.junit.jupiter.api.Test;
+import ru.javaprojects.rewardcalculator.TestUtil;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static ru.javaprojects.rewardcalculator.TestUtil.*;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward1;
+import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward2;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.*;
 import static ru.javaprojects.rewardcalculator.util.EmployeeRewardUtil.*;
 
 class EmployeeRewardUtilTest {
@@ -29,5 +36,11 @@ class EmployeeRewardUtilTest {
         int newDistributedAmount = calculateNewDistributedAmount(departmentReward1, 16020, 10020);
         assertEquals(34800, newDistributedAmount);
         assertThrows(EmployeeRewardBadDataException.class, () -> calculateNewDistributedAmount(departmentReward1, 16020, 20000));
+    }
+
+    @Test
+    void createEmployeeRewardsPdfFormTest() throws IOException {
+        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward1, employeeReward2, employeeReward3), departmentReward2);
+        checkPdf(pdfBytes);
     }
 }

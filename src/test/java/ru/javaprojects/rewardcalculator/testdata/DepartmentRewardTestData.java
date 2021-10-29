@@ -13,8 +13,7 @@ import java.util.List;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.DEPARTMENT_1_ID;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.department1;
-import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.PAYMENT_PERIOD_3_ID;
-import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.paymentPeriod3;
+import static ru.javaprojects.rewardcalculator.testdata.PaymentPeriodTestData.*;
 
 public class DepartmentRewardTestData {
     public static final TestMatcher<DepartmentReward> DEPARTMENT_REWARD_MATCHER = TestMatcher.usingIgnoringFieldsComparator(DepartmentReward.class, "department", "paymentPeriod");
@@ -26,7 +25,7 @@ public class DepartmentRewardTestData {
     public static final int NOT_FOUND = 10;
 
     public static final DepartmentReward departmentReward1 = new DepartmentReward(DEPARTMENT_REWARD_1_ID, 40800, 40800);
-    public static final DepartmentReward departmentReward2 = new DepartmentReward(DEPARTMENT_REWARD_2_ID, 40800, 40800);
+    public static final DepartmentReward departmentReward2 = new DepartmentReward(DEPARTMENT_REWARD_2_ID, 40800, 40800, department1, paymentPeriod2);
     public static final DepartmentReward departmentReward3 = new DepartmentReward(DEPARTMENT_REWARD_3_ID, 40800, 40800);
 
     public static final Pageable PAGEABLE = PageRequest.of(0, 2);

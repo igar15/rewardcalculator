@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javaprojects.rewardcalculator.service.DepartmentRewardService;
 import ru.javaprojects.rewardcalculator.service.EmployeeRewardService;
@@ -13,6 +14,7 @@ import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.javaprojects.rewardcalculator.TestUtil.checkPdf;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.getUpdated;
@@ -89,6 +91,74 @@ class EmployeeRewardRestControllerTest extends AbstractControllerTest {
     @Test
     void getAllUnAuth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(errorType(UNAUTHORIZED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAllInPdfWhenAdmin() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF));
+
+        byte[] pdfBytes = action.andReturn().getResponse().getContentAsByteArray();
+        checkPdf(pdfBytes);
+    }
+
+    @Test
+    @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
+    void getAllInPdfWhenDepartmentHead() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF));
+
+        byte[] pdfBytes = action.andReturn().getResponse().getContentAsByteArray();
+        checkPdf(pdfBytes);
+    }
+
+    @Test
+    @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
+    void getAllInPdfForbiddenWhenDepartmentHead() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_ANOTHER_DEPARTMENT_ID + "/employeerewards/pdf"))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ECONOMIST_MAIL)
+    void getAllInPdfForbiddenWhenEconomist() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf"))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = PERSONNEL_OFFICER_MAIL)
+    void getAllInPdfForbiddenWhenPersonnelOfficer() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf"))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAllInPdfWithNotExistedDepartmentReward() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + NOT_FOUND + "/employeerewards/pdf"))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(DATA_NOT_FOUND));
+    }
+
+    @Test
+    void getAllInPdfUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
                 .andExpect(errorType(UNAUTHORIZED_ERROR));

@@ -40,6 +40,11 @@ public class EmployeeRewardService {
         return repository.findAllByDepartmentRewardIdOrderByEmployeeName(departmentReward.getId());
     }
 
+    public byte[] getAllByDepartmentRewardInPdf(DepartmentReward departmentReward) {
+        List<EmployeeReward> employeeRewards = repository.findAllByDepartmentRewardIdOrderByEmployeeName(departmentReward.getId());
+        return createEmployeeRewardsPdfForm(employeeRewards, departmentReward);
+    }
+
     @Transactional
     public void update(EmployeeRewardTo employeeRewardTo) {
         checkToState(employeeRewardTo);

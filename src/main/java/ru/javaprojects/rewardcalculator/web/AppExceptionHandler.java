@@ -42,6 +42,7 @@ public class AppExceptionHandler {
     public static final String EXCEPTION_BAD_CREDENTIALS = "Email / password incorrect. Please try again";
     public static final String EXCEPTION_BAD_TOKEN = "Auth token is invalid. Try to authorize";
     public static final String EXCEPTION_DISABLED = "Your account was disabled";
+    public static final String PDF_CREATION_FAILED = "Failed to create PDF form";
 
     private static final Map<String, String> CONSTRAINS_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
@@ -97,6 +98,11 @@ public class AppExceptionHandler {
                        HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorInfo> illegalRequestDataError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
+    }
+
+    @ExceptionHandler(PdfException.class)
+    public ResponseEntity<ErrorInfo> pdfFormCreationError(HttpServletRequest req, Exception e) {
+        return logAndGetErrorInfo(req, e, false, APP_ERROR, PDF_CREATION_FAILED);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
