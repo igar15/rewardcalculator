@@ -8,12 +8,13 @@ public class PositionUtil {
     }
 
     public static Position createFromTo(PositionTo positionTo) {
-        return new Position(positionTo.getId(), positionTo.getName(), positionTo.getSalary());
+        return new Position(positionTo.getId(), positionTo.getName(), positionTo.getSalary(), positionTo.getChiefPosition());
     }
 
     public static Position updateFromTo(Position position, PositionTo positionTo) {
         position.setName(positionTo.getName());
         position.setSalary(positionTo.getSalary());
+        position.setChiefPosition(positionTo.getChiefPosition());
         return position;
     }
 }

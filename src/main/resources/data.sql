@@ -32,11 +32,11 @@ INSERT INTO user_managed_departments (user_id, department_id)
 VALUES (100000, 100004),
        (100000, 100005);
 
-INSERT INTO positions (name, salary, department_id)
-VALUES ('position 1 name', 40200, 100004),
-       ('position 2 name', 35700, 100004),
-       ('position 3 name', 60100, 100004),
-       ('position name', 25000, 100006);
+INSERT INTO positions (name, salary, chief_position, department_id)
+VALUES ('position 1 name', 40200, false, 100004),
+       ('position 2 name', 35700, false, 100004),
+       ('position 3 name', 60100, true, 100004),
+       ('position name', 25000, false, 100006);
 
 INSERT INTO employees (name, position_id)
 VALUES ('employee 1 name', 100007),

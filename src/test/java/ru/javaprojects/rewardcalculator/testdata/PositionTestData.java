@@ -16,23 +16,23 @@ public class PositionTestData {
     public static final int POSITION_ANOTHER_DEPARTMENT_ID = START_SEQ + 10;
     public static final int NOT_FOUND = 10;
 
-    public static final Position position1 = new Position(POSITION_1_ID, "position 1 name", 40200);
-    public static final Position position2 = new Position(POSITION_2_ID, "position 2 name", 35700);
-    public static final Position position3 = new Position(POSITION_3_ID, "position 3 name", 60100);
+    public static final Position position1 = new Position(POSITION_1_ID, "position 1 name", 40200, false);
+    public static final Position position2 = new Position(POSITION_2_ID, "position 2 name", 35700, false);
+    public static final Position position3 = new Position(POSITION_3_ID, "position 3 name", 60100, true);
 
     public static Position getNew() {
-        return new Position(null, "newPositionName", 50000, department1);
+        return new Position(null, "newPositionName", 50000, false, department1);
     }
 
     public static PositionTo getNewTo() {
-        return new PositionTo(null, "newPositionName", 50000, DEPARTMENT_1_ID);
+        return new PositionTo(null, "newPositionName", 50000, false, DEPARTMENT_1_ID);
     }
 
     public static Position getUpdated() {
-        return new Position(POSITION_1_ID, "UpdatedPositionName", 54200, department1);
+        return new Position(POSITION_1_ID, "UpdatedPositionName", 54200, false, department1);
     }
 
     public static PositionTo getUpdatedTo() {
-        return new PositionTo(POSITION_1_ID, "UpdatedPositionName", 54200, DEPARTMENT_1_ID);
+        return new PositionTo(POSITION_1_ID, "UpdatedPositionName", 54200, false, DEPARTMENT_1_ID);
     }
 }

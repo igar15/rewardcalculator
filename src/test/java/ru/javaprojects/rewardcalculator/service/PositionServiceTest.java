@@ -34,7 +34,12 @@ class PositionServiceTest extends AbstractServiceTest {
 
     @Test
     void duplicateNameCreate() {
-        assertThrows(DataAccessException.class, () -> service.create(new PositionTo(null, position1.getName(), 25000, DEPARTMENT_1_ID)));
+        assertThrows(DataAccessException.class, () -> service.create(new PositionTo(null, position1.getName(), 25000, false, DEPARTMENT_1_ID)));
+    }
+
+    @Test
+    void duplicateChiefPositionCreate() {
+        assertThrows(DataAccessException.class, () -> service.create(new PositionTo(null, "new position name", 25000, true, DEPARTMENT_1_ID)));
     }
 
     @Test
@@ -97,9 +102,9 @@ class PositionServiceTest extends AbstractServiceTest {
 
     @Test
     void createWithException() {
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, " ", 40000, DEPARTMENT_1_ID)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Po", 40000, DEPARTMENT_1_ID)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Position name", null, DEPARTMENT_1_ID)));
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Position name", 9999, DEPARTMENT_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, " ", 40000, false, DEPARTMENT_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Po", 40000, false, DEPARTMENT_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Position name", null, false, DEPARTMENT_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new PositionTo(null, "Position name", 9999, false, DEPARTMENT_1_ID)));
     }
 }

@@ -30,8 +30,7 @@ import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.getUpda
 import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.UserTestData.*;
 import static ru.javaprojects.rewardcalculator.util.exception.ErrorType.*;
-import static ru.javaprojects.rewardcalculator.web.AppExceptionHandler.EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES;
-import static ru.javaprojects.rewardcalculator.web.AppExceptionHandler.EXCEPTION_DUPLICATE_POSITION;
+import static ru.javaprojects.rewardcalculator.web.AppExceptionHandler.*;
 
 class PositionRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = PositionRestController.REST_URL + '/';
@@ -452,27 +451,55 @@ class PositionRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicateNameInDepartment() throws Exception {
-        PositionTo newPositionTo = new PositionTo(null, position1.getName(), 20000, DEPARTMENT_1_ID);
+        PositionTo newPositionTo = new PositionTo(null, position1.getName(), 20000, false, DEPARTMENT_1_ID);
         perform(MockMvcRequestBuilders.post(REST_URL + "/positions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newPositionTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR))
-                .andExpect(detailMessage(EXCEPTION_DUPLICATE_POSITION));
+                .andExpect(detailMessage(EXCEPTION_DUPLICATE_POSITION_NAME));
     }
 
     @Test
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicateNameInDepartment() throws Exception {
-        PositionTo updatedTo = new PositionTo(POSITION_2_ID, position1.getName(), 20000, DEPARTMENT_2_ID);
+        PositionTo updatedTo = new PositionTo(POSITION_2_ID, position1.getName(), 20000, false, DEPARTMENT_2_ID);
         perform(MockMvcRequestBuilders.put(REST_URL + "/positions/" + POSITION_2_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR))
-                .andExpect(detailMessage(EXCEPTION_DUPLICATE_POSITION));
+                .andExpect(detailMessage(EXCEPTION_DUPLICATE_POSITION_NAME));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createDuplicateChiefPositionInDepartment() throws Exception {
+        PositionTo newPositionTo = new PositionTo(null, "new position name", 20000, true, DEPARTMENT_1_ID);
+        perform(MockMvcRequestBuilders.post(REST_URL + "/positions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newPositionTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(detailMessage(EXCEPTION_DUPLICATE_CHIEF_POSITION));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateDuplicateChiefPositionInDepartment() throws Exception {
+        PositionTo updatedTo = new PositionTo(POSITION_2_ID, position2.getName(), 20000, true, DEPARTMENT_2_ID);
+        perform(MockMvcRequestBuilders.put(REST_URL + "/positions/" + POSITION_2_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(detailMessage(EXCEPTION_DUPLICATE_CHIEF_POSITION));
     }
 }

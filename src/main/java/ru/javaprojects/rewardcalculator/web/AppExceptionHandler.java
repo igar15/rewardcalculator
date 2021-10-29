@@ -32,7 +32,8 @@ public class AppExceptionHandler {
     public static final String EXCEPTION_DUPLICATE_EMAIL = "User with this email already exists";
     public static final String EXCEPTION_INVALID_PASSWORD = "Password length should be between 5 and 32 characters";
     public static final String EXCEPTION_DUPLICATE_DEPARTMENT = "Department with this name already exists";
-    public static final String EXCEPTION_DUPLICATE_POSITION = "Position with this name already exists in the department";
+    public static final String EXCEPTION_DUPLICATE_POSITION_NAME = "Position with this name already exists in the department";
+    public static final String EXCEPTION_DUPLICATE_CHIEF_POSITION = "Chief position already exists in the department";
     public static final String EXCEPTION_DUPLICATE_PAYMENT_PERIOD = "Payment period already exists";
     public static final String EXCEPTION_DUPLICATE_DEPARTMENT_REWARD = "Department reward for this payment period already exists";
     public static final String EXCEPTION_DUPLICATE_EMPLOYEE_REWARD = "Employee reward for this payment period already exists";
@@ -47,7 +48,8 @@ public class AppExceptionHandler {
     private static final Map<String, String> CONSTRAINS_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
             "departments_unique_name_idx", EXCEPTION_DUPLICATE_DEPARTMENT,
-            "positions_unique_department_id_name_idx", EXCEPTION_DUPLICATE_POSITION,
+            "positions_unique_department_id_name_idx", EXCEPTION_DUPLICATE_POSITION_NAME,
+            "positions_unique_department_id_chief_position_idx", EXCEPTION_DUPLICATE_CHIEF_POSITION,
             "payment_periods_unique_period_idx", EXCEPTION_DUPLICATE_PAYMENT_PERIOD,
             "department_rewards_unique_department_id_payment_period_id_idx", EXCEPTION_DUPLICATE_DEPARTMENT_REWARD,
             "employee_rewards_unique_employee_id_department_reward_id_idx", EXCEPTION_DUPLICATE_EMPLOYEE_REWARD,

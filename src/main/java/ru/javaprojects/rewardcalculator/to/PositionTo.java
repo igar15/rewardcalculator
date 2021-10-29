@@ -16,15 +16,19 @@ public class PositionTo extends BaseTo {
     private Integer salary;
 
     @NotNull
+    private Boolean chiefPosition;
+
+    @NotNull
     private Integer departmentId;
 
     public PositionTo() {
     }
 
-    public PositionTo(Integer id, String name, Integer salary, Integer departmentId) {
+    public PositionTo(Integer id, String name, Integer salary, Boolean chiefPosition, Integer departmentId) {
         super(id);
         this.name = name;
         this.salary = salary;
+        this.chiefPosition = chiefPosition;
         this.departmentId = departmentId;
     }
 
@@ -44,6 +48,14 @@ public class PositionTo extends BaseTo {
         this.salary = salary;
     }
 
+    public Boolean getChiefPosition() {
+        return chiefPosition;
+    }
+
+    public void setChiefPosition(Boolean chiefPosition) {
+        this.chiefPosition = chiefPosition;
+    }
+
     public Integer getDepartmentId() {
         return departmentId;
     }
@@ -58,6 +70,7 @@ public class PositionTo extends BaseTo {
                 "id=" + id +
                 ", name=" + name +
                 ", salary=" + salary +
+                ", chiefPosition=" + chiefPosition +
                 ", departmentId=" + departmentId +
                 '}';
     }

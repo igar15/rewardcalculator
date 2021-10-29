@@ -19,6 +19,9 @@ public class Position extends AbstractNamedEntity {
     @Column(name = "salary", nullable = false)
     private Integer salary;
 
+    @Column(name = "chief_position", nullable = false, columnDefinition = "bool default false")
+    private boolean chiefPosition = false;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id", nullable = false)
@@ -28,13 +31,14 @@ public class Position extends AbstractNamedEntity {
     public Position() {
     }
 
-    public Position(Integer id, String name, Integer salary) {
+    public Position(Integer id, String name, Integer salary, boolean chiefPosition) {
         super(id, name);
         this.salary = salary;
+        this.chiefPosition = chiefPosition;
     }
 
-    public Position(Integer id, String name, Integer salary, Department department) {
-        this(id, name, salary);
+    public Position(Integer id, String name, Integer salary, boolean chiefPosition, Department department) {
+        this(id, name, salary, chiefPosition);
         this.department = department;
     }
 
@@ -44,6 +48,14 @@ public class Position extends AbstractNamedEntity {
 
     public void setSalary(Integer salary) {
         this.salary = salary;
+    }
+
+    public boolean isChiefPosition() {
+        return chiefPosition;
+    }
+
+    public void setChiefPosition(boolean chiefPosition) {
+        this.chiefPosition = chiefPosition;
     }
 
     public Department getDepartment() {
@@ -60,6 +72,7 @@ public class Position extends AbstractNamedEntity {
                 "id=" + id +
                 ", name=" + name +
                 ", salary=" + salary +
+                ", chiefPosition=" + chiefPosition +
                 '}';
     }
 }
