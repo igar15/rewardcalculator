@@ -17,10 +17,11 @@ of the department based on the reward allocated to the department, the number of
 * JSON Web Token
 * JUnit 5
 * OpenAPI 3
+* iText PDF
 
 ### Project key logic:
 * System main purpose: calculating monthly reward of employees of the department based on the reward allocated
- to the department, the number of hours worked by the employee, and his success in work. 
+ to the department, the number of hours worked by the employee, and his success in work. Obtaining a reporting form for rewards in pdf format.  
  The system also allows to receive data of the payment periods of the company, departments, positions and employees of the department.
 * There are 4 types of users: admin, personnel officer, economist and department head.
 * Admins have full control over the system. They can receive, create, update and delete any data. But their main task is user management.
@@ -85,6 +86,7 @@ They have read-only access to payment periods data in the company, as well as da
 - DELETE /api/departmentrewards/{departmentRewardId} (delete department reward with id = departmentRewardId)
 #### Employee Rewards
 - GET /api/departmentrewards/{departmentRewardId}/employeerewards (get all employee rewards of the department reward with id = departmentRewardId)
+- GET /api/departmentrewards/{departmentRewardId}/employeerewards/pdf (get all employee rewards of the department reward with id = departmentRewardId in pdf form)
 - GET /api/employeerewards/{employeeRewardId} (get employee reward with id = employeeRewardId)
 - PUT /api/employeerewards/{employeeRewardId} (update employee reward with id = employeeRewardId)
 
