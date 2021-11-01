@@ -1,9 +1,7 @@
 package ru.javaprojects.rewardcalculator.service;
 
-import com.itextpdf.text.pdf.PdfReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.javaprojects.rewardcalculator.TestUtil;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
@@ -12,7 +10,6 @@ import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.javaprojects.rewardcalculator.TestUtil.checkPdf;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.*;
@@ -62,9 +59,15 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void getAllByDepartmentRewardInPdf() throws IOException {
-        byte[] pdfBytes = service.getAllByDepartmentRewardInPdf(departmentReward2);
-        checkPdf(pdfBytes);
+    void getAllByDepartmentRewardInPdfWithApprovingSignature() throws IOException {
+        byte[] pdfBytes = service.getAllByDepartmentRewardInPdf(departmentReward2, APPROVING_SIGNATURE);
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_AND_APPROVING_SIGNATURES_FILE_NAME);
+    }
+
+    @Test
+    void getAllByDepartmentRewardInPdfWithoutApprovingSignature() throws IOException {
+        byte[] pdfBytes = service.getAllByDepartmentRewardInPdf(departmentReward2, EMPTY_SIGNATURE);
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME);
     }
 
     @Test

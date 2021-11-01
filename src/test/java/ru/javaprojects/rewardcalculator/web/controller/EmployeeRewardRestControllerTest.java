@@ -98,26 +98,54 @@ class EmployeeRewardRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAllInPdfWhenAdmin() throws Exception {
-        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf"))
+    void getAllInPdfWithApprovingSignatureWhenAdmin() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf")
+                .param("approvingPosition", APPROVING_SIGNATURE.getPosition())
+                .param("approvingName", APPROVING_SIGNATURE.getName()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF));
 
         byte[] pdfBytes = action.andReturn().getResponse().getContentAsByteArray();
-        checkPdf(pdfBytes);
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_AND_APPROVING_SIGNATURES_FILE_NAME);
     }
 
     @Test
     @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
-    void getAllInPdfWhenDepartmentHead() throws Exception {
+    void getAllInPdfWithApprovingSignatureWhenDepartmentHead() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf")
+                .param("approvingPosition", APPROVING_SIGNATURE.getPosition())
+                .param("approvingName", APPROVING_SIGNATURE.getName()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF));
+
+        byte[] pdfBytes = action.andReturn().getResponse().getContentAsByteArray();
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_AND_APPROVING_SIGNATURES_FILE_NAME);
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAllInPdfWithoutApprovingSignatureWhenAdmin() throws Exception {
         ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF));
 
         byte[] pdfBytes = action.andReturn().getResponse().getContentAsByteArray();
-        checkPdf(pdfBytes);
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME);
+    }
+
+    @Test
+    @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
+    void getAllInPdfWithoutApprovingSignatureWhenDepartmentHead() throws Exception {
+        ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_2_ID + "/employeerewards/pdf"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF));
+
+        byte[] pdfBytes = action.andReturn().getResponse().getContentAsByteArray();
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME);
     }
 
     @Test

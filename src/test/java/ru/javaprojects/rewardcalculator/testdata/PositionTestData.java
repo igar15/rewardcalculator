@@ -17,8 +17,8 @@ public class PositionTestData {
     public static final int NOT_FOUND = 10;
 
     public static final Position position1 = new Position(POSITION_1_ID, "position 1 name", 40200, false);
-    public static final Position position2 = new Position(POSITION_2_ID, "position 2 name", 35700, false);
-    public static final Position position3 = new Position(POSITION_3_ID, "position 3 name", 60100, true);
+    public static final Position position2 = new Position(POSITION_2_ID, "position 2 name", 35700, true);
+    public static final Position position3 = new Position(POSITION_3_ID, "position 3 name", 60100, false);
 
     public static Position getNew() {
         return new Position(null, "newPositionName", 50000, false, department1);

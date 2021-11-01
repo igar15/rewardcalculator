@@ -7,7 +7,9 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.util.Assert;
 import ru.javaprojects.rewardcalculator.model.DepartmentReward;
+import ru.javaprojects.rewardcalculator.model.Employee;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
+import ru.javaprojects.rewardcalculator.model.Position;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.PdfException;
@@ -36,12 +38,12 @@ public class EmployeeRewardUtil {
     private static String rewardOfSalary;
     private static String depReward;
     private static String currency;
+    private static String agreed;
     private static DateTimeFormatter dateTimeFormatter;
 
     private static Font normalFont14;
     private static Font normalFont11;
     private static Font boldFont14;
-
 
     static {
         initStaticVariables();
@@ -88,14 +90,17 @@ public class EmployeeRewardUtil {
         return newDistributedAmount;
     }
 
-    public static byte[] createEmployeeRewardsPdfForm(List<EmployeeReward> employeeRewards, DepartmentReward departmentReward) {
+    public static byte[] createEmployeeRewardsPdfForm(List<EmployeeReward> employeeRewards, DepartmentReward departmentReward,
+                                                      EmployeeSignature approvingSignature) {
         try {
             Document document = new Document(PageSize.A4.rotate());
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PdfWriter.getInstance(document, outputStream);
             document.open();
-            addFormHeader(document, departmentReward);
-            addFormTable(document, employeeRewards, departmentReward);
+            addEmployeeRewardsPdfFormHeader(document, departmentReward);
+            addEmployeeRewardsPdfFormTable(document, employeeRewards, departmentReward);
+            EmployeeSignature chiefSignature = getDepartmentChiefSignature(employeeRewards);
+            addEmployeeRewardsPdfFormSignatures(document, chiefSignature, approvingSignature);
             document.close();
             return outputStream.toByteArray();
         } catch (DocumentException e) {
@@ -103,35 +108,48 @@ public class EmployeeRewardUtil {
         }
     }
 
-    private static void addFormHeader(Document document, DepartmentReward departmentReward) throws DocumentException {
-        addParagraph(document, employeeRewardsList, boldFont14, 10);
-        addParagraph(document, departmentReward.getDepartment().getName(), normalFont14, 10);
-        addParagraph(document, departmentReward.getPaymentPeriod().getPeriod().format(dateTimeFormatter), normalFont14, 15);
-        addParagraph(document, depReward + ": " + departmentReward.getAllocatedAmount() + " " + currency, normalFont14, 10);
+    private static void addEmployeeRewardsPdfFormHeader(Document document, DepartmentReward departmentReward) throws DocumentException {
+        addParagraph(document, employeeRewardsList, boldFont14, Element.ALIGN_CENTER, 0,  10);
+        addParagraph(document, departmentReward.getDepartment().getName(), normalFont14, Element.ALIGN_CENTER, 0, 10);
+        addParagraph(document, departmentReward.getPaymentPeriod().getPeriod().format(dateTimeFormatter), normalFont14, Element.ALIGN_CENTER, 0, 15);
+        addParagraph(document, depReward + ": " + departmentReward.getAllocatedAmount() + " " + currency, normalFont14, Element.ALIGN_CENTER, 0, 10);
     }
 
-    private static void addParagraph(Document document, String line, Font font, float spacingAfter) throws DocumentException {
-        Chunk chunk = new Chunk(line, font);
-        Paragraph paragraph = new Paragraph();
-        paragraph.setAlignment(Element.ALIGN_CENTER);
-        paragraph.setSpacingAfter(spacingAfter);
-        paragraph.add(chunk);
-        document.add(paragraph);
-    }
-
-    private static void addFormTable(Document document, List<EmployeeReward> employeeRewards, DepartmentReward departmentReward) throws DocumentException {
+    private static void addEmployeeRewardsPdfFormTable(Document document, List<EmployeeReward> employeeRewards, DepartmentReward departmentReward) throws DocumentException {
         PdfPTable table = createTable();
         addTableHeader(table);
         fillTable(table, employeeRewards, departmentReward);
         document.add(table);
     }
 
+    private static void addEmployeeRewardsPdfFormSignatures(Document document, EmployeeSignature chiefSignature, EmployeeSignature approvingSignature) throws DocumentException {
+        if (Objects.nonNull(chiefSignature)) {
+            PdfPTable table = createSignatureTable(chiefSignature);
+            table.setSpacingAfter(15);
+            document.add(table);
+        }
+        if (Objects.nonNull(approvingSignature) && !approvingSignature.position.isBlank()) {
+            addParagraph(document, agreed + ":", normalFont11, Element.ALIGN_LEFT, 118,   5);
+            PdfPTable table = createSignatureTable(approvingSignature);
+            document.add(table);
+        }
+    }
+
+    private static void addParagraph(Document document, String line, Font font, int alignment, float indentLeft, float spacingAfter) throws DocumentException {
+        Chunk chunk = new Chunk(line, font);
+        Paragraph paragraph = new Paragraph();
+        paragraph.setAlignment(alignment);
+        paragraph.setIndentationLeft(indentLeft);
+        paragraph.setSpacingAfter(spacingAfter);
+        paragraph.add(chunk);
+        document.add(paragraph);
+    }
+
     private static PdfPTable createTable() {
         float[] columnWidths = {1, 4, 6, 5, 3, 3, 3};
         PdfPTable table = new PdfPTable(columnWidths);
         table.setWidthPercentage(100);
-        table.setSpacingBefore(0f);
-        table.setSpacingAfter(0f);
+        table.setSpacingAfter(40);
         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
         table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
         table.setHeaderRows(1);
@@ -157,8 +175,8 @@ public class EmployeeRewardUtil {
             EmployeeReward employeeReward = employeeRewards.get(i);
             table.addCell(new Phrase(String.valueOf(i + 1), normalFont11));
             table.addCell(new Phrase(departmentReward.getDepartment().getName(), normalFont11));
-            table.addCell(createAlignmentCellWithPhrase(Element.ALIGN_LEFT, new Phrase(employeeReward.getEmployee().getPosition().getName(), normalFont11)));
-            table.addCell(createAlignmentCellWithPhrase(Element.ALIGN_LEFT, new Phrase(employeeReward.getEmployee().getName(), normalFont11)));
+            table.addCell(createAlignmentCellWithPhrase(Element.ALIGN_LEFT, Element.ALIGN_MIDDLE, new Phrase(employeeReward.getEmployee().getPosition().getName(), normalFont11)));
+            table.addCell(createAlignmentCellWithPhrase(Element.ALIGN_LEFT, Element.ALIGN_MIDDLE, new Phrase(employeeReward.getEmployee().getName(), normalFont11)));
             PdfPCell rewardCell = new PdfPCell(new Phrase(employeeReward.getFullReward().toString(), normalFont11));
             rewardCell.setHorizontalAlignment(Element.ALIGN_CENTER);
             rewardCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -170,10 +188,71 @@ public class EmployeeRewardUtil {
         }
     }
 
-    private static PdfPCell createAlignmentCellWithPhrase(int horizontalAlignment, Phrase phrase) {
+    static EmployeeSignature getDepartmentChiefSignature(List<EmployeeReward> employeeRewards) {
+        return employeeRewards.stream()
+                .filter(employeeReward -> employeeReward.getEmployee().getPosition().isChiefPosition())
+                .findFirst()
+                .map(employeeReward -> {
+                    Employee chief = employeeReward.getEmployee();
+                    Position chiefPosition = chief.getPosition();
+                    return new EmployeeSignature(chiefPosition.getName(), chief.getName());
+                }).orElse(new EmployeeSignature("", ""));
+    }
+
+    public static class EmployeeSignature {
+        private final String position;
+        private final String name;
+
+        public EmployeeSignature(String position, String name) {
+            this.position = position;
+            this.name = name;
+        }
+
+        public EmployeeSignature() {
+            this.position = "";
+            this.name = "";
+        }
+
+        public String getPosition() {
+            return position;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            EmployeeSignature that = (EmployeeSignature) o;
+            return Objects.equals(position, that.position) &&
+                    Objects.equals(name, that.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(position, name);
+        }
+    }
+
+    private static PdfPTable createSignatureTable(EmployeeSignature employeeSignature) {
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(70);
+
+        PdfPCell positionCell = createAlignmentCellWithPhrase(Element.ALIGN_LEFT, Element.ALIGN_BOTTOM, new Phrase(employeeSignature.position, normalFont11));
+        positionCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(positionCell);
+        PdfPCell nameCell = createAlignmentCellWithPhrase(Element.ALIGN_RIGHT, Element.ALIGN_BOTTOM, new Phrase(employeeSignature.name, normalFont11));
+        nameCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(nameCell);
+        return table;
+    }
+
+    private static PdfPCell createAlignmentCellWithPhrase(int horizontalAlignment, int verticalAlignment, Phrase phrase) {
         PdfPCell cell = new PdfPCell();
         cell.setHorizontalAlignment(horizontalAlignment);
-        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setVerticalAlignment(verticalAlignment);
         cell.setPhrase(phrase);
         return cell;
     }
@@ -201,6 +280,7 @@ public class EmployeeRewardUtil {
             rewardOfSalary = pdfFormProperties.getProperty("rewardOfSalary");
             depReward = pdfFormProperties.getProperty("depReward");
             currency = pdfFormProperties.getProperty("currency");
+            agreed = pdfFormProperties.getProperty("agreed");
             dateTimeFormatter = DateTimeFormatter.ofPattern(pdfFormProperties.getProperty("dateTimeFormatterPattern"));
 
             BaseFont baseFont = BaseFont.createFont(fontFileName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);

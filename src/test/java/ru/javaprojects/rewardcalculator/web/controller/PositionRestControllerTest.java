@@ -465,8 +465,8 @@ class PositionRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicateNameInDepartment() throws Exception {
-        PositionTo updatedTo = new PositionTo(POSITION_2_ID, position1.getName(), 20000, false, DEPARTMENT_2_ID);
-        perform(MockMvcRequestBuilders.put(REST_URL + "/positions/" + POSITION_2_ID)
+        PositionTo updatedTo = new PositionTo(POSITION_1_ID, position2.getName(), 20000, false, DEPARTMENT_2_ID);
+        perform(MockMvcRequestBuilders.put(REST_URL + "/positions/" + POSITION_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
@@ -493,8 +493,8 @@ class PositionRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicateChiefPositionInDepartment() throws Exception {
-        PositionTo updatedTo = new PositionTo(POSITION_2_ID, position2.getName(), 20000, true, DEPARTMENT_2_ID);
-        perform(MockMvcRequestBuilders.put(REST_URL + "/positions/" + POSITION_2_ID)
+        PositionTo updatedTo = new PositionTo(POSITION_1_ID, position1.getName(), 20000, true, DEPARTMENT_2_ID);
+        perform(MockMvcRequestBuilders.put(REST_URL + "/positions/" + POSITION_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())

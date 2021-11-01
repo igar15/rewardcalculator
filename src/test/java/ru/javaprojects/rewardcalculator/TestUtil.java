@@ -10,7 +10,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.EMPLOYEE_REWARDS_PDF_FORM_FILE_NAME;
 
 public class TestUtil {
     private TestUtil() {
@@ -32,9 +31,9 @@ public class TestUtil {
         return JsonUtil.readValues(getContent(result), clazz);
     }
 
-    public static void checkPdf(byte[] pdfBytes) throws IOException {
+    public static void checkPdf(byte[] pdfBytes, String pdfFileName) throws IOException {
         PdfReader bytesReader = new PdfReader(pdfBytes);
-        PdfReader fileReader = new PdfReader(EMPLOYEE_REWARDS_PDF_FORM_FILE_NAME);
+        PdfReader fileReader = new PdfReader(pdfFileName);
         for (int i = 1; i <= bytesReader.getNumberOfPages(); i++) {
             assertArrayEquals(fileReader.getPageContent(i), bytesReader.getPageContent(i));
         }

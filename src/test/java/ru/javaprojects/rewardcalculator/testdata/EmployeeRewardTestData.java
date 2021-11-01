@@ -7,6 +7,8 @@ import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SEQ;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward2;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.position2;
+import static ru.javaprojects.rewardcalculator.util.EmployeeRewardUtil.EmployeeSignature;
 
 public class EmployeeRewardTestData {
     public static final TestMatcher<EmployeeReward> EMPLOYEE_REWARD_MATCHER = TestMatcher.usingIgnoringFieldsComparator(EmployeeReward.class, "employee", "departmentReward");
@@ -21,7 +23,12 @@ public class EmployeeRewardTestData {
     public static final EmployeeReward employeeReward2 = new EmployeeReward(EMPLOYEE_REWARD_2_ID, 150.75, 10710, 0, 0, employee2, departmentReward2);
     public static final EmployeeReward employeeReward3 = new EmployeeReward(EMPLOYEE_REWARD_3_ID, 150.75, 18030, 0, 0, employee3, departmentReward2);
 
-    public static final String EMPLOYEE_REWARDS_PDF_FORM_FILE_NAME = "./src/test/resources/rewards.pdf";
+    public static final String EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_AND_APPROVING_SIGNATURES_FILE_NAME = "./src/test/resources/rewardsWithChiefAndApprovingSignatures.pdf";
+    public static final String EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME = "./src/test/resources/rewardsWithChiefSignatureOnly.pdf";
+    public static final String EMPLOYEE_REWARDS_PDF_FORM_WITH_APPROVING_SIGNATURE_ONLY_FILE_NAME = "./src/test/resources/rewardsWithApprovingSignatureOnly.pdf";
+    public static final EmployeeSignature CHIEF_SIGNATURE = new EmployeeSignature(position2.getName(), employee3.getName());
+    public static final EmployeeSignature APPROVING_SIGNATURE = new EmployeeSignature("Deputy Head of Scientific and Technical Center \"NIEMI\" No. 49 for General Technical Issues", "S.K. Raevsky");
+    public static final EmployeeSignature EMPTY_SIGNATURE = new EmployeeSignature();
 
     public static EmployeeReward getUpdated() {
         return new EmployeeReward(EMPLOYEE_REWARD_1_ID, 100d, 8000, 2000, 0, employee1, departmentReward2);

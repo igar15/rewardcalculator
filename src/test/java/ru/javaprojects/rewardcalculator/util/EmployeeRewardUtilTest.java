@@ -1,15 +1,14 @@
 package ru.javaprojects.rewardcalculator.util;
 
-import com.itextpdf.text.pdf.PdfReader;
 import org.junit.jupiter.api.Test;
-import ru.javaprojects.rewardcalculator.TestUtil;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static ru.javaprojects.rewardcalculator.TestUtil.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.javaprojects.rewardcalculator.TestUtil.checkPdf;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward1;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward2;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.*;
@@ -39,8 +38,32 @@ class EmployeeRewardUtilTest {
     }
 
     @Test
-    void createEmployeeRewardsPdfFormTest() throws IOException {
-        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward1, employeeReward2, employeeReward3), departmentReward2);
-        checkPdf(pdfBytes);
+    void createEmployeeRewardsPdfFormTestWithChiefAndApprovingSignatures() throws IOException {
+        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward1, employeeReward2, employeeReward3), departmentReward2, APPROVING_SIGNATURE);
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_AND_APPROVING_SIGNATURES_FILE_NAME);
+    }
+
+    @Test
+    void createEmployeeRewardsPdfFormTestWithChiefSignatureOnly() throws IOException {
+        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward1, employeeReward2, employeeReward3), departmentReward2, EMPTY_SIGNATURE);
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME);
+    }
+
+    @Test
+    void createEmployeeRewardsPdfFormTestWithApprovingSignatureOnly() throws IOException {
+        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward1, employeeReward2), departmentReward2, APPROVING_SIGNATURE);
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_APPROVING_SIGNATURE_ONLY_FILE_NAME);
+    }
+
+    @Test
+    void getDepartmentChiefSignatureTestWhenChiefExist() {
+        EmployeeSignature chiefSignature = getDepartmentChiefSignature(List.of(employeeReward1, employeeReward2, employeeReward3));
+        assertEquals(CHIEF_SIGNATURE, chiefSignature);
+    }
+
+    @Test
+    void getDepartmentChiefSignatureTestWhenChiefNotExist() {
+        EmployeeSignature chiefSignature = getDepartmentChiefSignature(List.of(employeeReward1, employeeReward2));
+        assertEquals(EMPTY_SIGNATURE, chiefSignature);
     }
 }

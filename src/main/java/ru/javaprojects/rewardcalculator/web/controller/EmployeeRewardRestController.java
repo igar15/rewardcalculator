@@ -18,8 +18,10 @@ import ru.javaprojects.rewardcalculator.web.security.AuthorizedUser;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.javaprojects.rewardcalculator.config.OpenApiConfig.ALLOWED_ADMIN_DEPARTMENT_HEAD;
+import static ru.javaprojects.rewardcalculator.util.EmployeeRewardUtil.EmployeeSignature;
 import static ru.javaprojects.rewardcalculator.util.SecureUtil.checkDepartmentHeadManagesTheDepartment;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.assureIdConsistent;
 
@@ -67,11 +69,16 @@ public class EmployeeRewardRestController {
     @GetMapping(value = "/departmentrewards/{departmentRewardId}/employeerewards/pdf",
                 produces = MediaType.APPLICATION_PDF_VALUE)
     @Operation(description = "Get all employee rewards of the department reward in PDF file" + ALLOWED_ADMIN_DEPARTMENT_HEAD)
-    public @ResponseBody byte[] getAllInPdf(@PathVariable int departmentRewardId, @AuthenticationPrincipal AuthorizedUser authUser) {
+    public @ResponseBody byte[] getAllInPdf(@PathVariable int departmentRewardId,
+                                            @AuthenticationPrincipal AuthorizedUser authUser,
+                                            @RequestParam(required = false) String approvingPosition,
+                                            @RequestParam(required = false) String approvingName) {
         log.info("getAll for departmentReward {} in pdf", departmentRewardId);
         DepartmentReward departmentReward = departmentRewardService.getWithDepartment(departmentRewardId);
         checkDepartmentHeadManagesTheDepartment(authUser, departmentReward.getDepartment());
-        return service.getAllByDepartmentRewardInPdf(departmentReward);
+        approvingPosition = Objects.isNull(approvingPosition) ? "" : approvingPosition;
+        approvingName = Objects.isNull(approvingName) ? "" : approvingName;
+        return service.getAllByDepartmentRewardInPdf(departmentReward, new EmployeeSignature(approvingPosition, approvingName));
     }
 
     private EmployeeReward checkDepartmentHeadManagesTheEmployeeReward(int employeeRewardId, AuthorizedUser authUser) {
