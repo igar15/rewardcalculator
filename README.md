@@ -80,14 +80,14 @@ They have read-only access to payment periods data in the company, as well as da
 - DELETE /api/employees/{employeeId} (delete employee with id = employeeId)
 #### Department Rewards
 - POST /api/departmentrewards (create a new department reward)
-- GET /api/departments/{departmentId}/departmentrewards (get all department rewards of the department with id = departmentIds)
-- GET /api/departments/{departmentId}/departmentrewards/byPage?page={pageNumber}&size={sizeNumber} (get page of department rewards of the department with id = departmentIds)
+- GET /api/departments/{departmentId}/departmentrewards (get all department rewards of the department with id = departmentId)
+- GET /api/departments/{departmentId}/departmentrewards/byPage?page={pageNumber}&size={sizeNumber} (get page of department rewards of the department with id = departmentId)
 - GET /api/departmentrewards/{departmentRewardId} (get department reward with id = departmentRewardId)
 - PUT /api/departmentrewards/{departmentRewardId} (update department reward with id = departmentRewardId)
 - DELETE /api/departmentrewards/{departmentRewardId} (delete department reward with id = departmentRewardId)
 #### Employee Rewards
 - GET /api/departmentrewards/{departmentRewardId}/employeerewards (get all employee rewards of the department reward with id = departmentRewardId)
-- GET /api/departmentrewards/{departmentRewardId}/employeerewards/pdf (get all employee rewards of the department reward with id = departmentRewardId in pdf form)
+- GET /api/departmentrewards/{departmentRewardId}/employeerewards/pdf?approvingPosition={approvingPosition}&approvingName={approvingName} (get all employee rewards of the department reward with id = departmentRewardId in pdf form. If approvingPosition and approvingName params passed also adds approving signature to the form)
 - GET /api/employeerewards/{employeeRewardId} (get employee reward with id = employeeRewardId)
 - PUT /api/employeerewards/{employeeRewardId} (update employee reward with id = employeeRewardId)
 
