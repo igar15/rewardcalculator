@@ -16,9 +16,6 @@ public class UserTo extends BaseTo {
     @Size(max = 40)
     private String email;
 
-    @NotNull
-    private Boolean enabled;
-
     @NotEmpty
     private Set<Role> roles;
 
@@ -28,11 +25,10 @@ public class UserTo extends BaseTo {
     public UserTo() {
     }
 
-    public UserTo(Integer id, String name, String email, boolean enabled, Set<Role> roles, Set<Integer> managedDepartmentsId) {
+    public UserTo(Integer id, String name, String email, Set<Role> roles, Set<Integer> managedDepartmentsId) {
         super(id);
         this.name = name;
         this.email = email;
-        this.enabled = enabled;
         this.roles = roles;
         this.managedDepartmentsId = managedDepartmentsId;
     }
@@ -51,14 +47,6 @@ public class UserTo extends BaseTo {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public Set<Role> getRoles() {
@@ -83,7 +71,6 @@ public class UserTo extends BaseTo {
                 "id=" + id +
                 ", name=" + name +
                 ", email=" + email +
-                ", enabled=" + enabled +
                 ", roles=" + roles +
                 ", managedDepartmentsId=" + managedDepartmentsId +
                 '}';

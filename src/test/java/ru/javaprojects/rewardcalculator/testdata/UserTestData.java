@@ -55,11 +55,11 @@ public class UserTestData {
     }
 
     public static User getUpdated() {
-        return new User(DEPARTMENT_HEAD_ID, "UpdatedName", "update@gmail.com", false, Set.of(ADMIN, ECONOMIST), Set.of(department3));
+        return new User(DEPARTMENT_HEAD_ID, "UpdatedName", "update@gmail.com", true, Set.of(ADMIN, ECONOMIST), Set.of(department3));
     }
 
     public static UserTo getUpdatedTo() {
-        return new UserTo(DEPARTMENT_HEAD_ID, "UpdatedName", "update@gmail.com", false, Set.of(ADMIN, ECONOMIST), Set.of(DEPARTMENT_3_ID));
+        return new UserTo(DEPARTMENT_HEAD_ID, "UpdatedName", "update@gmail.com", Set.of(ADMIN, ECONOMIST), Set.of(DEPARTMENT_3_ID));
     }
 
     public static String jsonWithPassword(NewUserTo newUserTo, String password) {
