@@ -53,6 +53,10 @@ public class UserService {
         return repository.findAllByOrderByNameAscEmailAsc();
     }
 
+    public List<User> getAllByKeyWord(String keyWord) {
+        return repository.findAllByNameContainsIgnoreCaseOrEmailContainsIgnoreCaseOrderByNameAscEmail(keyWord, keyWord);
+    }
+
     @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
         User user = get(id);

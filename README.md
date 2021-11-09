@@ -46,6 +46,7 @@ They have read-only access to payment periods data in the company, as well as da
 - POST /api/profile/login (login to application)
 #### Users
 - GET /api/users (get all users)
+- GET /api/users/by?keyWord={keyWord} (get all users by keyWord (search by name and email contains the keyWord))
 - GET /api/users/{userId} (get user with id = userId)
 - POST /api/users (create a new user)
 - PUT /api/users/{userId} (update user with id = userId)

@@ -47,6 +47,13 @@ public class UserRestController {
         return service.getAll();
     }
 
+    @GetMapping("/by")
+    @Operation(description = "Get all users by key word" + ALLOWED_ADMIN)
+    public List<User> getAllByKeyWord(@RequestParam String keyWord) {
+        log.info("getAllByKeyWord {}", keyWord);
+        return service.getAllByKeyWord(keyWord);
+    }
+
     @GetMapping("/{id}")
     @Operation(description = "Get user" + ALLOWED_ADMIN)
     public User get(@PathVariable int id) {

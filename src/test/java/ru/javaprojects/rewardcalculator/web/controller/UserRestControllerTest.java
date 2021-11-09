@@ -15,6 +15,7 @@ import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -72,6 +73,51 @@ class UserRestControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = PERSONNEL_OFFICER_MAIL)
     void getAllForbiddenWhenPersonnelOfficer() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAllByKeyWord() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "by")
+                .param("keyWord", "admin"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(USER_MATCHER.contentJson(List.of(admin)));
+    }
+
+    @Test
+    void getAllByKeyWordUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "by")
+                .param("keyWord", "admin"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(errorType(UNAUTHORIZED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
+    void getAllByKeyWordForbiddenWhenDepartmentHead() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "by")
+                .param("keyWord", "admin"))
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ECONOMIST_MAIL)
+    void getAllByKeyWordForbiddenWhenEconomist() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "by")
+                .param("keyWord", "admin"))
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = PERSONNEL_OFFICER_MAIL)
+    void getAllByKeyWordForbiddenWhenPersonnelOfficer() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "by")
+                .param("keyWord", "admin"))
                 .andExpect(status().isForbidden())
                 .andExpect(errorType(ACCESS_DENIED_ERROR));
     }
