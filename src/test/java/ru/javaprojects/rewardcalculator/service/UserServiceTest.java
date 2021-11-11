@@ -3,11 +3,13 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import ru.javaprojects.rewardcalculator.model.Role;
 import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.testdata.UserTestData;
 import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
+import ru.javaprojects.rewardcalculator.util.exception.UserDataException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.javaprojects.rewardcalculator.model.Role.DEPARTMENT_HEAD;
 import static ru.javaprojects.rewardcalculator.testdata.UserTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.UserTestData.getNewToWithManagedDepartmentsId;
 
 class UserServiceTest extends AbstractServiceTest {
 
@@ -47,6 +50,17 @@ class UserServiceTest extends AbstractServiceTest {
         NewUserTo newUserTo = getNewTo();
         newUserTo.setManagedDepartmentsId(Set.of(NOT_FOUND));
         assertThrows(NotFoundException.class, () -> service.create(newUserTo));
+    }
+
+    @Test
+    void createWithManagedDepartmentsWhenNotDepartmentHead() {
+        NewUserTo newUserTo = getNewToWithManagedDepartmentsId();
+        newUserTo.setRoles(Set.of(Role.ECONOMIST));
+        assertThrows(UserDataException.class, () -> service.create(newUserTo));
+        newUserTo.setRoles(Set.of(Role.ADMIN));
+        assertThrows(UserDataException.class, () -> service.create(newUserTo));
+        newUserTo.setRoles(Set.of(Role.PERSONNEL_OFFICER));
+        assertThrows(UserDataException.class, () -> service.create(newUserTo));
     }
 
     @Test
@@ -124,6 +138,17 @@ class UserServiceTest extends AbstractServiceTest {
     void update() {
         service.update(getUpdatedTo());
         USER_MATCHER.assertMatch(service.get(DEPARTMENT_HEAD_ID), getUpdated());
+    }
+
+    @Test
+    void updateWithManagedDepartmentsWhenNotDepartmentHead() {
+        UserTo updatedTo = getUpdatedTo();
+        updatedTo.setRoles(Set.of(Role.ECONOMIST));
+        assertThrows(UserDataException.class, () -> service.update(updatedTo));
+        updatedTo.setRoles(Set.of(Role.ADMIN));
+        assertThrows(UserDataException.class, () -> service.update(updatedTo));
+        updatedTo.setRoles(Set.of(Role.PERSONNEL_OFFICER));
+        assertThrows(UserDataException.class, () -> service.update(updatedTo));
     }
 
     @Test

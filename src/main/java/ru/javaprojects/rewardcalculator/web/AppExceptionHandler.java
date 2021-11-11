@@ -96,8 +96,8 @@ public class AppExceptionHandler {
     }
 
     @ExceptionHandler({IllegalRequestDataException.class, DepartmentRewardBadDataException.class,
-                       EmployeeRewardBadDataException.class, MethodArgumentTypeMismatchException.class,
-                       HttpMessageNotReadableException.class})
+                       EmployeeRewardBadDataException.class, UserDataException.class,
+                       MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorInfo> illegalRequestDataError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }

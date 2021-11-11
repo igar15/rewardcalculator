@@ -6,11 +6,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.javaprojects.rewardcalculator.model.Role;
 import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.repository.UserRepository;
 import ru.javaprojects.rewardcalculator.to.NewUserTo;
 import ru.javaprojects.rewardcalculator.to.UserTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
+import ru.javaprojects.rewardcalculator.util.exception.UserDataException;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +36,7 @@ public class UserService {
     @Transactional
     public User create(NewUserTo newUserTo) {
         Assert.notNull(newUserTo, "newUserTo must not be null");
+        checkCanHaveManagedDepartments(newUserTo);
         User user = createNewFromTo(newUserTo, passwordEncoder);
         addManagedDepartments(user, newUserTo);
         return repository.save(user);
@@ -68,6 +71,7 @@ public class UserService {
     public void update(UserTo userTo) {
         Assert.notNull(userTo, "userTo must not be null");
         User user = get(userTo.getId());
+        checkCanHaveManagedDepartments(userTo);
         updateFromTo(user, userTo);
         addManagedDepartments(user, userTo);
     }
@@ -92,6 +96,15 @@ public class UserService {
         user.getManagedDepartments().clear();
         if (Objects.nonNull(managedDepartmentsId)) {
             managedDepartmentsId.forEach(departmentId -> user.addManagedDepartment(departmentService.get(departmentId)));
+        }
+    }
+
+    private void checkCanHaveManagedDepartments(UserTo userTo) {
+        if (!userTo.getRoles().contains(Role.DEPARTMENT_HEAD)) {
+            Set<Integer> managedDepartmentsId = userTo.getManagedDepartmentsId();
+            if (Objects.nonNull(managedDepartmentsId) && !managedDepartmentsId.isEmpty()) {
+                throw new UserDataException("Only department head users can have managed departments");
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javaprojects.rewardcalculator.model.Role;
 import ru.javaprojects.rewardcalculator.model.User;
 import ru.javaprojects.rewardcalculator.service.UserService;
 import ru.javaprojects.rewardcalculator.to.NewUserTo;
@@ -190,6 +191,18 @@ class UserRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createWithManagedDepartmentsWhenNotDepartmentHeadWithLocation() throws Exception {
+        NewUserTo newUserTo = getNewToWithManagedDepartmentsId();
+        newUserTo.setRoles(Set.of(Role.ECONOMIST));
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(newUserTo, "newPass")))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
     void createUnAuth() throws Exception {
         NewUserTo newUserTo = getNewToWithManagedDepartmentsId();
         perform(MockMvcRequestBuilders.post(REST_URL)
@@ -299,6 +312,18 @@ class UserRestControllerTest extends AbstractControllerTest {
     void updateIdNotConsistent() throws Exception {
         UserTo updatedTo = getUpdatedTo();
         updatedTo.setId(ADMIN_ID);
+        perform(MockMvcRequestBuilders.put(REST_URL + DEPARTMENT_HEAD_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateWithManagedDepartmentsWhenNotDepartmentHead() throws Exception {
+        UserTo updatedTo = getUpdatedTo();
+        updatedTo.setRoles(Set.of(Role.ECONOMIST));
         perform(MockMvcRequestBuilders.put(REST_URL + DEPARTMENT_HEAD_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
