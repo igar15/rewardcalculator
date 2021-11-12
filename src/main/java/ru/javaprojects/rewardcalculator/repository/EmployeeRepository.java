@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @EntityGraph(attributePaths = "position")
-    @Query("SELECT e FROM Employee e WHERE e.position.department.id = :departmentId")
+    @Query("SELECT e FROM Employee e WHERE e.position.department.id = :departmentId ORDER BY e.name")
     List<Employee> findAllByPositionDepartmentIdWithPosition(int departmentId);
 
     List<Employee> findAllByPositionDepartmentId(int departmentId);
