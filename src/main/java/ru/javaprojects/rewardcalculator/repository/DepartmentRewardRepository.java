@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -31,4 +32,14 @@ public interface DepartmentRewardRepository extends JpaRepository<DepartmentRewa
     Page<DepartmentReward> findAllByDepartmentIdOrderByPaymentPeriod_PeriodDesc(int departmentId, Pageable pageable);
 
     Optional<DepartmentReward> findByDepartmentIdAndPaymentPeriodId(int departmentId, int paymentPeriodId);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM DepartmentReward d WHERE d.department.id = :departmentId")
+    void deleteAllByDepartmentId(@Param("departmentId") int departmentId);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM DepartmentReward d WHERE d.paymentPeriod.id = :paymentPeriodId")
+    void deleteAllByPaymentPeriodId(@Param("paymentPeriodId") int paymentPeriodId);
 }

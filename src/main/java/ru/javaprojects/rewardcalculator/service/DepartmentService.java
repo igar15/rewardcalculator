@@ -6,9 +6,12 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javaprojects.rewardcalculator.model.Department;
 import ru.javaprojects.rewardcalculator.repository.DepartmentRepository;
+import ru.javaprojects.rewardcalculator.repository.DepartmentRewardRepository;
+import ru.javaprojects.rewardcalculator.repository.PositionRepository;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
@@ -16,9 +19,14 @@ import java.util.List;
 @Service
 public class DepartmentService {
     private final DepartmentRepository repository;
+    private final PositionRepository positionRepository;
+    private final DepartmentRewardRepository departmentRewardRepository;
 
-    public DepartmentService(DepartmentRepository repository) {
+    public DepartmentService(DepartmentRepository repository, PositionRepository positionRepository,
+                             DepartmentRewardRepository departmentRewardRepository) {
         this.repository = repository;
+        this.positionRepository = positionRepository;
+        this.departmentRewardRepository = departmentRewardRepository;
     }
 
     @CacheEvict(value = "departments", allEntries = true)
@@ -41,6 +49,7 @@ public class DepartmentService {
         return repository.findAllByOrderByName(pageable);
     }
 
+    @Transactional
     @Caching(evict = {
             @CacheEvict(value = "departments", allEntries = true),
             @CacheEvict(value = "positions", key = "#id"),
@@ -48,6 +57,8 @@ public class DepartmentService {
     })
     public void delete(int id) {
         Department department = get(id);
+        positionRepository.deleteAllByDepartmentId(id);
+        departmentRewardRepository.deleteAllByDepartmentId(id);
         repository.delete(department);
     }
 

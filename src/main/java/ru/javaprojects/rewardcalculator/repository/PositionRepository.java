@@ -2,6 +2,7 @@ package ru.javaprojects.rewardcalculator.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,9 @@ public interface PositionRepository extends JpaRepository<Position, Integer> {
     @EntityGraph(attributePaths = {"department"})
     @Query("SELECT p FROM Position p WHERE p.id = :id")
     Optional<Position> findByIdWithDepartment(@Param("id") int id);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Position p WHERE p.department.id = :departmentId")
+    void deleteAllByDepartmentId(@Param("departmentId") int departmentId);
 }
