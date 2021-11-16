@@ -546,8 +546,8 @@ class UserRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(newUserTo, "newPass")))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_EMAIL));
     }
 
@@ -560,8 +560,8 @@ class UserRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_EMAIL));
     }
 }

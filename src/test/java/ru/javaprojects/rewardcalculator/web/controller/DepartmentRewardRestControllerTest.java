@@ -570,8 +570,8 @@ class DepartmentRewardRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDepartmentRewardTo)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_DEPARTMENT_REWARD));
     }
 }

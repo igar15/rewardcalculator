@@ -194,8 +194,8 @@ class PositionRestControllerTest extends AbstractControllerTest {
     void deleteWhenPositionHasEmployees() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + "positions/" + POSITION_1_ID))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES));
     }
 
@@ -456,8 +456,8 @@ class PositionRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newPositionTo)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_POSITION_NAME));
     }
 
@@ -470,8 +470,8 @@ class PositionRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_POSITION_NAME));
     }
 
@@ -484,8 +484,8 @@ class PositionRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newPositionTo)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_CHIEF_POSITION));
     }
 
@@ -498,8 +498,8 @@ class PositionRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_CHIEF_POSITION));
     }
 }

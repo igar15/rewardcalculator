@@ -74,7 +74,7 @@ public class AppExceptionHandler {
             String lowerCaseMsg = rootMsg.toLowerCase();
             for (Map.Entry<String, String> entry : CONSTRAINS_MAP.entrySet()) {
                 if (lowerCaseMsg.contains(entry.getKey())) {
-                    return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, entry.getValue());
+                    return logAndGetErrorInfo(req, e, false, DATA_ERROR, entry.getValue());
                 }
             }
         }

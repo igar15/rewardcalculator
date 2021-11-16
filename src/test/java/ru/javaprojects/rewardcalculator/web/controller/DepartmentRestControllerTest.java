@@ -218,8 +218,8 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
     void deleteWhenPositionHasEmployees() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + DEPARTMENT_1_ID))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DEPARTMENT_POSITION_HAS_EMPLOYEES));
     }
 
@@ -433,8 +433,8 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDepartment)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_DEPARTMENT));
     }
 
@@ -447,8 +447,8 @@ class DepartmentRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR))
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_DEPARTMENT));
     }
 }
