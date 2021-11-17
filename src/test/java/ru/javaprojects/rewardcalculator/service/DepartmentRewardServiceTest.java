@@ -156,7 +156,7 @@ class DepartmentRewardServiceTest extends AbstractServiceTest {
     @Test
     void updateWithAllocatedAMountLessThanExistedDistributedAmount() {
         DepartmentRewardTo updatedTo = getUpdatedTo();
-        updatedTo.setAllocatedAmount(30000);
+        updatedTo.setAllocatedAmount(10000);
         assertThrows(DepartmentRewardBadDataException.class, () -> service.update(updatedTo));
     }
 

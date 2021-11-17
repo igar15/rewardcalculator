@@ -407,7 +407,7 @@ class DepartmentRewardRestControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void updateWithAllocatedAMountLessThanExistedDistributedAmount() throws Exception {
         DepartmentRewardTo updatedTo = getUpdatedTo();
-        updatedTo.setAllocatedAmount(30000);
+        updatedTo.setAllocatedAmount(10000);
         perform(MockMvcRequestBuilders.put(REST_URL + "departmentrewards/" + DEPARTMENT_REWARD_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))

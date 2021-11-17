@@ -20,8 +20,8 @@ public class EmployeeRewardTestData {
     public static final int NOT_FOUND = 10;
 
     public static final EmployeeReward employeeReward1 = new EmployeeReward(EMPLOYEE_REWARD_1_ID, 150.75, 12060, 0, 0, employee1, departmentReward2);
-    public static final EmployeeReward employeeReward2 = new EmployeeReward(EMPLOYEE_REWARD_2_ID, 150.75, 10710, 0, 0, employee2, departmentReward2);
-    public static final EmployeeReward employeeReward3 = new EmployeeReward(EMPLOYEE_REWARD_3_ID, 150.75, 18030, 0, 0, employee3, departmentReward2);
+    public static final EmployeeReward employeeReward2 = new EmployeeReward(EMPLOYEE_REWARD_2_ID, 150.75, 12060, 0, 0, employee2, departmentReward2);
+    public static final EmployeeReward employeeReward3 = new EmployeeReward(EMPLOYEE_REWARD_3_ID, 150.75, 10710, 0, 0, employee3, departmentReward2);
 
     public static final String EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_AND_APPROVING_SIGNATURES_FILE_NAME = "./src/test/resources/rewardsWithChiefAndApprovingSignatures.pdf";
     public static final String EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME = "./src/test/resources/rewardsWithChiefSignatureOnly.pdf";

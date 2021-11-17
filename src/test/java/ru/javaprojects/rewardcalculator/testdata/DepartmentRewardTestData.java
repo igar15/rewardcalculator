@@ -20,18 +20,16 @@ public class DepartmentRewardTestData {
 
     public static final int DEPARTMENT_REWARD_1_ID = START_SEQ + 18;
     public static final int DEPARTMENT_REWARD_2_ID = START_SEQ + 19;
-    public static final int DEPARTMENT_REWARD_3_ID = START_SEQ + 20;
-    public static final int DEPARTMENT_REWARD_ANOTHER_DEPARTMENT_ID = START_SEQ + 21;
+    public static final int DEPARTMENT_REWARD_ANOTHER_DEPARTMENT_ID = START_SEQ + 20;
     public static final int NOT_FOUND = 10;
 
-    public static final DepartmentReward departmentReward1 = new DepartmentReward(DEPARTMENT_REWARD_1_ID, 40800, 40800);
-    public static final DepartmentReward departmentReward2 = new DepartmentReward(DEPARTMENT_REWARD_2_ID, 40800, 40800, department1, paymentPeriod2);
-    public static final DepartmentReward departmentReward3 = new DepartmentReward(DEPARTMENT_REWARD_3_ID, 40800, 40800);
+    public static final DepartmentReward departmentReward1 = new DepartmentReward(DEPARTMENT_REWARD_1_ID, 40800, 12060);
+    public static final DepartmentReward departmentReward2 = new DepartmentReward(DEPARTMENT_REWARD_2_ID, 40800, 34830, department1, paymentPeriod2);
 
     public static final Pageable PAGEABLE = PageRequest.of(0, 2);
     public static final Page<DepartmentReward> PAGE = new PageImpl<>(List.of(departmentReward2, departmentReward1), PAGEABLE, 2);
 
-    public static final DepartmentReward departmentReward2Updated = new DepartmentReward(DEPARTMENT_REWARD_2_ID, 40800, 38740);
+    public static final DepartmentReward departmentReward2Updated = new DepartmentReward(DEPARTMENT_REWARD_2_ID, 40800, 32770);
 
     public static DepartmentReward getNew() {
         return new DepartmentReward(null, 100000, 0, department1, paymentPeriod3);
@@ -42,7 +40,7 @@ public class DepartmentRewardTestData {
     }
 
     public static DepartmentReward getUpdated() {
-        return new DepartmentReward(DEPARTMENT_REWARD_1_ID, 55000, 40800, department1, paymentPeriod3);
+        return new DepartmentReward(DEPARTMENT_REWARD_1_ID, 55000, 12060, department1, paymentPeriod3);
     }
 
     public static DepartmentRewardTo getUpdatedTo() {

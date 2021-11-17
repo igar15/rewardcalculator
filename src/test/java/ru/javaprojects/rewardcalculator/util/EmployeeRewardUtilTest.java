@@ -32,9 +32,9 @@ class EmployeeRewardUtilTest {
 
     @Test
     void calculateNewDistributedAmountTest() {
-        int newDistributedAmount = calculateNewDistributedAmount(departmentReward1, 16020, 10020);
-        assertEquals(34800, newDistributedAmount);
-        assertThrows(EmployeeRewardBadDataException.class, () -> calculateNewDistributedAmount(departmentReward1, 16020, 20000));
+        int newDistributedAmount = calculateNewDistributedAmount(departmentReward1, 12060, 10000);
+        assertEquals(10000, newDistributedAmount);
+        assertThrows(EmployeeRewardBadDataException.class, () -> calculateNewDistributedAmount(departmentReward1, 12060, 50000));
     }
 
     @Test

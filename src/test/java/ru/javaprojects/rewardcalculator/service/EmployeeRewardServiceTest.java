@@ -92,7 +92,7 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
     @Test
     void updateWithAllocatedAmountExceededTooMuchReward() {
         EmployeeRewardTo updatedTo = getUpdatedTo();
-        updatedTo.setAdditionalReward(4500);
+        updatedTo.setAdditionalReward(15000);
         assertThrows(EmployeeRewardBadDataException.class, () -> service.update(updatedTo));
     }
 

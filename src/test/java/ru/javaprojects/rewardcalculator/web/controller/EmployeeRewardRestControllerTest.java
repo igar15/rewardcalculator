@@ -343,7 +343,7 @@ class EmployeeRewardRestControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void updateWithAllocatedAmountExceededTooMuchReward() throws Exception {
         EmployeeRewardTo updatedTo = getUpdatedTo();
-        updatedTo.setAdditionalReward(4500);
+        updatedTo.setAdditionalReward(15000);
         perform(MockMvcRequestBuilders.put(REST_URL + "employeerewards/" + EMPLOYEE_REWARD_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
