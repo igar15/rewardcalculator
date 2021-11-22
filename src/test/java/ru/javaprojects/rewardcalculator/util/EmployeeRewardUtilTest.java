@@ -25,9 +25,11 @@ class EmployeeRewardUtilTest {
 
     @Test
     void calculateFullRewardTest() {
-        assertEquals(21020, calculateFullReward(16020, 5000, 0));
-        assertEquals(10000, calculateFullReward(16020, 0, 6020));
-        assertThrows(EmployeeRewardBadDataException.class, () -> calculateFullReward(10000, 0, 12000));
+        assertEquals(21020, calculateFullReward(16020, 5000, 0, 44000));
+        assertEquals(10000, calculateFullReward(16020, 0, 6020, 44000));
+        assertEquals(35200, calculateFullReward(10000, 25200, 0, 44000));
+        assertThrows(EmployeeRewardBadDataException.class, () -> calculateFullReward(10000, 0, 12000, 44000));
+        assertThrows(EmployeeRewardBadDataException.class, () -> calculateFullReward(10000, 26000, 0, 44000));
     }
 
     @Test

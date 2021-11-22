@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 
 public class EmployeeRewardUtil {
     private static final double PREMIUM_RATE = 0.3;
+    private static final int MAX_PERCENTAGE_OF_SALARY = 80;
 
     private static String employeeRewardsList;
     private static String indexNumber;
@@ -74,10 +75,14 @@ public class EmployeeRewardUtil {
         return (int) (hoursWorked * salary / requiredHoursWorked * PREMIUM_RATE);
     }
 
-    public static int calculateFullReward(int hoursWorkedReward, int additionalReward, int penalty) {
+    public static int calculateFullReward(int hoursWorkedReward, int additionalReward, int penalty, int salary) {
         int fullReward = hoursWorkedReward + additionalReward - penalty;
         if (fullReward < 0) {
             throw new EmployeeRewardBadDataException("Employee reward must be greater than or equal zero");
+        }
+        int percentageOfSalary = fullReward * 100 / salary;
+        if (percentageOfSalary > MAX_PERCENTAGE_OF_SALARY) {
+            throw new EmployeeRewardBadDataException("Employee reward must be less than or equal " + MAX_PERCENTAGE_OF_SALARY + " %");
         }
         return fullReward;
     }

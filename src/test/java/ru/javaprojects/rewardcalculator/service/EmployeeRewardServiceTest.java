@@ -90,6 +90,13 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    void updateWithFullRewardExceededMaxPercentageOfSalary() {
+        EmployeeRewardTo updatedTo = getUpdatedTo();
+        updatedTo.setAdditionalReward(25000);
+        assertThrows(EmployeeRewardBadDataException.class, () -> service.update(updatedTo));
+    }
+
+    @Test
     void updateWithAllocatedAmountExceededTooMuchReward() {
         EmployeeRewardTo updatedTo = getUpdatedTo();
         updatedTo.setAdditionalReward(15000);

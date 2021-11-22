@@ -55,7 +55,7 @@ public class EmployeeRewardService {
         double requiredHoursWorked = departmentReward.getPaymentPeriod().getRequiredHoursWorked();
 
         int hoursWorkedReward = calculateHoursWorkedReward(employeeRewardTo.getHoursWorked(), salary, requiredHoursWorked);
-        int newFullReward = calculateFullReward(hoursWorkedReward, employeeRewardTo.getAdditionalReward(), employeeRewardTo.getPenalty());
+        int newFullReward = calculateFullReward(hoursWorkedReward, employeeRewardTo.getAdditionalReward(), employeeRewardTo.getPenalty(), salary);
         int newDistributedAmount = calculateNewDistributedAmount(departmentReward, employeeReward.getFullReward(), newFullReward);
         updateFromTo(employeeReward, employeeRewardTo, hoursWorkedReward);
         departmentReward.setDistributedAmount(newDistributedAmount);
