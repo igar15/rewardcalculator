@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 public class PositionTo extends BaseTo {
 
     @NotBlank
-    @Size(min = 4, max = 50)
+    @Size(min = 4, max = 70)
     private String name;
 
     @NotNull

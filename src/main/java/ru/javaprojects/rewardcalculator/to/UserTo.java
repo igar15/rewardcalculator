@@ -8,7 +8,7 @@ import java.util.Set;
 public class UserTo extends BaseTo {
 
     @NotBlank
-    @Size(min = 4, max = 50)
+    @Size(min = 4, max = 70)
     private String name;
 
     @Email
