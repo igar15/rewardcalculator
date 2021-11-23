@@ -2,6 +2,7 @@ package ru.javaprojects.rewardcalculator.service;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -58,7 +59,10 @@ public class PositionService {
     }
 
 //    @CacheEvict(value = "positions", key = "@positionRepository.findByIdWithDepartment(#positionTo.id).department.id")
-    @CacheEvict(value = "positions", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "positions", key = "#positionTo.departmentId"),
+            @CacheEvict(value = "employees", key = "#positionTo.departmentId")
+    })
     @Transactional
     public void update(PositionTo positionTo) {
         Assert.notNull(positionTo, "position must not be null");
