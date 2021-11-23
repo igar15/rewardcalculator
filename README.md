@@ -34,8 +34,7 @@ They have read-only access to payment periods data in the company, as well as da
 * Every user has access to their profile data and can also change their password. 
 
 ###Application Domain Model Schema
-![domain model](https://user-images.githubusercontent.com/60218699/139638775-d0d25436-ef09-4978-aa1e-4fcc59ca3031.png)
-
+![reward_calculator_domain_model](https://user-images.githubusercontent.com/60218699/143012542-48c7c565-b3db-4f2b-abeb-7c58b2063a86.png)
 ### API documentation:
 #### Swagger documentation
 - (/v3/api-docs)

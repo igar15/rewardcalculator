@@ -16,15 +16,21 @@ public class Employee extends AbstractNamedEntity {
     @JoinColumn(name = "position_id", nullable = false)
     private Position position;
 
+    @NotNull
+    @Column(name = "rate")
+    @Enumerated(EnumType.STRING)
+    private Rate rate;
+
     public Employee() {
     }
 
-    public Employee(Integer id, String name) {
+    public Employee(Integer id, String name, Rate rate) {
         super(id, name);
+        this.rate = rate;
     }
 
-    public Employee(Integer id, String name, Position position) {
-        this(id, name);
+    public Employee(Integer id, String name, Rate rate, Position position) {
+        this(id, name, rate);
         this.position = position;
     }
 
@@ -36,11 +42,20 @@ public class Employee extends AbstractNamedEntity {
         this.position = position;
     }
 
+    public Rate getRate() {
+        return rate;
+    }
+
+    public void setRate(Rate rate) {
+        this.rate = rate;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
                 "id=" + id +
                 ", name=" + name +
+                ", rate=" + rate +
                 '}';
     }
 }

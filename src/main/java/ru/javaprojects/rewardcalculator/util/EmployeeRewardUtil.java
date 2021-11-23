@@ -6,10 +6,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.util.Assert;
-import ru.javaprojects.rewardcalculator.model.DepartmentReward;
-import ru.javaprojects.rewardcalculator.model.Employee;
-import ru.javaprojects.rewardcalculator.model.EmployeeReward;
-import ru.javaprojects.rewardcalculator.model.Position;
+import ru.javaprojects.rewardcalculator.model.*;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.PdfException;
@@ -25,9 +22,13 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+import static ru.javaprojects.rewardcalculator.model.Rate.HALF_RATE;
+import static ru.javaprojects.rewardcalculator.model.Rate.QUARTER_RATE;
+
 public class EmployeeRewardUtil {
     private static final double PREMIUM_RATE = 0.3;
     private static final int MAX_PERCENTAGE_OF_SALARY = 80;
+    private static final double HOURS_WORK_ROUNDING_COMPENSATION_COEFFICIENT = 0.25;
 
     private static String employeeRewardsList;
     private static String indexNumber;
@@ -71,16 +72,46 @@ public class EmployeeRewardUtil {
         Assert.isTrue(employeeRewardTo.getPenalty() >= 0, "penalty must be greater than or equals to zero");
     }
 
-    public static int calculateHoursWorkedReward(double hoursWorked, int salary, double requiredHoursWorked) {
-        return (int) (hoursWorked * salary / requiredHoursWorked * PREMIUM_RATE);
+    public static int calculateHoursWorkedReward(double hoursWorked, int salary, Rate rate, double requiredHoursWorked) {
+        int hoursWorkedReward = (int) (hoursWorked * salary / requiredHoursWorked * PREMIUM_RATE);
+        return compensateHoursWorkedRoundingError(hoursWorkedReward, salary, rate);
     }
 
-    public static int calculateFullReward(int hoursWorkedReward, int additionalReward, int penalty, int salary) {
+    private static int compensateHoursWorkedRoundingError(int hoursWorkedReward, int salary, Rate rate) {
+        switch (rate) {
+            case FULL_RATE -> {
+                return hoursWorkedReward;
+            }
+            case HALF_RATE -> {
+                int maxHoursWorkedReward = (int) (salary * HALF_RATE.getCoefficient() * PREMIUM_RATE);
+                if (maxHoursWorkedReward < hoursWorkedReward
+                        || Math.abs(maxHoursWorkedReward - hoursWorkedReward) < salary * HOURS_WORK_ROUNDING_COMPENSATION_COEFFICIENT / 100) {
+                    return maxHoursWorkedReward;
+                } else {
+                    return hoursWorkedReward;
+                }
+            }
+            case QUARTER_RATE -> {
+                int maxHoursWorkedReward = (int) (salary * QUARTER_RATE.getCoefficient() * PREMIUM_RATE);
+                if (maxHoursWorkedReward < hoursWorkedReward
+                        || Math.abs(maxHoursWorkedReward - hoursWorkedReward) < salary * (HOURS_WORK_ROUNDING_COMPENSATION_COEFFICIENT / 2) / 100) {
+                    return maxHoursWorkedReward;
+                } else {
+                    return hoursWorkedReward;
+                }
+            }
+            default -> {
+                throw new IllegalArgumentException("Unknown Position Rate");
+            }
+        }
+    }
+
+    public static int calculateFullReward(int hoursWorkedReward, int additionalReward, int penalty, int salary, Rate rate) {
         int fullReward = hoursWorkedReward + additionalReward - penalty;
         if (fullReward < 0) {
             throw new EmployeeRewardBadDataException("Employee reward must be greater than or equal zero");
         }
-        int percentageOfSalary = fullReward * 100 / salary;
+        int percentageOfSalary = (int) (fullReward * 100 / salary / rate.getCoefficient());
         if (percentageOfSalary > MAX_PERCENTAGE_OF_SALARY) {
             throw new EmployeeRewardBadDataException("Employee reward must be less than or equal " + MAX_PERCENTAGE_OF_SALARY + " %");
         }
@@ -187,7 +218,7 @@ public class EmployeeRewardUtil {
             rewardCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             rewardCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
             table.addCell(rewardCell);
-            table.addCell(new Phrase(employeeReward.getEmployee().getPosition().getSalary().toString(), normalFont11));
+            table.addCell(new Phrase(calculateSalaryWithRateCoefficient(employeeReward), normalFont11));
             table.addCell(new Phrase(calculateRewardOfSalaryPercent(employeeReward), normalFont11));
 
         }
@@ -262,10 +293,18 @@ public class EmployeeRewardUtil {
         return cell;
     }
 
+    private static String calculateSalaryWithRateCoefficient(EmployeeReward employeeReward) {
+        Integer salary = employeeReward.getEmployee().getPosition().getSalary();
+        Rate rate = employeeReward.getEmployee().getRate();
+        int salaryWithRate = (int) (salary * rate.getCoefficient());
+        return String.valueOf(salaryWithRate);
+    }
+
     private static String calculateRewardOfSalaryPercent(EmployeeReward employeeReward) {
         Integer reward = employeeReward.getFullReward();
         Integer salary = employeeReward.getEmployee().getPosition().getSalary();
-        int rewardOfSalary = reward * 100 / salary;
+        Rate rate = employeeReward.getEmployee().getRate();
+        int rewardOfSalary = (int) (reward * 100 / salary / rate.getCoefficient());
         return String.valueOf(rewardOfSalary);
     }
 

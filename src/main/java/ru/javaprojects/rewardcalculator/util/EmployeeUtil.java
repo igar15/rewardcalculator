@@ -8,11 +8,12 @@ public class EmployeeUtil {
     }
 
     public static Employee createFromTo(EmployeeTo employeeTo) {
-        return new Employee(employeeTo.getId(), employeeTo.getName());
+        return new Employee(employeeTo.getId(), employeeTo.getName(), employeeTo.getRate());
     }
 
     public static Employee updateFromTo(Employee employee, EmployeeTo employeeTo) {
         employee.setName(employeeTo.getName());
+        employee.setRate(employeeTo.getRate());
         return employee;
     }
 }

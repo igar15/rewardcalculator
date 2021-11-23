@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaprojects.rewardcalculator.model.DepartmentReward;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
+import ru.javaprojects.rewardcalculator.model.Rate;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRewardRepository;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
@@ -52,10 +53,11 @@ public class EmployeeRewardService {
                 .orElseThrow(() -> new NotFoundException("Not found employee reward with id=" + employeeRewardTo.getId()));
         DepartmentReward departmentReward = employeeReward.getDepartmentReward();
         int salary = employeeReward.getEmployee().getPosition().getSalary();
+        Rate rate = employeeReward.getEmployee().getRate();
         double requiredHoursWorked = departmentReward.getPaymentPeriod().getRequiredHoursWorked();
 
-        int hoursWorkedReward = calculateHoursWorkedReward(employeeRewardTo.getHoursWorked(), salary, requiredHoursWorked);
-        int newFullReward = calculateFullReward(hoursWorkedReward, employeeRewardTo.getAdditionalReward(), employeeRewardTo.getPenalty(), salary);
+        int hoursWorkedReward = calculateHoursWorkedReward(employeeRewardTo.getHoursWorked(), salary, rate, requiredHoursWorked);
+        int newFullReward = calculateFullReward(hoursWorkedReward, employeeRewardTo.getAdditionalReward(), employeeRewardTo.getPenalty(), salary, rate);
         int newDistributedAmount = calculateNewDistributedAmount(departmentReward, employeeReward.getFullReward(), newFullReward);
         updateFromTo(employeeReward, employeeRewardTo, hoursWorkedReward);
         departmentReward.setDistributedAmount(newDistributedAmount);

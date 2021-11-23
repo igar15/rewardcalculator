@@ -1,5 +1,7 @@
 package ru.javaprojects.rewardcalculator.to;
 
+import ru.javaprojects.rewardcalculator.model.Rate;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,14 +13,18 @@ public class EmployeeTo extends BaseTo {
     private String name;
 
     @NotNull
+    private Rate rate;
+
+    @NotNull
     private Integer positionId;
 
     public EmployeeTo() {
     }
 
-    public EmployeeTo(Integer id, String name, Integer positionId) {
+    public EmployeeTo(Integer id, String name, Rate rate, Integer positionId) {
         super(id);
         this.name = name;
+        this.rate = rate;
         this.positionId = positionId;
     }
 
@@ -28,6 +34,14 @@ public class EmployeeTo extends BaseTo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Rate getRate() {
+        return rate;
+    }
+
+    public void setRate(Rate rate) {
+        this.rate = rate;
     }
 
     public Integer getPositionId() {
@@ -43,6 +57,7 @@ public class EmployeeTo extends BaseTo {
         return "EmployeeTo{" +
                 "id=" + id +
                 ", name=" + name +
+                ", rate=" + rate +
                 ", positionId=" + positionId +
                 '}';
     }

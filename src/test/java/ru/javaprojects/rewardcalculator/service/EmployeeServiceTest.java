@@ -11,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.javaprojects.rewardcalculator.model.Rate.FULL_RATE;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getNew;
@@ -118,6 +119,7 @@ class EmployeeServiceTest extends AbstractServiceTest {
 
     @Test
     void createWithException() {
-        validateRootCause(ConstraintViolationException.class, () -> service.create(new EmployeeTo(null, " ", POSITION_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new EmployeeTo(null, " ", FULL_RATE, POSITION_1_ID)));
+        validateRootCause(ConstraintViolationException.class, () -> service.create(new EmployeeTo(null, "employee name", null, POSITION_1_ID)));
     }
 }
