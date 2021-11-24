@@ -1,7 +1,6 @@
 package ru.javaprojects.rewardcalculator.util;
 
 import org.junit.jupiter.api.Test;
-import ru.javaprojects.rewardcalculator.model.Rate;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 
 import java.io.IOException;
@@ -10,7 +9,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.javaprojects.rewardcalculator.TestUtil.checkPdf;
-import static ru.javaprojects.rewardcalculator.model.Rate.*;
+import static ru.javaprojects.rewardcalculator.model.Rate.FULL_RATE;
+import static ru.javaprojects.rewardcalculator.model.Rate.HALF_RATE;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward1;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward2;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.*;
