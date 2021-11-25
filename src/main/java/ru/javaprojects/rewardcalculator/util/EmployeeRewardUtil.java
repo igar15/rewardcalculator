@@ -251,8 +251,25 @@ public class EmployeeRewardUtil {
                 .map(employeeReward -> {
                     Employee chief = employeeReward.getEmployee();
                     Position chiefPosition = chief.getPosition();
-                    return new EmployeeSignature(chiefPosition.getName(), chief.getName());
+                    return new EmployeeSignature(chiefPosition.getName(), formatChiefName(chief.getName()));
                 }).orElse(new EmployeeSignature("", ""));
+    }
+
+    private static String formatChiefName(String name) {
+        String[] nameParts = name.split(" ");
+        if (nameParts.length == 3) {
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append(nameParts[1].charAt(0))
+                    .append(".")
+                    .append(nameParts[2].charAt(0))
+                    .append(".")
+                    .append(" ")
+                    .append(nameParts[0]);
+            return builder.toString();
+        } else {
+            return name;
+        }
     }
 
     public static class EmployeeSignature {
