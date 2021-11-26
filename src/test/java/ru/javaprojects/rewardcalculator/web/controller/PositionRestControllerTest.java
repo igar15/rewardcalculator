@@ -45,7 +45,7 @@ class PositionRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(POSITION_MATCHER.contentJson(position1, position2, position3));
+                .andExpect(POSITION_MATCHER.contentJson(position3, position2, position1));
     }
 
     @Test
@@ -55,7 +55,7 @@ class PositionRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(POSITION_MATCHER.contentJson(position1, position2, position3));
+                .andExpect(POSITION_MATCHER.contentJson(position3, position2, position1));
     }
 
     @Test
@@ -65,7 +65,7 @@ class PositionRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(POSITION_MATCHER.contentJson(position1, position2, position3));
+                .andExpect(POSITION_MATCHER.contentJson(position3, position2, position1));
     }
 
     @Test
@@ -75,7 +75,7 @@ class PositionRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(POSITION_MATCHER.contentJson(position1, position2, position3));
+                .andExpect(POSITION_MATCHER.contentJson(position3, position2, position1));
     }
 
     @Test

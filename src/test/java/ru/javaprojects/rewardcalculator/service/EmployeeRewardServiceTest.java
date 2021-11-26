@@ -49,13 +49,13 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
     @Test
     void getAllByDepartmentRewardId() {
         List<EmployeeReward> employeeRewards = service.getAllByDepartmentRewardId(DEPARTMENT_REWARD_2_ID);
-        EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward1, employeeReward2, employeeReward3);
+        EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward3, employeeReward2, employeeReward1);
     }
 
     @Test
     void getAllByDepartmentReward() {
         List<EmployeeReward> employeeRewards = service.getAllByDepartmentReward(departmentReward2);
-        EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward1, employeeReward2, employeeReward3);
+        EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward3, employeeReward2, employeeReward1);
     }
 
     @Test

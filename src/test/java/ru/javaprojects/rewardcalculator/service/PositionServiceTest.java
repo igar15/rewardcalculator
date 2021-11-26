@@ -63,7 +63,7 @@ class PositionServiceTest extends AbstractServiceTest {
     @Test
     void getAllByDepartmentId() {
         List<Position> positions = service.getAllByDepartmentId(DEPARTMENT_1_ID);
-        POSITION_MATCHER.assertMatch(positions, position1, position2, position3);
+        POSITION_MATCHER.assertMatch(positions, position3, position2, position1);
     }
 
     @Test

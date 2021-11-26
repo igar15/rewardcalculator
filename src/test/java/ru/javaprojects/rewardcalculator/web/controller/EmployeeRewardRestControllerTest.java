@@ -39,7 +39,7 @@ class EmployeeRewardRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(EMPLOYEE_REWARD_MATCHER.contentJson(employeeReward1, employeeReward2, employeeReward3));
+                .andExpect(EMPLOYEE_REWARD_MATCHER.contentJson(employeeReward3, employeeReward2, employeeReward1));
     }
 
     @Test
@@ -49,7 +49,7 @@ class EmployeeRewardRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(EMPLOYEE_REWARD_MATCHER.contentJson(employeeReward1, employeeReward2, employeeReward3));
+                .andExpect(EMPLOYEE_REWARD_MATCHER.contentJson(employeeReward3, employeeReward2, employeeReward1));
     }
 
     @Test

@@ -22,15 +22,15 @@ public class UserTestData {
     public static final int PERSONNEL_OFFICER_ID = START_SEQ + 3;
     public static final int NOT_FOUND = 10;
 
-    public static final String DEPARTMENT_HEAD_MAIL = "departmenthead@yandex.ru";
+    public static final String DEPARTMENT_HEAD_MAIL = "johnsmith@gmail.com";
     public static final String ADMIN_MAIL = "admin@gmail.com";
-    public static final String ECONOMIST_MAIL = "economist@yandex.ru";
-    public static final String PERSONNEL_OFFICER_MAIL = "personnelofficer@yandex.ru";
+    public static final String ECONOMIST_MAIL = "sarahconnor@gmail.com";
+    public static final String PERSONNEL_OFFICER_MAIL = "jacklondon@gmail.com";
 
-    public static final User departmentHead = new User(DEPARTMENT_HEAD_ID, "Department head name", "departmenthead@yandex.ru", "password", true, Set.of(DEPARTMENT_HEAD), Set.of(department1, department2));
-    public static final User admin = new User(ADMIN_ID, "Admin name", "admin@gmail.com", "admin", true, Set.of(ADMIN, DEPARTMENT_HEAD, ECONOMIST), Set.of());
-    public static final User economist = new User(ECONOMIST_ID, "Economist name", "economist@yandex.ru", "password", true, Set.of(ECONOMIST), Set.of());
-    public static final User personnelOfficer = new User(PERSONNEL_OFFICER_ID, "Personnel Officer name", "personnelofficer@yandex.ru", "password", true, Set.of(PERSONNEL_OFFICER), Set.of());
+    public static final User departmentHead = new User(DEPARTMENT_HEAD_ID, "John Smith", "johnsmith@gmail.com", "password", true, Set.of(DEPARTMENT_HEAD), Set.of(department1, department2));
+    public static final User admin = new User(ADMIN_ID, "Viktor Wran", "admin@gmail.com", "admin", true, Set.of(ADMIN, DEPARTMENT_HEAD, ECONOMIST), Set.of());
+    public static final User economist = new User(ECONOMIST_ID, "Sarah Connor", "sarahconnor@gmail.com", "password", true, Set.of(ECONOMIST), Set.of());
+    public static final User personnelOfficer = new User(PERSONNEL_OFFICER_ID, "Jack London", "jacklondon@gmail.com", "password", true, Set.of(PERSONNEL_OFFICER), Set.of());
 
 
     public static User getNew() {

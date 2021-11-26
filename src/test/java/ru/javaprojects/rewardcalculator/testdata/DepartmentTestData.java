@@ -19,9 +19,9 @@ public class DepartmentTestData {
     public static final int DEPARTMENT_3_ID = START_SEQ + 6;
     public static final int NOT_FOUND = 10;
 
-    public static final Department department1 = new Department(DEPARTMENT_1_ID, "Отдел № 1");
-    public static final Department department2 = new Department(DEPARTMENT_2_ID, "Отдел № 3");
-    public static final Department department3 = new Department(DEPARTMENT_3_ID, "Отдел № 2");
+    public static final Department department1 = new Department(DEPARTMENT_1_ID, "Department # 1");
+    public static final Department department2 = new Department(DEPARTMENT_2_ID, "Department # 3");
+    public static final Department department3 = new Department(DEPARTMENT_3_ID, "Department # 2");
 
     public static final Pageable PAGEABLE = PageRequest.of(0, 2);
     public static final Page<Department> PAGE = new PageImpl<>(List.of(department1, department3), PAGEABLE, 3);

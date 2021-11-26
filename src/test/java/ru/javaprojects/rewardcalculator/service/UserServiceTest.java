@@ -96,7 +96,7 @@ class UserServiceTest extends AbstractServiceTest {
     @Test
     void getAll() {
         List<User> users = service.getAll();
-        USER_MATCHER.assertMatch(users, admin, departmentHead, economist, personnelOfficer);
+        USER_MATCHER.assertMatch(users, personnelOfficer, departmentHead, economist, admin);
     }
 
     @Test
@@ -105,9 +105,9 @@ class UserServiceTest extends AbstractServiceTest {
         USER_MATCHER.assertMatch(users, List.of(admin));
         users = service.getAllByKeyWord("AdMin");
         USER_MATCHER.assertMatch(users, List.of(admin));
-        users = service.getAllByKeyWord("Adm");
+        users = service.getAllByKeyWord("Viktor");
         USER_MATCHER.assertMatch(users, List.of(admin));
-        users = service.getAllByKeyWord("Min");
+        users = service.getAllByKeyWord("wran");
         USER_MATCHER.assertMatch(users, List.of(admin));
         users = service.getAllByKeyWord("yyyXXXzzz");
         USER_MATCHER.assertMatch(users, List.of());
@@ -115,12 +115,12 @@ class UserServiceTest extends AbstractServiceTest {
 
     @Test
     void getByEmailKeyWord() {
-        List<User> users = service.getAllByKeyWord("@yandex.ru");
-        USER_MATCHER.assertMatch(users, List.of(departmentHead, economist, personnelOfficer));
-        users = service.getAllByKeyWord("@YAndex.ru");
-        USER_MATCHER.assertMatch(users, List.of(departmentHead, economist, personnelOfficer));
-        users = service.getAllByKeyWord("@");
-        USER_MATCHER.assertMatch(users, List.of(admin, departmentHead, economist, personnelOfficer));
+        List<User> users = service.getAllByKeyWord("@gmail.com");
+        USER_MATCHER.assertMatch(users, List.of(personnelOfficer, departmentHead, economist, admin));
+        users = service.getAllByKeyWord("@GMAIL.com");
+        USER_MATCHER.assertMatch(users, List.of(personnelOfficer, departmentHead, economist, admin));
+        users = service.getAllByKeyWord("admin@");
+        USER_MATCHER.assertMatch(users, List.of(admin));
     }
 
     @Test

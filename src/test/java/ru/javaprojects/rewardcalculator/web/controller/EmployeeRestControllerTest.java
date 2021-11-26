@@ -43,7 +43,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(EMPLOYEE_MATCHER.contentJson(employee1, employee2, employee3));
+                .andExpect(EMPLOYEE_MATCHER.contentJson(employee3, employee2, employee1));
     }
 
     @Test
@@ -53,7 +53,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(EMPLOYEE_MATCHER.contentJson(employee1, employee2, employee3));
+                .andExpect(EMPLOYEE_MATCHER.contentJson(employee3, employee2, employee1));
     }
 
     @Test
@@ -63,7 +63,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(EMPLOYEE_MATCHER.contentJson(employee1, employee2, employee3));
+                .andExpect(EMPLOYEE_MATCHER.contentJson(employee3, employee2, employee1));
     }
 
     @Test
@@ -73,7 +73,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(EMPLOYEE_MATCHER.contentJson(employee1, employee2, employee3));
+                .andExpect(EMPLOYEE_MATCHER.contentJson(employee3, employee2, employee1));
     }
 
     @Test

@@ -26,7 +26,7 @@ public class EmployeeRewardTestData {
     public static final String EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_AND_APPROVING_SIGNATURES_FILE_NAME = "./src/test/resources/rewardsWithChiefAndApprovingSignatures.pdf";
     public static final String EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME = "./src/test/resources/rewardsWithChiefSignatureOnly.pdf";
     public static final String EMPLOYEE_REWARDS_PDF_FORM_WITH_APPROVING_SIGNATURE_ONLY_FILE_NAME = "./src/test/resources/rewardsWithApprovingSignatureOnly.pdf";
-    public static final EmployeeSignature CHIEF_SIGNATURE = new EmployeeSignature(position2.getName(), "3.n. employee");
+    public static final EmployeeSignature CHIEF_SIGNATURE = new EmployeeSignature(position2.getName(), "Bob Smith");
     public static final EmployeeSignature APPROVING_SIGNATURE = new EmployeeSignature("Deputy Head of Scientific and Technical Center \"NIEMI\" No. 49 for General Technical Issues", "S.K. Raevsky");
     public static final EmployeeSignature EMPTY_SIGNATURE = new EmployeeSignature();
 

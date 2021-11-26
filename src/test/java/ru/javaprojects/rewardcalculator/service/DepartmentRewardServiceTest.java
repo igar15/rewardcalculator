@@ -53,7 +53,7 @@ class DepartmentRewardServiceTest extends AbstractServiceTest {
         List<Employee> employees = employeeRewards.stream()
                 .map(EmployeeReward::getEmployee)
                 .collect(Collectors.toList());
-        EMPLOYEE_MATCHER.assertMatch(employees, employee1, employee2, employee3);
+        EMPLOYEE_MATCHER.assertMatch(employees, employee3, employee2, employee1);
     }
 
     @Test

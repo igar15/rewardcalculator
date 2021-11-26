@@ -64,7 +64,7 @@ class EmployeeServiceTest extends AbstractServiceTest {
     @Test
     void getAllNotFiredByDepartmentId() {
         List<Employee> employees = service.getAllNotFiredByDepartmentId(DEPARTMENT_1_ID);
-        EMPLOYEE_MATCHER.assertMatch(employees, employee1, employee2, employee3);
+        EMPLOYEE_MATCHER.assertMatch(employees, employee3, employee2, employee1);
     }
 
     @Test

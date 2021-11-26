@@ -76,7 +76,7 @@ class JwtAuthorizationFilterTest extends AbstractControllerTest {
                 .headers(adminJwtHeader))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(admin, departmentHead, economist, personnelOfficer));
+                .andExpect(USER_MATCHER.contentJson(personnelOfficer, departmentHead, economist, admin));
     }
 
     @Test
