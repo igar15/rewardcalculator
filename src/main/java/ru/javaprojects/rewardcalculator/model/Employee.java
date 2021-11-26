@@ -21,6 +21,9 @@ public class Employee extends AbstractNamedEntity {
     @Enumerated(EnumType.STRING)
     private Rate rate;
 
+    @Column(name = "fired", nullable = false, columnDefinition = "bool default false")
+    private boolean fired = false;
+
     public Employee() {
     }
 
@@ -50,12 +53,21 @@ public class Employee extends AbstractNamedEntity {
         this.rate = rate;
     }
 
+    public boolean isFired() {
+        return fired;
+    }
+
+    public void setFired(boolean fired) {
+        this.fired = fired;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
                 "id=" + id +
                 ", name=" + name +
                 ", rate=" + rate +
+                ", fired=" + fired +
                 '}';
     }
 }

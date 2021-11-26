@@ -16,10 +16,14 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @EntityGraph(attributePaths = "position")
-    @Query("SELECT e FROM Employee e WHERE e.position.department.id = :departmentId ORDER BY e.name")
-    List<Employee> findAllByPositionDepartmentIdWithPosition(int departmentId);
+    @Query("SELECT e FROM Employee e WHERE e.position.department.id = :departmentId AND e.fired = false ORDER BY e.name")
+    List<Employee> findAllNotFiredByPositionDepartmentIdWithPosition(int departmentId);
 
-    List<Employee> findAllByPositionDepartmentId(int departmentId);
+    @EntityGraph(attributePaths = "position")
+    @Query("SELECT e FROM Employee e WHERE e.position.department.id = :departmentId AND e.fired = true ORDER BY e.name")
+    List<Employee> findAllFiredByPositionDepartmentIdWithPosition(int departmentId);
+
+    List<Employee> findAllByPositionDepartmentIdAndFired(int departmentId, boolean fired);
 
     @EntityGraph(attributePaths = "position.department")
     @Query("SELECT e FROM Employee e WHERE e.id = :id")

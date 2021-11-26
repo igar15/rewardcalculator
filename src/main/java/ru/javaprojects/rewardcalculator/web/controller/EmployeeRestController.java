@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static ru.javaprojects.rewardcalculator.config.OpenApiConfig.ALLOWED_ADMIN;
 import static ru.javaprojects.rewardcalculator.config.OpenApiConfig.ALLOWED_ADMIN_PERSONNEL_OFFICER;
 import static ru.javaprojects.rewardcalculator.util.SecureUtil.checkDepartmentHeadManagesTheDepartment;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.assureIdConsistent;
@@ -38,11 +39,19 @@ public class EmployeeRestController {
     }
 
     @GetMapping("/departments/{departmentId}/employees")
-    @Operation(description = "Get all employees of the department")
-    public List<Employee> getAll(@PathVariable int departmentId, @AuthenticationPrincipal AuthorizedUser authUser) {
-        log.info("getAll for department {}", departmentId);
+    @Operation(description = "Get all not fired employees of the department")
+    public List<Employee> getAllNotFired(@PathVariable int departmentId, @AuthenticationPrincipal AuthorizedUser authUser) {
+        log.info("getAllNotFired for department {}", departmentId);
         checkDepartmentHeadManagesTheDepartment(authUser, departmentId);
-        return service.getAllByDepartmentId(departmentId);
+        return service.getAllNotFiredByDepartmentId(departmentId);
+    }
+
+    @GetMapping("/departments/{departmentId}/employees/fired")
+    @Operation(description = "Get all fired employees of the department")
+    public List<Employee> getAllFired(@PathVariable int departmentId, @AuthenticationPrincipal AuthorizedUser authUser) {
+        log.info("getAllFired for department {}", departmentId);
+        checkDepartmentHeadManagesTheDepartment(authUser, departmentId);
+        return service.getAllFiredByDepartmentId(departmentId);
     }
 
     @GetMapping("/employees/{id}")
@@ -84,5 +93,14 @@ public class EmployeeRestController {
         log.info("update {} with id={}", employeeTo, id);
         assureIdConsistent(employeeTo, id);
         service.update(employeeTo);
+    }
+
+    @PatchMapping("/employees/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Secured({"ROLE_ADMIN", "ROLE_PERSONNEL_OFFICER"})
+    @Operation(description = "Change employee's working status (fired/not fired)" + ALLOWED_ADMIN_PERSONNEL_OFFICER)
+    public void changeWorkingStatus(@PathVariable int id, @RequestParam boolean fired) {
+        log.info(fired ? "fire {}" : "recruit {}", id);
+        service.changeWorkingStatus(id, fired);
     }
 }

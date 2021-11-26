@@ -92,7 +92,7 @@ public class DepartmentRewardService {
 
     private void createBlankEmployeeRewards(DepartmentReward departmentReward) {
         Department department = departmentReward.getDepartment();
-        List<Employee> employees = employeeRepository.findAllByPositionDepartmentId(department.id());
+        List<Employee> employees = employeeRepository.findAllByPositionDepartmentIdAndFired(department.id(), false);
         employees.forEach(employee ->
                 employeeRewardRepository.save(new EmployeeReward(null, 0d, 0, 0, 0, employee, departmentReward)));
     }

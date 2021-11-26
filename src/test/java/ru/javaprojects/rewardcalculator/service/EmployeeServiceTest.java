@@ -3,14 +3,13 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javaprojects.rewardcalculator.model.Employee;
-import ru.javaprojects.rewardcalculator.repository.EmployeeRepository;
 import ru.javaprojects.rewardcalculator.to.EmployeeTo;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static ru.javaprojects.rewardcalculator.model.Rate.FULL_RATE;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.NOT_FOUND;
@@ -25,9 +24,6 @@ class EmployeeServiceTest extends AbstractServiceTest {
 
     @Autowired
     private EmployeeService service;
-
-    @Autowired
-    private EmployeeRepository repository;
 
     @Test
     void create() {
@@ -66,14 +62,25 @@ class EmployeeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void getAllByDepartmentId() {
-        List<Employee> employees = service.getAllByDepartmentId(DEPARTMENT_1_ID);
+    void getAllNotFiredByDepartmentId() {
+        List<Employee> employees = service.getAllNotFiredByDepartmentId(DEPARTMENT_1_ID);
         EMPLOYEE_MATCHER.assertMatch(employees, employee1, employee2, employee3);
     }
 
     @Test
-    void getAllByDepartmentIdWithNotExistedDepartment() {
-        assertThrows(NotFoundException.class, () -> service.getAllByDepartmentId(NOT_FOUND));
+    void getAllNotFiredByDepartmentIdWithNotExistedDepartment() {
+        assertThrows(NotFoundException.class, () -> service.getAllNotFiredByDepartmentId(NOT_FOUND));
+    }
+
+    @Test
+    void getAllFiredByDepartmentId() {
+        List<Employee> employees = service.getAllFiredByDepartmentId(DEPARTMENT_1_ID);
+        EMPLOYEE_MATCHER.assertMatch(employees, firedEmployee1, firedEmployee2, firedEmployee3);
+    }
+
+    @Test
+    void getAllFiredByDepartmentIdWithNotExistedDepartment() {
+        assertThrows(NotFoundException.class, () -> service.getAllFiredByDepartmentId(NOT_FOUND));
     }
 
     @Test
@@ -115,6 +122,19 @@ class EmployeeServiceTest extends AbstractServiceTest {
         EmployeeTo updatedTo = getUpdatedTo();
         updatedTo.setPositionId(NOT_FOUND);
         assertThrows(NotFoundException.class, () -> service.update(updatedTo));
+    }
+
+    @Test
+    void changeWorkingStatus() {
+        service.changeWorkingStatus(EMPLOYEE_1_ID, true);
+        assertTrue(service.get(EMPLOYEE_1_ID).isFired());
+        service.changeWorkingStatus(EMPLOYEE_1_ID, false);
+        assertFalse(service.get(EMPLOYEE_1_ID).isFired());
+    }
+
+    @Test
+    void changeWorkingStatusNotFound() {
+        assertThrows(NotFoundException.class, () -> service.changeWorkingStatus(NOT_FOUND, true));
     }
 
     @Test

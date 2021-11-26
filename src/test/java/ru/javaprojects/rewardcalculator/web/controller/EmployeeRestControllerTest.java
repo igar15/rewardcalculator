@@ -13,6 +13,7 @@ import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 import ru.javaprojects.rewardcalculator.web.json.JsonUtil;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +38,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAllWhenAdmin() throws Exception {
+    void getAllNotFiredWhenAdmin() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -47,7 +48,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = PERSONNEL_OFFICER_MAIL)
-    void getAllWhenPersonnelOfficer() throws Exception {
+    void getAllNotFiredWhenPersonnelOfficer() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -57,7 +58,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ECONOMIST_MAIL)
-    void getAllWhenEconomist() throws Exception {
+    void getAllNotFiredWhenEconomist() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -67,7 +68,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
-    void getAllWhenDepartmentHead() throws Exception {
+    void getAllNotFiredWhenDepartmentHead() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -77,7 +78,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
-    void getAllForbiddenWhenDepartment() throws Exception {
+    void getAllNotFiredForbiddenWhenDepartmentHead() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_3_ID + "/employees"))
                 .andDo(print())
                 .andExpect(status().isForbidden())
@@ -86,7 +87,7 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAllWithNotExistedDepartment() throws Exception {
+    void getAllNotFiredWithNotExistedDepartment() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + NOT_FOUND + "/employees"))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
@@ -94,8 +95,74 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void getAllUnAuth() throws Exception {
+    void getAllNotFiredUnAuth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees"))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(errorType(UNAUTHORIZED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAllFiredWhenAdmin() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees/fired"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(EMPLOYEE_MATCHER.contentJson(firedEmployee1, firedEmployee2, firedEmployee3));
+    }
+
+    @Test
+    @WithUserDetails(value = PERSONNEL_OFFICER_MAIL)
+    void getAllFiredWhenPersonnelOfficer() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees/fired"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(EMPLOYEE_MATCHER.contentJson(firedEmployee1, firedEmployee2, firedEmployee3));
+    }
+
+    @Test
+    @WithUserDetails(value = ECONOMIST_MAIL)
+    void getAllFiredWhenEconomist() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees/fired"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(EMPLOYEE_MATCHER.contentJson(firedEmployee1, firedEmployee2, firedEmployee3));
+    }
+
+    @Test
+    @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
+    void getAllFiredWhenDepartmentHead() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees/fired"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(EMPLOYEE_MATCHER.contentJson(firedEmployee1, firedEmployee2, firedEmployee3));
+    }
+
+    @Test
+    @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
+    void getAllFiredForbiddenWhenDepartmentHead() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_3_ID + "/employees/fired"))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getAllFiredWithNotExistedDepartment() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + NOT_FOUND + "/employees/fired"))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(DATA_NOT_FOUND));
+    }
+
+    @Test
+    void getAllFiredUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "departments/" + DEPARTMENT_1_ID + "/employees/fired"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
                 .andExpect(errorType(UNAUTHORIZED_ERROR));
@@ -401,6 +468,73 @@ class EmployeeRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL + "employees/" + EMPLOYEE_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void changeWorkingStatusWhenAdmin() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + "employees/" + EMPLOYEE_1_ID)
+                .param("fired", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        assertTrue(service.get(EMPLOYEE_1_ID).isFired());
+    }
+
+    @Test
+    @WithUserDetails(value = PERSONNEL_OFFICER_MAIL)
+    void changeWorkingStatusWhenPersonnelOfficer() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + "employees/" + EMPLOYEE_1_ID)
+                .param("fired", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        assertTrue(service.get(EMPLOYEE_1_ID).isFired());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void changeWorkingStatusNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + "employees/" + NOT_FOUND)
+                .param("fired", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(DATA_NOT_FOUND));
+    }
+
+    @Test
+    void changeWorkingStatusUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + "employees/" + EMPLOYEE_1_ID)
+                .param("fired", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(errorType(UNAUTHORIZED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = ECONOMIST_MAIL)
+    void changeWorkingStatusForbiddenWhenEconomist() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + "employees/" + EMPLOYEE_1_ID)
+                .param("fired", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(errorType(ACCESS_DENIED_ERROR));
+    }
+
+    @Test
+    @WithUserDetails(value = DEPARTMENT_HEAD_MAIL)
+    void changeWorkingStatusForbiddenWhenDepartmentHead() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + "employees/" + EMPLOYEE_1_ID)
+                .param("fired", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(errorType(ACCESS_DENIED_ERROR));
     }

@@ -47,9 +47,14 @@ public class EmployeeService {
     }
 
     @Cacheable(value = "employees", key = "#departmentId")
-    public List<Employee> getAllByDepartmentId(int departmentId) {
+    public List<Employee> getAllNotFiredByDepartmentId(int departmentId) {
         departmentService.get(departmentId);
-        return repository.findAllByPositionDepartmentIdWithPosition(departmentId);
+        return repository.findAllNotFiredByPositionDepartmentIdWithPosition(departmentId);
+    }
+
+    public List<Employee> getAllFiredByDepartmentId(int departmentId) {
+        departmentService.get(departmentId);
+        return repository.findAllFiredByPositionDepartmentIdWithPosition(departmentId);
     }
 
     @CacheEvict(value = "employees", allEntries = true)
@@ -66,5 +71,12 @@ public class EmployeeService {
         Position position = positionService.get(employeeTo.getPositionId());
         updateFromTo(employee, employeeTo);
         employee.setPosition(position);
+    }
+
+    @CacheEvict(value = "employees", allEntries = true)
+    @Transactional
+    public void changeWorkingStatus(int id, boolean fired) {
+        Employee employee = get(id);
+        employee.setFired(fired);
     }
 }

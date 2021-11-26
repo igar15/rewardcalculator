@@ -61,9 +61,10 @@ CREATE UNIQUE INDEX positions_unique_department_id_chief_position_idx ON positio
 CREATE TABLE employees
 (
     id            INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-    name          VARCHAR NOT NULL,
-    rate          VARCHAR NOT NULL,
-    position_id   INTEGER NOT NULL,
+    name          VARCHAR                           NOT NULL,
+    rate          VARCHAR                           NOT NULL,
+    fired         BOOL                DEFAULT FALSE NOT NULL,
+    position_id   INTEGER                           NOT NULL,
     FOREIGN KEY (position_id) REFERENCES positions (id)
 );
 

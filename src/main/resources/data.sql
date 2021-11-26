@@ -38,11 +38,11 @@ VALUES ('position 1 name', 40200, false, 100004),
        ('position 3 name', 60100, false, 100004),
        ('position name', 25000, false, 100006);
 
-INSERT INTO employees (name, rate, position_id)
-VALUES ('employee 1 name', 'FULL_RATE', 100007),
-       ('employee 2 name', 'FULL_RATE', 100007),
-       ('employee 3 name', 'FULL_RATE', 100008),
-       ('employee name', 'FULL_RATE', 100010);
+INSERT INTO employees (name, rate, fired, position_id)
+VALUES ('employee 1 name', 'FULL_RATE', false, 100007),
+       ('employee 2 name', 'FULL_RATE', false, 100007),
+       ('employee 3 name', 'FULL_RATE', false, 100008),
+       ('employee name', 'FULL_RATE', false, 100010);
 
 INSERT INTO payment_periods (period, required_hours_worked)
 VALUES ('2021-01-01', 120),
@@ -64,3 +64,9 @@ VALUES (100011, 100019, 150.75, 12060, 0, 0),
        (100014, 100020, 114.50, 5696, 0, 0),
        (100012, 100018, 0, 0, 0, 0),
        (100013, 100018, 0, 0, 0, 0);
+
+INSERT INTO employees (name, rate, fired, position_id)
+VALUES ('employee 1 name', 'FULL_RATE', true, 100007),
+       ('employee 2 name', 'FULL_RATE', true, 100007),
+       ('employee 3 name', 'FULL_RATE', true, 100008),
+       ('employee name', 'FULL_RATE', true, 100010);
