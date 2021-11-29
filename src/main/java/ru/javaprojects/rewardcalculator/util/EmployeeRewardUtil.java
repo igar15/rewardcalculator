@@ -223,7 +223,7 @@ public class EmployeeRewardUtil {
             PdfPCell departmentNameCell = new PdfPCell(createAlignmentCellWithPhrase(Element.ALIGN_CENTER, Element.ALIGN_MIDDLE, new Phrase(departmentReward.getDepartment().getName(), normalFont11)));
             departmentNameCell.setMinimumHeight(36f);
             table.addCell(departmentNameCell);
-            PdfPCell positionNameCell = new PdfPCell(createAlignmentCellWithPhrase(Element.ALIGN_LEFT, Element.ALIGN_MIDDLE, new Phrase(employeeReward.getEmployee().getPosition().getName(), normalFont11)));
+            PdfPCell positionNameCell = new PdfPCell(createAlignmentCellWithPhrase(Element.ALIGN_LEFT, Element.ALIGN_MIDDLE, new Phrase(employeeReward.getCurrentPositionName(), normalFont11)));
             positionNameCell.setMinimumHeight(36f);
             table.addCell(positionNameCell);
             PdfPCell employeeNameCell = new PdfPCell(createAlignmentCellWithPhrase(Element.ALIGN_LEFT, Element.ALIGN_MIDDLE, new Phrase(employeeReward.getEmployee().getName(), normalFont11)));
@@ -331,16 +331,16 @@ public class EmployeeRewardUtil {
     }
 
     private static String calculateSalaryWithRateCoefficient(EmployeeReward employeeReward) {
-        Integer salary = employeeReward.getEmployee().getPosition().getSalary();
-        Rate rate = employeeReward.getEmployee().getRate();
+        Integer salary = employeeReward.getCurrentPositionSalary();
+        Rate rate = employeeReward.getCurrentEmployeeRate();
         int salaryWithRate = (int) (salary * rate.getCoefficient());
         return String.valueOf(salaryWithRate);
     }
 
     private static String calculateRewardOfSalaryPercent(EmployeeReward employeeReward) {
         Integer reward = employeeReward.getFullReward();
-        Integer salary = employeeReward.getEmployee().getPosition().getSalary();
-        Rate rate = employeeReward.getEmployee().getRate();
+        Integer salary = employeeReward.getCurrentPositionSalary();
+        Rate rate = employeeReward.getCurrentEmployeeRate();
         int rewardOfSalary = (int) (reward * 100 / salary / rate.getCoefficient());
         return String.valueOf(rewardOfSalary);
     }

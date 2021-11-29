@@ -55,15 +55,15 @@ VALUES (100004, 100015, 40800, 12060),
        (100006, 100016, 40800, 5696),
        (100006, 100015, 120000, 7156);
 
-INSERT INTO employee_rewards (employee_id, department_reward_id, hours_worked, hours_worked_reward, additional_reward, penalty)
-VALUES (100011, 100019, 150.75, 12060, 0, 0),
-       (100012, 100019, 150.75, 12060, 0, 0),
-       (100013, 100019, 150.75, 10710, 0, 0),
-       (100011, 100018, 176.50, 12060, 0, 0),
-       (100014, 100021, 114.50, 7156, 0, 0),
-       (100014, 100020, 114.50, 5696, 0, 0),
-       (100012, 100018, 0, 0, 0, 0),
-       (100013, 100018, 0, 0, 0, 0);
+INSERT INTO employee_rewards (employee_id, department_reward_id, hours_worked, hours_worked_reward, additional_reward, penalty, current_position_name, current_position_salary, current_employee_rate)
+VALUES (100011, 100019, 150.75, 12060, 0, 0, 'Web designer', 40200, 'FULL_RATE'),
+       (100012, 100019, 150.75, 12060, 0, 0, 'Web designer', 40200, 'FULL_RATE'),
+       (100013, 100019, 150.75, 10710, 0, 0, 'Programmer', 35700, 'FULL_RATE'),
+       (100011, 100018, 176.50, 12060, 0, 0, 'Web designer', 40200, 'FULL_RATE'),
+       (100014, 100021, 114.50, 7156, 0, 0, 'Product manager', 25000, 'FULL_RATE'),
+       (100014, 100020, 114.50, 5696, 0, 0, 'Product manager', 25000, 'FULL_RATE'),
+       (100012, 100018, 0, 0, 0, 0, 'Web designer', 40200, 'FULL_RATE'),
+       (100013, 100018, 0, 0, 0, 0, 'Programmer', 35700, 'FULL_RATE');
 
 INSERT INTO employees (name, rate, fired, position_id)
 VALUES ('Jack Robinson', 'FULL_RATE', true, 100007),

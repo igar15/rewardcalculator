@@ -49,11 +49,11 @@ public class EmployeeRewardService {
     @Transactional
     public void update(EmployeeRewardTo employeeRewardTo) {
         checkToState(employeeRewardTo);
-        EmployeeReward employeeReward = repository.findByIdWithPositionAndDepartmentReward(employeeRewardTo.getId())
+        EmployeeReward employeeReward = repository.findByIdWithDepartmentReward(employeeRewardTo.getId())
                 .orElseThrow(() -> new NotFoundException("Not found employee reward with id=" + employeeRewardTo.getId()));
         DepartmentReward departmentReward = employeeReward.getDepartmentReward();
-        int salary = employeeReward.getEmployee().getPosition().getSalary();
-        Rate rate = employeeReward.getEmployee().getRate();
+        int salary = employeeReward.getCurrentPositionSalary();
+        Rate rate = employeeReward.getCurrentEmployeeRate();
         double requiredHoursWorked = departmentReward.getPaymentPeriod().getRequiredHoursWorked();
 
         int hoursWorkedReward = calculateHoursWorkedReward(employeeRewardTo.getHoursWorked(), salary, rate, requiredHoursWorked);

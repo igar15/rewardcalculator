@@ -3,6 +3,7 @@ package ru.javaprojects.rewardcalculator.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javaprojects.rewardcalculator.model.EmployeeReward;
+import ru.javaprojects.rewardcalculator.testdata.PositionTestData;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
@@ -27,6 +28,9 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
 
     @Autowired
     private DepartmentRewardService departmentRewardService;
+
+    @Autowired
+    private PositionService positionService;
 
     @Test
     void get() {
@@ -58,6 +62,14 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
         EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward3, employeeReward2, employeeReward1);
     }
 
+    // test on safety old rewards data, when employee position data changes in the future
+    @Test
+    void getAllByDepartmentRewardWhenEmployeePositionChanged() {
+        positionService.update(PositionTestData.getUpdatedTo());
+        List<EmployeeReward> employeeRewards = service.getAllByDepartmentReward(departmentReward2);
+        EMPLOYEE_REWARD_MATCHER.assertMatch(employeeRewards, employeeReward3, employeeReward2, employeeReward1);
+    }
+
     @Test
     void getAllByDepartmentRewardInPdfWithApprovingSignature() throws IOException {
         byte[] pdfBytes = service.getAllByDepartmentRewardInPdf(departmentReward2, APPROVING_SIGNATURE);
@@ -66,6 +78,14 @@ class EmployeeRewardServiceTest extends AbstractServiceTest {
 
     @Test
     void getAllByDepartmentRewardInPdfWithoutApprovingSignature() throws IOException {
+        byte[] pdfBytes = service.getAllByDepartmentRewardInPdf(departmentReward2, EMPTY_SIGNATURE);
+        checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME);
+    }
+
+    // test on safety old rewards data, when employee position data changes in the future
+    @Test
+    void getAllByDepartmentRewardInPdfWithoutApprovingSignatureWhenEmployeePositionChanged() throws IOException {
+        positionService.update(PositionTestData.getUpdatedTo());
         byte[] pdfBytes = service.getAllByDepartmentRewardInPdf(departmentReward2, EMPTY_SIGNATURE);
         checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME);
     }

@@ -5,7 +5,10 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "employee_rewards", uniqueConstraints = {@UniqueConstraint(columnNames = {"employee_id", "department_reward_id"}, name = "employee_rewards_unique_employee_id_department_reward_id_idx")})
@@ -43,20 +46,40 @@ public class EmployeeReward extends AbstractBaseEntity {
     @Column(name = "penalty", nullable = false)
     private Integer penalty;
 
+    @NotBlank
+    @Size(min = 4, max = 70)
+    @Column(name = "current_position_name", nullable = false)
+    private String currentPositionName;
+
+    @NotNull
+    @Min(10000)
+    @Column(name = "current_position_salary", nullable = false)
+    private Integer currentPositionSalary;
+
+    @NotNull
+    @Column(name = "current_employee_rate")
+    @Enumerated(EnumType.STRING)
+    private Rate currentEmployeeRate;
+
     public EmployeeReward() {
     }
 
-    public EmployeeReward(Integer id, Double hoursWorked, Integer hoursWorkedReward, Integer additionalReward, Integer penalty) {
+    public EmployeeReward(Integer id, Double hoursWorked, Integer hoursWorkedReward, Integer additionalReward,
+                          Integer penalty, String currentPositionName, Integer currentPositionSalary, Rate currentEmployeeRate ) {
         super(id);
         this.hoursWorked = hoursWorked;
         this.hoursWorkedReward = hoursWorkedReward;
         this.additionalReward = additionalReward;
         this.penalty = penalty;
+        this.currentPositionName = currentPositionName;
+        this.currentPositionSalary = currentPositionSalary;
+        this.currentEmployeeRate = currentEmployeeRate;
     }
 
-    public EmployeeReward(Integer id, Double hoursWorked, Integer hoursWorkedReward, Integer additionalReward, Integer penalty,
+    public EmployeeReward(Integer id, Double hoursWorked, Integer hoursWorkedReward, Integer additionalReward,
+                          Integer penalty, String currentPositionName, Integer currentPositionSalary, Rate currentEmployeeRate,
                           Employee employee, DepartmentReward departmentReward) {
-        this(id, hoursWorked, hoursWorkedReward, additionalReward, penalty);
+        this(id, hoursWorked, hoursWorkedReward, additionalReward, penalty, currentPositionName, currentPositionSalary, currentEmployeeRate);
         this.employee = employee;
         this.departmentReward = departmentReward;
     }
@@ -113,6 +136,30 @@ public class EmployeeReward extends AbstractBaseEntity {
         return hoursWorkedReward + additionalReward - penalty;
     }
 
+    public String getCurrentPositionName() {
+        return currentPositionName;
+    }
+
+    public void setCurrentPositionName(String currentPositionName) {
+        this.currentPositionName = currentPositionName;
+    }
+
+    public Integer getCurrentPositionSalary() {
+        return currentPositionSalary;
+    }
+
+    public void setCurrentPositionSalary(Integer currentPositionSalary) {
+        this.currentPositionSalary = currentPositionSalary;
+    }
+
+    public Rate getCurrentEmployeeRate() {
+        return currentEmployeeRate;
+    }
+
+    public void setCurrentEmployeeRate(Rate currentEmployeeRate) {
+        this.currentEmployeeRate = currentEmployeeRate;
+    }
+
     @Override
     public String toString() {
         return "EmployeeReward{" +
@@ -121,6 +168,9 @@ public class EmployeeReward extends AbstractBaseEntity {
                 ", hoursWorkedReward=" + hoursWorkedReward +
                 ", additionalReward=" + additionalReward +
                 ", penalty=" + penalty +
+                ", currentPositionName=" + currentPositionName +
+                ", currentPositionSalary=" + currentPositionSalary +
+                ", currentEmployeeRate=" + currentEmployeeRate +
                 '}';
     }
 }

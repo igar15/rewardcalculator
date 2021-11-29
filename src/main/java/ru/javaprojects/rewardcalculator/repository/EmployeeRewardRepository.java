@@ -17,9 +17,9 @@ public interface EmployeeRewardRepository extends JpaRepository<EmployeeReward, 
     @EntityGraph(attributePaths = "employee.position")
     List<EmployeeReward> findAllByDepartmentRewardIdOrderByEmployeeName(int departmentRewardId);
 
-    @EntityGraph(attributePaths = {"employee.position", "departmentReward.paymentPeriod"})
+    @EntityGraph(attributePaths = "departmentReward.paymentPeriod")
     @Query("SELECT e FROM EmployeeReward e WHERE e.id = :id")
-    Optional<EmployeeReward> findByIdWithPositionAndDepartmentReward(int id);
+    Optional<EmployeeReward> findByIdWithDepartmentReward(int id);
 
     @EntityGraph(attributePaths = {"departmentReward.department"})
     @Query("SELECT e FROM EmployeeReward e WHERE e.id = :id")

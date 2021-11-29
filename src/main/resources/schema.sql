@@ -91,13 +91,17 @@ CREATE UNIQUE INDEX department_rewards_unique_department_id_payment_period_id_id
 
 CREATE TABLE employee_rewards
 (
-    id                     INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-    employee_id            INTEGER NOT NULL,
-    department_reward_id   INTEGER NOT NULL,
-    hours_worked           NUMERIC NOT NULL,
-    hours_worked_reward    INTEGER NOT NULL,
-    additional_reward      INTEGER NOT NULL,
-    penalty                INTEGER NOT NULL,
+    id                       INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
+    employee_id              INTEGER NOT NULL,
+    department_reward_id     INTEGER NOT NULL,
+    hours_worked             NUMERIC NOT NULL,
+    hours_worked_reward      INTEGER NOT NULL,
+    additional_reward        INTEGER NOT NULL,
+    penalty                  INTEGER NOT NULL,
+    current_position_name    VARCHAR NOT NULL,
+    current_position_salary  INTEGER NOT NULL,
+    current_employee_rate    VARCHAR NOT NULL,
+
     CONSTRAINT valid_employee_reward CHECK (hours_worked_reward + additional_reward - penalty >= 0),
     FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE,
     FOREIGN KEY (department_reward_id) REFERENCES department_rewards (id) ON DELETE CASCADE
