@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static ru.javaprojects.rewardcalculator.config.OpenApiConfig.ALLOWED_ADMIN_DEPARTMENT_HEAD;
-import static ru.javaprojects.rewardcalculator.util.EmployeeRewardUtil.EmployeeSignature;
+import static ru.javaprojects.rewardcalculator.util.EmployeeUtil.EmployeeSignature;
 import static ru.javaprojects.rewardcalculator.util.SecureUtil.checkDepartmentHeadManagesTheDepartment;
 import static ru.javaprojects.rewardcalculator.util.ValidationUtil.assureIdConsistent;
 

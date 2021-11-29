@@ -7,6 +7,7 @@ import ru.javaprojects.rewardcalculator.model.EmployeeReward;
 import ru.javaprojects.rewardcalculator.model.Rate;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRewardRepository;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
+import ru.javaprojects.rewardcalculator.util.EmployeeUtil.EmployeeSignature;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
@@ -18,10 +19,13 @@ public class EmployeeRewardService {
     private static final double PREMIUM_RATE = 0.3;
     private final EmployeeRewardRepository repository;
     private final DepartmentRewardService departmentRewardService;
+    private final EmployeeService employeeService;
 
-    public EmployeeRewardService(EmployeeRewardRepository repository, DepartmentRewardService departmentRewardService) {
+    public EmployeeRewardService(EmployeeRewardRepository repository, DepartmentRewardService departmentRewardService,
+                                 EmployeeService employeeService) {
         this.repository = repository;
         this.departmentRewardService = departmentRewardService;
+        this.employeeService = employeeService;
     }
 
     public EmployeeReward get(int id) {
@@ -43,7 +47,8 @@ public class EmployeeRewardService {
 
     public byte[] getAllByDepartmentRewardInPdf(DepartmentReward departmentReward, EmployeeSignature approvingSignature) {
         List<EmployeeReward> employeeRewards = repository.findAllByDepartmentRewardIdOrderByEmployeeName(departmentReward.getId());
-        return createEmployeeRewardsPdfForm(employeeRewards, departmentReward, approvingSignature);
+        EmployeeSignature chiefSignature = employeeService.getChiefSignature(departmentReward.getDepartment().getId());
+        return createEmployeeRewardsPdfForm(employeeRewards, departmentReward, chiefSignature, approvingSignature);
     }
 
     @Transactional

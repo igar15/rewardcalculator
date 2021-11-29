@@ -12,6 +12,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.javaprojects.rewardcalculator.model.Rate.FULL_RATE;
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentTestData.*;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.CHIEF_SIGNATURE;
+import static ru.javaprojects.rewardcalculator.testdata.EmployeeRewardTestData.EMPTY_SIGNATURE;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.NOT_FOUND;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getNew;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.getNewTo;
@@ -81,6 +83,16 @@ class EmployeeServiceTest extends AbstractServiceTest {
     @Test
     void getAllFiredByDepartmentIdWithNotExistedDepartment() {
         assertThrows(NotFoundException.class, () -> service.getAllFiredByDepartmentId(NOT_FOUND));
+    }
+
+    @Test
+    void getChiefSignature() {
+        assertEquals(CHIEF_SIGNATURE, service.getChiefSignature(DEPARTMENT_1_ID));
+    }
+
+    @Test
+    void getChiefSignatureWhenNoChief() {
+        assertEquals(EMPTY_SIGNATURE, service.getChiefSignature(DEPARTMENT_2_ID));
     }
 
     @Test

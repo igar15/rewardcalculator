@@ -9,6 +9,8 @@ import ru.javaprojects.rewardcalculator.model.Employee;
 import ru.javaprojects.rewardcalculator.model.Position;
 import ru.javaprojects.rewardcalculator.repository.EmployeeRepository;
 import ru.javaprojects.rewardcalculator.to.EmployeeTo;
+import ru.javaprojects.rewardcalculator.util.EmployeeUtil.EmployeeSignature;
+import ru.javaprojects.rewardcalculator.util.EmployeeUtil;
 import ru.javaprojects.rewardcalculator.util.exception.NotFoundException;
 
 import java.util.List;
@@ -55,6 +57,12 @@ public class EmployeeService {
     public List<Employee> getAllFiredByDepartmentId(int departmentId) {
         departmentService.get(departmentId);
         return repository.findAllFiredByPositionDepartmentIdWithPosition(departmentId);
+    }
+
+    public EmployeeSignature getChiefSignature(int departmentId) {
+        return repository.findByPositionDepartmentIdAndFiredAndPositionChiefPosition(departmentId, false, true)
+                .map(EmployeeUtil::getEmployeeSignature)
+                .orElse(new EmployeeSignature());
     }
 
     @CacheEvict(value = "employees", allEntries = true)

@@ -8,7 +8,7 @@ import static ru.javaprojects.rewardcalculator.model.AbstractBaseEntity.START_SE
 import static ru.javaprojects.rewardcalculator.testdata.DepartmentRewardTestData.departmentReward2;
 import static ru.javaprojects.rewardcalculator.testdata.EmployeeTestData.*;
 import static ru.javaprojects.rewardcalculator.testdata.PositionTestData.position2;
-import static ru.javaprojects.rewardcalculator.util.EmployeeRewardUtil.EmployeeSignature;
+import static ru.javaprojects.rewardcalculator.util.EmployeeUtil.EmployeeSignature;
 
 public class EmployeeRewardTestData {
     public static final TestMatcher<EmployeeReward> EMPLOYEE_REWARD_MATCHER = TestMatcher.usingIgnoringFieldsComparator(EmployeeReward.class, "employee", "departmentReward");

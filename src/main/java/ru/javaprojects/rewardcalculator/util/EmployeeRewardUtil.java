@@ -6,8 +6,11 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.util.Assert;
-import ru.javaprojects.rewardcalculator.model.*;
+import ru.javaprojects.rewardcalculator.model.DepartmentReward;
+import ru.javaprojects.rewardcalculator.model.EmployeeReward;
+import ru.javaprojects.rewardcalculator.model.Rate;
 import ru.javaprojects.rewardcalculator.to.EmployeeRewardTo;
+import ru.javaprojects.rewardcalculator.util.EmployeeUtil.EmployeeSignature;
 import ru.javaprojects.rewardcalculator.util.exception.EmployeeRewardBadDataException;
 import ru.javaprojects.rewardcalculator.util.exception.PdfException;
 
@@ -127,7 +130,7 @@ public class EmployeeRewardUtil {
     }
 
     public static byte[] createEmployeeRewardsPdfForm(List<EmployeeReward> employeeRewards, DepartmentReward departmentReward,
-                                                      EmployeeSignature approvingSignature) {
+                                                      EmployeeSignature chiefSignature, EmployeeSignature approvingSignature) {
         try {
             Document document = new Document(PageSize.A4.rotate());
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -136,7 +139,6 @@ public class EmployeeRewardUtil {
             addEmployeeRewardsPdfFormHeader(document, departmentReward);
             addEmployeeRewardsPdfFormTable(document, employeeRewards, departmentReward);
             addSumOfRewardsLine(document, employeeRewards);
-            EmployeeSignature chiefSignature = getDepartmentChiefSignature(employeeRewards);
             addEmployeeRewardsPdfFormSignatures(document, chiefSignature, approvingSignature);
             document.close();
             return outputStream.toByteArray();
@@ -172,7 +174,7 @@ public class EmployeeRewardUtil {
             table.setSpacingAfter(15);
             document.add(table);
         }
-        if (Objects.nonNull(approvingSignature) && !approvingSignature.position.isBlank()) {
+        if (Objects.nonNull(approvingSignature) && !approvingSignature.getPosition().isBlank()) {
             addParagraph(document, agreed + ":", normalFont11, Element.ALIGN_LEFT, 118,   5);
             PdfPTable table = createSignatureTable(approvingSignature);
             document.add(table);
@@ -244,79 +246,14 @@ public class EmployeeRewardUtil {
         }
     }
 
-    static EmployeeSignature getDepartmentChiefSignature(List<EmployeeReward> employeeRewards) {
-        return employeeRewards.stream()
-                .filter(employeeReward -> employeeReward.getEmployee().getPosition().isChiefPosition())
-                .findFirst()
-                .map(employeeReward -> {
-                    Employee chief = employeeReward.getEmployee();
-                    Position chiefPosition = chief.getPosition();
-                    return new EmployeeSignature(chiefPosition.getName(), formatChiefName(chief.getName()));
-                }).orElse(new EmployeeSignature("", ""));
-    }
-
-    private static String formatChiefName(String name) {
-        String[] nameParts = name.split(" ");
-        if (nameParts.length == 3) {
-            StringBuilder builder = new StringBuilder();
-            builder
-                    .append(nameParts[1].charAt(0))
-                    .append(".")
-                    .append(nameParts[2].charAt(0))
-                    .append(".")
-                    .append(" ")
-                    .append(nameParts[0]);
-            return builder.toString();
-        } else {
-            return name;
-        }
-    }
-
-    public static class EmployeeSignature {
-        private final String position;
-        private final String name;
-
-        public EmployeeSignature(String position, String name) {
-            this.position = position;
-            this.name = name;
-        }
-
-        public EmployeeSignature() {
-            this.position = "";
-            this.name = "";
-        }
-
-        public String getPosition() {
-            return position;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            EmployeeSignature that = (EmployeeSignature) o;
-            return Objects.equals(position, that.position) &&
-                    Objects.equals(name, that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(position, name);
-        }
-    }
-
     private static PdfPTable createSignatureTable(EmployeeSignature employeeSignature) {
         PdfPTable table = new PdfPTable(2);
         table.setWidthPercentage(70);
 
-        PdfPCell positionCell = createAlignmentCellWithPhrase(Element.ALIGN_LEFT, Element.ALIGN_BOTTOM, new Phrase(employeeSignature.position, normalFont11));
+        PdfPCell positionCell = createAlignmentCellWithPhrase(Element.ALIGN_LEFT, Element.ALIGN_BOTTOM, new Phrase(employeeSignature.getPosition(), normalFont11));
         positionCell.setBorder(Rectangle.NO_BORDER);
         table.addCell(positionCell);
-        PdfPCell nameCell = createAlignmentCellWithPhrase(Element.ALIGN_RIGHT, Element.ALIGN_BOTTOM, new Phrase(employeeSignature.name, normalFont11));
+        PdfPCell nameCell = createAlignmentCellWithPhrase(Element.ALIGN_RIGHT, Element.ALIGN_BOTTOM, new Phrase(employeeSignature.getName(), normalFont11));
         nameCell.setBorder(Rectangle.NO_BORDER);
         table.addCell(nameCell);
         return table;

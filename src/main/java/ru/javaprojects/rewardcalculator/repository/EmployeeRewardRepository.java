@@ -14,7 +14,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface EmployeeRewardRepository extends JpaRepository<EmployeeReward, Integer> {
 
-    @EntityGraph(attributePaths = "employee.position")
+    @EntityGraph(attributePaths = "employee")
     List<EmployeeReward> findAllByDepartmentRewardIdOrderByEmployeeName(int departmentRewardId);
 
     @EntityGraph(attributePaths = "departmentReward.paymentPeriod")

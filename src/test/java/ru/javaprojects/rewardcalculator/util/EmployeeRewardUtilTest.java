@@ -48,31 +48,19 @@ class EmployeeRewardUtilTest {
 
     @Test
     void createEmployeeRewardsPdfFormTestWithChiefAndApprovingSignatures() throws IOException {
-        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward3, employeeReward2, employeeReward1), departmentReward2, APPROVING_SIGNATURE);
+        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward3, employeeReward2, employeeReward1), departmentReward2, CHIEF_SIGNATURE, APPROVING_SIGNATURE);
         checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_AND_APPROVING_SIGNATURES_FILE_NAME);
     }
 
     @Test
     void createEmployeeRewardsPdfFormTestWithChiefSignatureOnly() throws IOException {
-        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward3, employeeReward2, employeeReward1), departmentReward2, EMPTY_SIGNATURE);
+        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward3, employeeReward2, employeeReward1), departmentReward2, CHIEF_SIGNATURE, EMPTY_SIGNATURE);
         checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_CHIEF_SIGNATURE_ONLY_FILE_NAME);
     }
 
     @Test
     void createEmployeeRewardsPdfFormTestWithApprovingSignatureOnly() throws IOException {
-        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward2, employeeReward1), departmentReward2, APPROVING_SIGNATURE);
+        byte[] pdfBytes = createEmployeeRewardsPdfForm(List.of(employeeReward2, employeeReward1), departmentReward2, EMPTY_SIGNATURE, APPROVING_SIGNATURE);
         checkPdf(pdfBytes, EMPLOYEE_REWARDS_PDF_FORM_WITH_APPROVING_SIGNATURE_ONLY_FILE_NAME);
-    }
-
-    @Test
-    void getDepartmentChiefSignatureTestWhenChiefExist() {
-        EmployeeSignature chiefSignature = getDepartmentChiefSignature(List.of(employeeReward1, employeeReward2, employeeReward3));
-        assertEquals(CHIEF_SIGNATURE, chiefSignature);
-    }
-
-    @Test
-    void getDepartmentChiefSignatureTestWhenChiefNotExist() {
-        EmployeeSignature chiefSignature = getDepartmentChiefSignature(List.of(employeeReward1, employeeReward2));
-        assertEquals(EMPTY_SIGNATURE, chiefSignature);
     }
 }
