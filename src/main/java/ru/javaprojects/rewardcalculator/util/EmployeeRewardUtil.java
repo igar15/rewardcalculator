@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
@@ -150,7 +151,8 @@ public class EmployeeRewardUtil {
     private static void addEmployeeRewardsPdfFormHeader(Document document, DepartmentReward departmentReward) throws DocumentException {
         addParagraph(document, employeeRewardsList, boldFont11, Element.ALIGN_CENTER, 0,  2);
         addParagraph(document, departmentReward.getDepartment().getName(), normalFont11, Element.ALIGN_CENTER, 0, 2);
-        addParagraph(document, departmentReward.getPaymentPeriod().getPeriod().format(dateTimeFormatter), normalFont11, Element.ALIGN_CENTER, 0, 10);
+        String paymentPeriod = departmentReward.getPaymentPeriod().getPeriod().format(dateTimeFormatter);
+        addParagraph(document, Character.toString(paymentPeriod.charAt(0)).toUpperCase() + paymentPeriod.substring(1), normalFont11, Element.ALIGN_CENTER, 0, 10);
         addParagraph(document, depReward + ": " + departmentReward.getAllocatedAmount() + " " + currency, normalFont11, Element.ALIGN_CENTER, 0, 10);
     }
 
@@ -211,7 +213,7 @@ public class EmployeeRewardUtil {
                     header.setMinimumHeight(45);
                     header.setHorizontalAlignment(Element.ALIGN_CENTER);
                     header.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    header.setPhrase(new Phrase(columnTitle));
+                    header.setPhrase(new Phrase(columnTitle, normalFont11));
                     table.addCell(header);
                 });
     }
@@ -300,7 +302,9 @@ public class EmployeeRewardUtil {
             currency = pdfFormProperties.getProperty("currency");
             sumOfRewards = pdfFormProperties.getProperty("sumOfRewards");
             agreed = pdfFormProperties.getProperty("agreed");
-            dateTimeFormatter = DateTimeFormatter.ofPattern(pdfFormProperties.getProperty("dateTimeFormatterPattern"));
+            dateTimeFormatter = DateTimeFormatter
+                    .ofPattern(pdfFormProperties.getProperty("dateTimeFormatterPattern"))
+                    .withLocale(new Locale(pdfFormProperties.getProperty("locale")));
 
             BaseFont baseFont = BaseFont.createFont(fontFileName, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             normalFont11 = new Font(baseFont, 11, Font.NORMAL);
